@@ -1,4 +1,11 @@
-import { Box, DragEvent, Path, Ellipse, PointerEvent, UI } from 'leafer-ui';
+import {
+  Box,
+  DragEvent,
+  Path,
+  Ellipse,
+  PointerEvent,
+  UI,
+} from '@leafer-ui/core';
 import { InnerEditor, registerInnerEditor } from '@leafer-in/editor';
 import { pathData2Point, point2PathData } from './utils';
 import { AnyObject, IPoint, PointIdx } from './type';

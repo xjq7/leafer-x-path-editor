@@ -1,5 +1,5 @@
 /* eslint-disable no-plusplus */
-import { IPathCommandData, IPathCommandObject } from 'leafer-ui';
+import { IPathCommandData, IPathCommandObject } from '@leafer-ui/interface';
 import { PathCommandMap as Command } from '@leafer-ui/core';
 import { IPoint } from './type';
 

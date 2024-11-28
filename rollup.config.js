@@ -15,7 +15,6 @@ const basePath = '.';
 const supportPlatforms = ['web', 'worker', 'node', 'miniapp'];
 const external = {
   '@leafer-ui/core': 'LeaferUICore',
-  'leafer-ui': 'LeaferUI',
   '@leafer-in/editor': 'LeaferEditor',
 }; // 声明外部依赖，不打进插件包，只引用
 
