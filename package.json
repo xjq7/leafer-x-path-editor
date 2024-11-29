@@ -35,6 +35,7 @@
     "@leafer-in/editor": "^1.0.10",
     "@leafer-ui/core": "^1.0.10",
     "@leafer-ui/interface": "^1.0.10",
+    "leafer-ui": "^1.0.10",
     "@rollup/plugin-commonjs": "^25.0.4",
     "@rollup/plugin-html": "^1.0.3",
     "@rollup/plugin-multi-entry": "^6.0.0",
@@ -61,5 +62,8 @@
     "@leafer-in/editor": "^1.0.10",
     "@leafer-ui/core": "^1.0.10",
     "@leafer-ui/interface": "^1.0.10"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
   }
 }

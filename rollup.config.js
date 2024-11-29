@@ -11,11 +11,12 @@ import serve from 'rollup-plugin-serve';
 
 // config
 
+const globalName = 'LeaferX.pathEditor';
 const basePath = '.';
 const supportPlatforms = ['web', 'worker', 'node', 'miniapp'];
 const external = {
-  '@leafer-ui/core': 'LeaferUICore',
-  '@leafer-in/editor': 'LeaferEditor',
+  '@leafer-ui/core': 'LeaferUI',
+  '@leafer-in/editor': 'LeaferIN',
 }; // 声明外部依赖，不打进插件包，只引用
 
 const port = 12121; // visit http://localhost:12121

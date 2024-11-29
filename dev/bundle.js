@@ -1,36 +1,5 @@
 
 (function(l, r) { if (!l || l.getElementById('livereloadscript')) return; r = l.createElement('script'); r.async = 1; r.src = '//' + (self.location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; r.id = 'livereloadscript'; l.getElementsByTagName('head')[0].appendChild(r) })(self.document);
-import { App as App$1, Path as Path$1 } from 'leafer-ui';
-
-/******************************************************************************
-Copyright (c) Microsoft Corporation.
-
-Permission to use, copy, modify, and/or distribute this software for any
-purpose with or without fee is hereby granted.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
-AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
-LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.
-***************************************************************************** */
-/* global Reflect, Promise, SuppressedError, Symbol, Iterator */
-
-
-function __decorate$4(decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-}
-
-typeof SuppressedError === "function" ? SuppressedError : function (error, suppressed, message) {
-    var e = new Error(message);
-    return e.name = "SuppressedError", e.error = error, e.suppressed = suppressed, e;
-};
-
 const Platform = {
     toURL(text, fileType) {
         let url = encodeURIComponent(text);
@@ -463,7 +432,7 @@ const MatrixHelper = {
 const M$6 = MatrixHelper;
 
 const { toInnerPoint: toInnerPoint$2, toOuterPoint: toOuterPoint$3 } = MatrixHelper;
-const { sin: sin$2, cos: cos$2, abs: abs$2, sqrt: sqrt$2, atan2: atan2$2, min: min$1, PI: PI$1$1 } = Math;
+const { sin: sin$2, cos: cos$2, abs: abs$2$1, sqrt: sqrt$2, atan2: atan2$2, min: min$1, PI: PI$1$1 } = Math;
 const PointHelper = {
     defaultPoint: getPointData(),
     tempPoint: {},
@@ -552,8 +521,8 @@ const PointHelper = {
         return getDistanceFrom(t.x, t.y, point.x, point.y);
     },
     getDistanceFrom(x1, y1, x2, y2) {
-        const x = abs$2(x2 - x1);
-        const y = abs$2(y2 - y1);
+        const x = abs$2$1(x2 - x1);
+        const y = abs$2$1(y2 - y1);
         return sqrt$2(x * x + y * y);
     },
     getMinDistanceFrom(x1, y1, x2, y2, x3, y3) {
@@ -824,9 +793,9 @@ const { tempPointBounds: tempPointBounds$1, setPoint: setPoint$2, addPoint: addP
 const { toOuterPoint: toOuterPoint$2 } = MatrixHelper;
 const { float, fourNumber } = MathHelper;
 const { floor, ceil: ceil$1 } = Math;
-let right$3, bottom$2, boundsRight, boundsBottom;
+let right$4, bottom$3, boundsRight, boundsBottom;
 const point = {};
-const toPoint$2 = {};
+const toPoint$2$1 = {};
 const BoundsHelper = {
     tempBounds: {},
     set(t, x = 0, y = 0, width = 0, height = 0) {
@@ -935,17 +904,17 @@ const BoundsHelper = {
         else {
             point.x = t.x;
             point.y = t.y;
-            toOuterPoint$2(matrix, point, toPoint$2);
-            setPoint$2(tempPointBounds$1, toPoint$2.x, toPoint$2.y);
+            toOuterPoint$2(matrix, point, toPoint$2$1);
+            setPoint$2(tempPointBounds$1, toPoint$2$1.x, toPoint$2$1.y);
             point.x = t.x + t.width;
-            toOuterPoint$2(matrix, point, toPoint$2);
-            addPoint$2(tempPointBounds$1, toPoint$2.x, toPoint$2.y);
+            toOuterPoint$2(matrix, point, toPoint$2$1);
+            addPoint$2(tempPointBounds$1, toPoint$2$1.x, toPoint$2$1.y);
             point.y = t.y + t.height;
-            toOuterPoint$2(matrix, point, toPoint$2);
-            addPoint$2(tempPointBounds$1, toPoint$2.x, toPoint$2.y);
+            toOuterPoint$2(matrix, point, toPoint$2$1);
+            addPoint$2(tempPointBounds$1, toPoint$2$1.x, toPoint$2$1.y);
             point.x = t.x;
-            toOuterPoint$2(matrix, point, toPoint$2);
-            addPoint$2(tempPointBounds$1, toPoint$2.x, toPoint$2.y);
+            toOuterPoint$2(matrix, point, toPoint$2$1);
+            addPoint$2(tempPointBounds$1, toPoint$2$1.x, toPoint$2$1.y);
             toBounds$2(tempPointBounds$1, to);
         }
     },
@@ -993,20 +962,20 @@ const BoundsHelper = {
         t.height = float(t.height, maxLength);
     },
     add(t, bounds, isPoint) {
-        right$3 = t.x + t.width;
-        bottom$2 = t.y + t.height;
+        right$4 = t.x + t.width;
+        bottom$3 = t.y + t.height;
         boundsRight = bounds.x;
         boundsBottom = bounds.y;
         if (!isPoint) {
             boundsRight += bounds.width;
             boundsBottom += bounds.height;
         }
-        right$3 = right$3 > boundsRight ? right$3 : boundsRight;
-        bottom$2 = bottom$2 > boundsBottom ? bottom$2 : boundsBottom;
+        right$4 = right$4 > boundsRight ? right$4 : boundsRight;
+        bottom$3 = bottom$3 > boundsBottom ? bottom$3 : boundsBottom;
         t.x = t.x < bounds.x ? t.x : bounds.x;
         t.y = t.y < bounds.y ? t.y : bounds.y;
-        t.width = right$3 - t.x;
-        t.height = bottom$2 - t.y;
+        t.width = right$4 - t.x;
+        t.height = bottom$3 - t.y;
     },
     addList(t, list) {
         B.setListWithFn(t, list, undefined, true);
@@ -1080,16 +1049,16 @@ const BoundsHelper = {
         if (!B.hit(t, other))
             return getBoundsData();
         let { x, y, width, height } = other;
-        right$3 = x + width;
-        bottom$2 = y + height;
+        right$4 = x + width;
+        bottom$3 = y + height;
         boundsRight = t.x + t.width;
         boundsBottom = t.y + t.height;
         x = x > t.x ? x : t.x;
         y = y > t.y ? y : t.y;
-        right$3 = right$3 < boundsRight ? right$3 : boundsRight;
-        bottom$2 = bottom$2 < boundsBottom ? bottom$2 : boundsBottom;
-        width = right$3 - x;
-        height = bottom$2 - y;
+        right$4 = right$4 < boundsRight ? right$4 : boundsRight;
+        bottom$3 = bottom$3 < boundsBottom ? bottom$3 : boundsBottom;
+        width = right$4 - x;
+        height = bottom$3 - y;
         return { x, y, width, height };
     },
     intersect(t, other, otherMatrix) {
@@ -1234,7 +1203,7 @@ class Bounds {
         BoundsHelper.reset(this);
     }
 }
-const tempBounds = new Bounds();
+const tempBounds$1 = new Bounds();
 
 class AutoBounds {
     constructor(top, right, bottom, left, width, height) {
@@ -1297,9 +1266,9 @@ directionData.forEach(item => item.type = 'percent');
 const AroundHelper = {
     directionData,
     tempPoint: {},
-    get,
+    get: get$4,
     toPoint(around, bounds, to, onlySize, pointBounds) {
-        const point = get(around);
+        const point = get$4(around);
         to.x = point.x;
         to.y = point.y;
         if (point.type === 'percent') {
@@ -1320,9 +1289,16 @@ const AroundHelper = {
         }
     }
 };
-function get(around) {
+function get$4(around) {
     return typeof around === 'string' ? directionData[Direction9[around]] : around;
 }
+
+const { toPoint: toPoint$1$1 } = AroundHelper;
+const AlignHelper = {
+    toPoint(align, contentBounds, bounds, to, onlySize) {
+        toPoint$1$1(align, bounds, to, onlySize, contentBounds);
+    }
+};
 
 const StringNumberMap = {
     '0': 1,
@@ -1457,7 +1433,7 @@ const UICreator = {
 };
 const { list: list$1$1 } = UICreator;
 
-const debug$6 = Debug.get('EventCreator');
+const debug$6$1 = Debug.get('EventCreator');
 const EventCreator = {
     nameList: {},
     register(Event) {
@@ -1465,7 +1441,7 @@ const EventCreator = {
         Object.keys(Event).forEach(key => {
             name = Event[key];
             if (typeof name === 'string')
-                nameList[name] && debug$6.repeat(name), nameList[name] = Event;
+                nameList[name] && debug$6$1.repeat(name), nameList[name] = Event;
         });
     },
     changeName(oldName, newName) {
@@ -1711,14 +1687,14 @@ PERFORMANCE OF THIS SOFTWARE.
 /* global Reflect, Promise, SuppressedError, Symbol */
 
 
-function __decorate$3(decorators, target, key, desc) {
+function __decorate$4(decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 }
 
-function __awaiter(thisArg, _arguments, P, generator) {
+function __awaiter$1(thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -1844,178 +1820,421 @@ let Canvas$1 = class Canvas {
         this.context = null;
     }
 };
-__decorate$3([
+__decorate$4([
     contextAttr('imageSmoothingEnabled')
 ], Canvas$1.prototype, "smooth", void 0);
-__decorate$3([
+__decorate$4([
     contextAttr('imageSmoothingQuality')
 ], Canvas$1.prototype, "smoothLevel", void 0);
-__decorate$3([
+__decorate$4([
     contextAttr('globalAlpha')
 ], Canvas$1.prototype, "opacity", void 0);
-__decorate$3([
+__decorate$4([
     contextAttr()
 ], Canvas$1.prototype, "fillStyle", void 0);
-__decorate$3([
+__decorate$4([
     contextAttr()
 ], Canvas$1.prototype, "strokeStyle", void 0);
-__decorate$3([
+__decorate$4([
     contextAttr('lineWidth')
 ], Canvas$1.prototype, "strokeWidth", void 0);
-__decorate$3([
+__decorate$4([
     contextAttr('lineCap')
 ], Canvas$1.prototype, "strokeCap", void 0);
-__decorate$3([
+__decorate$4([
     contextAttr('lineJoin')
 ], Canvas$1.prototype, "strokeJoin", void 0);
-__decorate$3([
+__decorate$4([
     contextAttr('lineDashOffset')
 ], Canvas$1.prototype, "dashOffset", void 0);
-__decorate$3([
+__decorate$4([
     contextAttr()
 ], Canvas$1.prototype, "miterLimit", void 0);
-__decorate$3([
+__decorate$4([
     contextAttr()
 ], Canvas$1.prototype, "shadowBlur", void 0);
-__decorate$3([
+__decorate$4([
     contextAttr()
 ], Canvas$1.prototype, "shadowColor", void 0);
-__decorate$3([
+__decorate$4([
     contextAttr()
 ], Canvas$1.prototype, "shadowOffsetX", void 0);
-__decorate$3([
+__decorate$4([
     contextAttr()
 ], Canvas$1.prototype, "shadowOffsetY", void 0);
-__decorate$3([
+__decorate$4([
     contextAttr()
 ], Canvas$1.prototype, "filter", void 0);
-__decorate$3([
+__decorate$4([
     contextAttr()
 ], Canvas$1.prototype, "font", void 0);
-__decorate$3([
+__decorate$4([
     contextAttr()
 ], Canvas$1.prototype, "fontKerning", void 0);
-__decorate$3([
+__decorate$4([
     contextAttr()
 ], Canvas$1.prototype, "fontStretch", void 0);
-__decorate$3([
+__decorate$4([
     contextAttr()
 ], Canvas$1.prototype, "fontVariantCaps", void 0);
-__decorate$3([
+__decorate$4([
     contextAttr()
 ], Canvas$1.prototype, "textAlign", void 0);
-__decorate$3([
+__decorate$4([
     contextAttr()
 ], Canvas$1.prototype, "textBaseline", void 0);
-__decorate$3([
+__decorate$4([
     contextAttr()
 ], Canvas$1.prototype, "textRendering", void 0);
-__decorate$3([
+__decorate$4([
     contextAttr()
 ], Canvas$1.prototype, "wordSpacing", void 0);
-__decorate$3([
+__decorate$4([
     contextAttr()
 ], Canvas$1.prototype, "letterSpacing", void 0);
-__decorate$3([
+__decorate$4([
     contextAttr()
 ], Canvas$1.prototype, "direction", void 0);
-__decorate$3([
+__decorate$4([
     contextMethod()
 ], Canvas$1.prototype, "setTransform", null);
-__decorate$3([
+__decorate$4([
     contextMethod()
 ], Canvas$1.prototype, "resetTransform", null);
-__decorate$3([
+__decorate$4([
     contextMethod()
 ], Canvas$1.prototype, "getTransform", null);
-__decorate$3([
+__decorate$4([
     contextMethod()
 ], Canvas$1.prototype, "save", null);
-__decorate$3([
+__decorate$4([
     contextMethod()
 ], Canvas$1.prototype, "restore", null);
-__decorate$3([
+__decorate$4([
     contextMethod()
 ], Canvas$1.prototype, "translate", null);
-__decorate$3([
+__decorate$4([
     contextMethod()
 ], Canvas$1.prototype, "scale", null);
-__decorate$3([
+__decorate$4([
     contextMethod()
 ], Canvas$1.prototype, "rotate", null);
-__decorate$3([
+__decorate$4([
     contextMethod()
 ], Canvas$1.prototype, "fill", null);
-__decorate$3([
+__decorate$4([
     contextMethod()
 ], Canvas$1.prototype, "stroke", null);
-__decorate$3([
+__decorate$4([
     contextMethod()
 ], Canvas$1.prototype, "clip", null);
-__decorate$3([
+__decorate$4([
     contextMethod()
 ], Canvas$1.prototype, "fillRect", null);
-__decorate$3([
+__decorate$4([
     contextMethod()
 ], Canvas$1.prototype, "strokeRect", null);
-__decorate$3([
+__decorate$4([
     contextMethod()
 ], Canvas$1.prototype, "clearRect", null);
-__decorate$3([
+__decorate$4([
     contextMethod()
 ], Canvas$1.prototype, "beginPath", null);
-__decorate$3([
+__decorate$4([
     contextMethod()
 ], Canvas$1.prototype, "moveTo", null);
-__decorate$3([
+__decorate$4([
     contextMethod()
 ], Canvas$1.prototype, "lineTo", null);
-__decorate$3([
+__decorate$4([
     contextMethod()
 ], Canvas$1.prototype, "bezierCurveTo", null);
-__decorate$3([
+__decorate$4([
     contextMethod()
 ], Canvas$1.prototype, "quadraticCurveTo", null);
-__decorate$3([
+__decorate$4([
     contextMethod()
 ], Canvas$1.prototype, "closePath", null);
-__decorate$3([
+__decorate$4([
     contextMethod()
 ], Canvas$1.prototype, "arc", null);
-__decorate$3([
+__decorate$4([
     contextMethod()
 ], Canvas$1.prototype, "arcTo", null);
-__decorate$3([
+__decorate$4([
     contextMethod()
 ], Canvas$1.prototype, "ellipse", null);
-__decorate$3([
+__decorate$4([
     contextMethod()
 ], Canvas$1.prototype, "rect", null);
-__decorate$3([
+__decorate$4([
     contextMethod()
 ], Canvas$1.prototype, "roundRect", null);
-__decorate$3([
+__decorate$4([
     contextMethod()
 ], Canvas$1.prototype, "createConicGradient", null);
-__decorate$3([
+__decorate$4([
     contextMethod()
 ], Canvas$1.prototype, "createLinearGradient", null);
-__decorate$3([
+__decorate$4([
     contextMethod()
 ], Canvas$1.prototype, "createPattern", null);
-__decorate$3([
+__decorate$4([
     contextMethod()
 ], Canvas$1.prototype, "createRadialGradient", null);
-__decorate$3([
+__decorate$4([
     contextMethod()
 ], Canvas$1.prototype, "fillText", null);
-__decorate$3([
+__decorate$4([
     contextMethod()
 ], Canvas$1.prototype, "measureText", null);
-__decorate$3([
+__decorate$4([
     contextMethod()
 ], Canvas$1.prototype, "strokeText", null);
+
+const { copy: copy$5 } = MatrixHelper;
+const minSize = { width: 1, height: 1, pixelRatio: 1 };
 const canvasSizeAttrs = ['width', 'height', 'pixelRatio'];
+class LeaferCanvasBase extends Canvas$1 {
+    get width() { return this.size.width; }
+    get height() { return this.size.height; }
+    get pixelRatio() { return this.size.pixelRatio; }
+    get pixelWidth() { return this.width * this.pixelRatio; }
+    get pixelHeight() { return this.height * this.pixelRatio; }
+    get allowBackgroundColor() { return this.view && this.parentView; }
+    constructor(config, manager) {
+        super();
+        this.size = {};
+        this.worldTransform = {};
+        if (!config)
+            config = minSize;
+        if (!config.pixelRatio)
+            config.pixelRatio = Platform.devicePixelRatio;
+        this.manager = manager;
+        this.innerId = IncrementId.create(IncrementId.CNAVAS);
+        const { width, height, pixelRatio } = config;
+        this.autoLayout = !width || !height;
+        this.size.pixelRatio = pixelRatio;
+        this.config = config;
+        this.init();
+    }
+    init() { }
+    __createContext() {
+        const { view } = this;
+        const { contextSettings } = this.config;
+        this.context = contextSettings ? view.getContext('2d', contextSettings) : view.getContext('2d');
+        this.__bindContext();
+    }
+    export(_filename, _options) { return undefined; }
+    toBlob(_type, _quality) { return undefined; }
+    toDataURL(_type, _quality) { return undefined; }
+    saveAs(_filename, _quality) { return undefined; }
+    resize(size) {
+        if (this.isSameSize(size))
+            return;
+        let takeCanvas;
+        if (this.context && !this.unreal && this.width) {
+            takeCanvas = this.getSameCanvas();
+            takeCanvas.copyWorld(this);
+        }
+        const s = this.size;
+        DataHelper.copyAttrs(s, size, canvasSizeAttrs);
+        canvasSizeAttrs.forEach(key => s[key] || (s[key] = 1));
+        this.bounds = new Bounds(0, 0, this.width, this.height);
+        if (this.context && !this.unreal) {
+            this.updateViewSize();
+            this.smooth = this.config.smooth;
+        }
+        this.updateClientBounds();
+        if (this.context && !this.unreal && takeCanvas) {
+            this.clearWorld(takeCanvas.bounds);
+            this.copyWorld(takeCanvas);
+            takeCanvas.recycle();
+        }
+    }
+    updateViewSize() { }
+    updateClientBounds() { }
+    getClientBounds(update) {
+        if (update)
+            this.updateClientBounds();
+        return this.clientBounds || this.bounds;
+    }
+    startAutoLayout(_autoBounds, _listener) { }
+    stopAutoLayout() { }
+    setCursor(_cursor) { }
+    setWorld(matrix, parentMatrix) {
+        const { pixelRatio } = this;
+        const w = this.worldTransform;
+        if (parentMatrix) {
+            const { a, b, c, d, e, f } = parentMatrix;
+            this.setTransform(w.a = ((matrix.a * a) + (matrix.b * c)) * pixelRatio, w.b = ((matrix.a * b) + (matrix.b * d)) * pixelRatio, w.c = ((matrix.c * a) + (matrix.d * c)) * pixelRatio, w.d = ((matrix.c * b) + (matrix.d * d)) * pixelRatio, w.e = (((matrix.e * a) + (matrix.f * c) + e)) * pixelRatio, w.f = (((matrix.e * b) + (matrix.f * d) + f)) * pixelRatio);
+        }
+        else {
+            this.setTransform(w.a = matrix.a * pixelRatio, w.b = matrix.b * pixelRatio, w.c = matrix.c * pixelRatio, w.d = matrix.d * pixelRatio, w.e = matrix.e * pixelRatio, w.f = matrix.f * pixelRatio);
+        }
+    }
+    useWorldTransform(worldTransform) {
+        if (worldTransform)
+            this.worldTransform = worldTransform;
+        const w = this.worldTransform;
+        if (w)
+            this.setTransform(w.a, w.b, w.c, w.d, w.e, w.f);
+    }
+    setStroke(color, strokeWidth, options) {
+        if (strokeWidth)
+            this.strokeWidth = strokeWidth;
+        if (color)
+            this.strokeStyle = color;
+        if (options)
+            this.setStrokeOptions(options);
+    }
+    setStrokeOptions(options) {
+        this.strokeCap = options.strokeCap === 'none' ? 'butt' : options.strokeCap;
+        this.strokeJoin = options.strokeJoin;
+        this.dashPattern = options.dashPattern;
+        this.dashOffset = options.dashOffset;
+        this.miterLimit = options.miterLimit;
+    }
+    saveBlendMode(blendMode) {
+        this.savedBlendMode = this.blendMode;
+        this.blendMode = blendMode;
+    }
+    restoreBlendMode() {
+        this.blendMode = this.savedBlendMode;
+    }
+    hitFill(_point, _fillRule) { return true; }
+    hitStroke(_point, _strokeWidth) { return true; }
+    hitPixel(_radiusPoint, _offset, _scale = 1) { return true; }
+    setWorldShadow(x, y, blur, color) {
+        const { pixelRatio } = this;
+        this.shadowOffsetX = x * pixelRatio;
+        this.shadowOffsetY = y * pixelRatio;
+        this.shadowBlur = blur * pixelRatio;
+        this.shadowColor = color || 'black';
+    }
+    setWorldBlur(blur) {
+        const { pixelRatio } = this;
+        this.filter = `blur(${blur * pixelRatio}px)`;
+    }
+    copyWorld(canvas, from, to, blendMode) {
+        if (blendMode)
+            this.blendMode = blendMode;
+        if (from) {
+            const { pixelRatio } = this;
+            if (!to)
+                to = from;
+            this.drawImage(canvas.view, from.x * pixelRatio, from.y * pixelRatio, from.width * pixelRatio, from.height * pixelRatio, to.x * pixelRatio, to.y * pixelRatio, to.width * pixelRatio, to.height * pixelRatio);
+        }
+        else {
+            this.drawImage(canvas.view, 0, 0);
+        }
+        if (blendMode)
+            this.blendMode = 'source-over';
+    }
+    copyWorldToInner(canvas, fromWorld, toInnerBounds, blendMode) {
+        if (blendMode)
+            this.blendMode = blendMode;
+        if (fromWorld.b || fromWorld.c) {
+            this.save();
+            this.resetTransform();
+            this.copyWorld(canvas, fromWorld, BoundsHelper.tempToOuterOf(toInnerBounds, fromWorld));
+            this.restore();
+        }
+        else {
+            const { pixelRatio } = this;
+            this.drawImage(canvas.view, fromWorld.x * pixelRatio, fromWorld.y * pixelRatio, fromWorld.width * pixelRatio, fromWorld.height * pixelRatio, toInnerBounds.x, toInnerBounds.y, toInnerBounds.width, toInnerBounds.height);
+        }
+        if (blendMode)
+            this.blendMode = 'source-over';
+    }
+    copyWorldByReset(canvas, from, to, blendMode, onlyResetTransform) {
+        this.resetTransform();
+        this.copyWorld(canvas, from, to, blendMode);
+        if (!onlyResetTransform)
+            this.useWorldTransform();
+    }
+    useGrayscaleAlpha(bounds) {
+        this.setTempBounds(bounds, true, true);
+        let alpha, pixel;
+        const { context } = this, imageData = context.getImageData(tempBounds$1.x, tempBounds$1.y, tempBounds$1.width, tempBounds$1.height), { data } = imageData;
+        for (let i = 0, len = data.length; i < len; i += 4) {
+            pixel = data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114;
+            if (alpha = data[i + 3])
+                data[i + 3] = alpha === 255 ? pixel : alpha * (pixel / 255);
+        }
+        context.putImageData(imageData, tempBounds$1.x, tempBounds$1.y);
+    }
+    useMask(maskCanvas, fromBounds, toBounds) {
+        this.copyWorld(maskCanvas, fromBounds, toBounds, 'destination-in');
+    }
+    useEraser(eraserCanvas, fromBounds, toBounds) {
+        this.copyWorld(eraserCanvas, fromBounds, toBounds, 'destination-out');
+    }
+    fillWorld(bounds, color, blendMode) {
+        if (blendMode)
+            this.blendMode = blendMode;
+        this.fillStyle = color;
+        this.setTempBounds(bounds);
+        this.fillRect(tempBounds$1.x, tempBounds$1.y, tempBounds$1.width, tempBounds$1.height);
+        if (blendMode)
+            this.blendMode = 'source-over';
+    }
+    strokeWorld(bounds, color, blendMode) {
+        if (blendMode)
+            this.blendMode = blendMode;
+        this.strokeStyle = color;
+        this.setTempBounds(bounds);
+        this.strokeRect(tempBounds$1.x, tempBounds$1.y, tempBounds$1.width, tempBounds$1.height);
+        if (blendMode)
+            this.blendMode = 'source-over';
+    }
+    clearWorld(bounds, ceilPixel) {
+        this.setTempBounds(bounds, ceilPixel);
+        this.clearRect(tempBounds$1.x, tempBounds$1.y, tempBounds$1.width, tempBounds$1.height);
+    }
+    clipWorld(bounds, ceilPixel) {
+        this.beginPath();
+        this.setTempBounds(bounds, ceilPixel);
+        this.rect(tempBounds$1.x, tempBounds$1.y, tempBounds$1.width, tempBounds$1.height);
+        this.clip();
+    }
+    clear() {
+        const { pixelRatio } = this;
+        this.clearRect(0, 0, this.width * pixelRatio + 2, this.height * pixelRatio + 2);
+    }
+    setTempBounds(bounds, ceil, intersect) {
+        tempBounds$1.set(bounds);
+        if (intersect)
+            tempBounds$1.intersect(this.bounds);
+        tempBounds$1.scale(this.pixelRatio);
+        if (ceil)
+            tempBounds$1.ceil();
+    }
+    isSameSize(size) {
+        return this.width === size.width && this.height === size.height && this.pixelRatio === size.pixelRatio;
+    }
+    getSameCanvas(useSameWorldTransform, useSameSmooth) {
+        const canvas = this.manager ? this.manager.get(this.size) : Creator.canvas(Object.assign({}, this.size));
+        canvas.save();
+        if (useSameWorldTransform)
+            copy$5(canvas.worldTransform, this.worldTransform), canvas.useWorldTransform();
+        if (useSameSmooth)
+            canvas.smooth = this.smooth;
+        return canvas;
+    }
+    recycle(clearBounds) {
+        if (!this.recycled) {
+            this.restore();
+            clearBounds ? this.clearWorld(clearBounds, true) : this.clear();
+            this.manager ? this.manager.recycle(this) : this.destroy();
+        }
+    }
+    updateRender(_bounds) { }
+    unrealCanvas() { }
+    destroy() {
+        this.manager = this.view = this.parentView = null;
+    }
+}
 
 const PathHelper = {
     creator: {},
@@ -2104,7 +2323,7 @@ const RectHelper = {
     }
 };
 
-const { sin: sin$1$1, cos: cos$1$1, atan2: atan2$1, ceil, abs: abs$1, PI: PI$3, sqrt: sqrt$1, pow } = Math;
+const { sin: sin$1$1, cos: cos$1$1, atan2: atan2$1, ceil: ceil$2, abs: abs$1$1, PI: PI$3, sqrt: sqrt$1, pow } = Math;
 const { setPoint: setPoint$1, addPoint: addPoint$1 } = TwoPointBoundsHelper;
 const { set, toNumberPoints: toNumberPoints$1 } = PointHelper;
 const { M: M$5, L: L$6, C: C$5, Q: Q$4, Z: Z$5 } = PathCommandMap;
@@ -2177,7 +2396,7 @@ const BezierHelper = {
         let totalRadian = endRadian - startRadian;
         if (totalRadian < 0)
             totalRadian += PI2;
-        if (totalRadian === PI$3 || (abs$1(BAx + BAy) < 1.e-12) || (abs$1(CBx + CBy) < 1.e-12)) {
+        if (totalRadian === PI$3 || (abs$1$1(BAx + BAy) < 1.e-12) || (abs$1$1(CBx + CBy) < 1.e-12)) {
             if (data)
                 data.push(L$6, x1, y1);
             if (setPointBounds) {
@@ -2219,7 +2438,7 @@ const BezierHelper = {
             totalRadian -= PI2;
         if (anticlockwise)
             totalRadian -= PI2;
-        const parts = ceil(abs$1(totalRadian / PI_2));
+        const parts = ceil$2(abs$1$1(totalRadian / PI_2));
         const partRadian = totalRadian / parts;
         const partRadian4Sin = sin$1$1(partRadian / 4);
         const control = 8 / 3 * partRadian4Sin * partRadian4Sin / sin$1$1(partRadian / 2);
@@ -2372,7 +2591,7 @@ const EllipseHelper = {
 const { M: M$4, m, L: L$5, l, H, h, V, v, C: C$4, c, S, s, Q: Q$3, q, T, t, A, a, Z: Z$4, z, N: N$3, D: D$3, X: X$3, G: G$3, F: F$4, O: O$3, P: P$3, U: U$3 } = PathCommandMap;
 const { rect: rect$1$1, roundRect: roundRect$2, arcTo: arcTo$3, arc: arc$3, ellipse: ellipse$3, quadraticCurveTo: quadraticCurveTo$1 } = BezierHelper;
 const { ellipticalArc } = EllipseHelper;
-const debug$5 = Debug.get('PathConvert');
+const debug$5$1 = Debug.get('PathConvert');
 const setEndPoint$1 = {};
 const PathConvert = {
     current: { dot: 0 },
@@ -2613,7 +2832,7 @@ const PathConvert = {
                     i += 6;
                     break;
                 default:
-                    debug$5.error(`command: ${command} [index:${i}]`, old);
+                    debug$5$1.error(`command: ${command} [index:${i}]`, old);
                     return data;
             }
             lastCommand = command;
@@ -2838,7 +3057,7 @@ class PathCreator {
 }
 
 const { M: M$2, L: L$3, C: C$2, Q: Q$1$1, Z: Z$2, N: N$1, D: D$1, X: X$1, G: G$1, F: F$2, O: O$1, P: P$1, U: U$1 } = PathCommandMap;
-const debug$4 = Debug.get('PathDrawer');
+const debug$4$1 = Debug.get('PathDrawer');
 const PathDrawer = {
     drawPathByData(drawer, data) {
         if (!data)
@@ -2901,7 +3120,7 @@ const PathDrawer = {
                     i += 6;
                     break;
                 default:
-                    debug$4.error(`command: ${command} [index:${i}]`, data);
+                    debug$4$1.error(`command: ${command} [index:${i}]`, data);
                     return;
             }
         }
@@ -2910,8 +3129,8 @@ const PathDrawer = {
 
 const { M: M$1$1, L: L$2, C: C$1$1, Q: Q$5, Z: Z$1$1, N: N$4, D: D$5, X: X$4, G: G$4, F: F$1, O: O$4, P: P$6, U: U$4 } = PathCommandMap;
 const { toTwoPointBounds, toTwoPointBoundsByQuadraticCurve, arcTo: arcTo$1, arc, ellipse: ellipse$6 } = BezierHelper;
-const { addPointBounds, copy: copy$4, addPoint, setPoint, addBounds, toBounds: toBounds$1 } = TwoPointBoundsHelper;
-const debug$3 = Debug.get('PathBounds');
+const { addPointBounds, copy: copy$4$1, addPoint: addPoint$4, setPoint: setPoint$3, addBounds, toBounds: toBounds$1$1 } = TwoPointBoundsHelper;
+const debug$3$1 = Debug.get('PathBounds');
 let radius, radiusX, radiusY;
 const tempPointBounds = {};
 const setPointBounds = {};
@@ -2919,21 +3138,21 @@ const setEndPoint = {};
 const PathBounds = {
     toBounds(data, setBounds) {
         PathBounds.toTwoPointBounds(data, setPointBounds);
-        toBounds$1(setPointBounds, setBounds);
+        toBounds$1$1(setPointBounds, setBounds);
     },
     toTwoPointBounds(data, setPointBounds) {
         if (!data || !data.length)
-            return setPoint(setPointBounds, 0, 0);
+            return setPoint$3(setPointBounds, 0, 0);
         let i = 0, x = 0, y = 0, x1, y1, toX, toY, command;
         const len = data.length;
         while (i < len) {
             command = data[i];
             if (i === 0) {
                 if (command === Z$1$1 || command === C$1$1 || command === Q$5) {
-                    setPoint(setPointBounds, x, y);
+                    setPoint$3(setPointBounds, x, y);
                 }
                 else {
-                    setPoint(setPointBounds, data[i + 1], data[i + 2]);
+                    setPoint$3(setPointBounds, data[i + 1], data[i + 2]);
                 }
             }
             switch (command) {
@@ -2941,7 +3160,7 @@ const PathBounds = {
                 case L$2:
                     x = data[i + 1];
                     y = data[i + 2];
-                    addPoint(setPointBounds, x, y);
+                    addPoint$4(setPointBounds, x, y);
                     i += 3;
                     break;
                 case C$1$1:
@@ -2982,7 +3201,7 @@ const PathBounds = {
                     break;
                 case G$4:
                     ellipse$6(null, data[i + 1], data[i + 2], data[i + 3], data[i + 4], data[i + 5], data[i + 6], data[i + 7], data[i + 8], tempPointBounds, setEndPoint);
-                    i === 0 ? copy$4(setPointBounds, tempPointBounds) : addPointBounds(setPointBounds, tempPointBounds);
+                    i === 0 ? copy$4$1(setPointBounds, tempPointBounds) : addPointBounds(setPointBounds, tempPointBounds);
                     x = setEndPoint.x;
                     y = setEndPoint.y;
                     i += 9;
@@ -2998,7 +3217,7 @@ const PathBounds = {
                     break;
                 case O$4:
                     arc(null, data[i + 1], data[i + 2], data[i + 3], data[i + 4], data[i + 5], data[i + 6], tempPointBounds, setEndPoint);
-                    i === 0 ? copy$4(setPointBounds, tempPointBounds) : addPointBounds(setPointBounds, tempPointBounds);
+                    i === 0 ? copy$4$1(setPointBounds, tempPointBounds) : addPointBounds(setPointBounds, tempPointBounds);
                     x = setEndPoint.x;
                     y = setEndPoint.y;
                     i += 7;
@@ -3013,13 +3232,13 @@ const PathBounds = {
                     break;
                 case U$4:
                     arcTo$1(null, x, y, data[i + 1], data[i + 2], data[i + 3], data[i + 4], data[i + 5], tempPointBounds, setEndPoint);
-                    i === 0 ? copy$4(setPointBounds, tempPointBounds) : addPointBounds(setPointBounds, tempPointBounds);
+                    i === 0 ? copy$4$1(setPointBounds, tempPointBounds) : addPointBounds(setPointBounds, tempPointBounds);
                     x = setEndPoint.x;
                     y = setEndPoint.y;
                     i += 6;
                     break;
                 default:
-                    debug$3.error(`command: ${command} [index:${i}]`, data);
+                    debug$3$1.error(`command: ${command} [index:${i}]`, data);
                     return;
             }
         }
@@ -3092,6 +3311,19 @@ PathHelper.parse = PathConvert.parse;
 PathHelper.convertToCanvasData = PathConvert.toCanvasData;
 const pen = new PathCreator();
 
+const { drawRoundRect } = RectHelper;
+function roundRect(drawer) {
+    if (drawer && !drawer.roundRect) {
+        drawer.roundRect = function (x, y, width, height, cornerRadius) {
+            drawRoundRect(this, x, y, width, height, cornerRadius);
+        };
+    }
+}
+
+function canvasPatch(drawer) {
+    roundRect(drawer);
+}
+
 const FileHelper = {
     opacityTypes: ['png', 'webp', 'svg'],
     upperCaseTypeMap: {},
@@ -3131,7 +3363,7 @@ class TaskItem {
         this.task = task;
     }
     run() {
-        return __awaiter(this, void 0, void 0, function* () {
+        return __awaiter$1(this, void 0, void 0, function* () {
             try {
                 if (this.task && !this.isComplete && this.parent.running)
                     yield this.task();
@@ -3375,12 +3607,12 @@ const ImageManager = {
     recycledList: [],
     tasker: new TaskProcessor(),
     patternTasker: new TaskProcessor(),
-    get isComplete() { return I.tasker.isComplete; },
+    get isComplete() { return I$2.tasker.isComplete; },
     get(config) {
-        let image = I.map[config.url];
+        let image = I$2.map[config.url];
         if (!image) {
             image = Creator.image(config);
-            I.map[config.url] = image;
+            I$2.map[config.url] = image;
         }
         image.use++;
         return image;
@@ -3388,14 +3620,14 @@ const ImageManager = {
     recycle(image) {
         image.use--;
         setTimeout(() => { if (!image.use)
-            I.recycledList.push(image); });
+            I$2.recycledList.push(image); });
     },
     clearRecycled() {
-        const list = I.recycledList;
+        const list = I$2.recycledList;
         if (list.length > 100) {
             list.forEach(image => {
                 if (!image.use && image.url) {
-                    delete I.map[image.url];
+                    delete I$2.map[image.url];
                     image.destroy();
                 }
             });
@@ -3403,7 +3635,7 @@ const ImageManager = {
         }
     },
     hasOpacityPixel(config) {
-        return FileHelper.opacityTypes.some(item => I.isFormat(item, config));
+        return FileHelper.opacityTypes.some(item => I$2.isFormat(item, config));
     },
     isFormat(format, config) {
         if (config.format === format)
@@ -3422,11 +3654,11 @@ const ImageManager = {
         return false;
     },
     destroy() {
-        I.map = {};
-        I.recycledList = [];
+        I$2.map = {};
+        I$2.recycledList = [];
     }
 };
-const I = ImageManager;
+const I$2 = ImageManager;
 
 const { IMAGE, create: create$1 } = IncrementId;
 class LeaferImage {
@@ -3443,7 +3675,7 @@ class LeaferImage {
     load(onSuccess, onError) {
         if (!this.loading) {
             this.loading = true;
-            ImageManager.tasker.add(() => __awaiter(this, void 0, void 0, function* () {
+            ImageManager.tasker.add(() => __awaiter$1(this, void 0, void 0, function* () {
                 return yield Platform.origin.loadImage(this.url).then((img) => {
                     this.ready = true;
                     this.width = img.naturalWidth || img.width;
@@ -3804,7 +4036,7 @@ function defineDataProcessor(target, key, defaultValue) {
     defineKey(data, key, property);
 }
 
-const debug$1$2 = new Debug('rewrite');
+const debug$1$3 = new Debug('rewrite');
 const list$2 = [];
 const excludeNames = ['destroy', 'constructor'];
 function rewrite(method) {
@@ -3821,7 +4053,7 @@ function doRewrite(error) {
     if (list$2.length) {
         list$2.forEach(item => {
             if (error)
-                debug$1$2.error(item.name, '需在Class上装饰@rewriteAble()');
+                debug$1$3.error(item.name, '需在Class上装饰@rewriteAble()');
             item.run();
         });
         list$2.length = 0;
@@ -3857,17 +4089,17 @@ function registerUIEvent() {
     };
 }
 
-const { copy: copy$3$1, toInnerPoint: toInnerPoint$1, toOuterPoint: toOuterPoint$1, scaleOfOuter, rotateOfOuter, skewOfOuter, multiplyParent: multiplyParent$2, divideParent, getLayout } = MatrixHelper;
+const { copy: copy$3$1, toInnerPoint: toInnerPoint$1, toOuterPoint: toOuterPoint$1, scaleOfOuter: scaleOfOuter$2, rotateOfOuter: rotateOfOuter$2, skewOfOuter, multiplyParent: multiplyParent$2, divideParent, getLayout } = MatrixHelper;
 const matrix$3 = {};
 const LeafHelper = {
     updateAllMatrix(leaf, checkAutoLayout, waitAutoLayout) {
         if (checkAutoLayout && leaf.__hasAutoLayout && leaf.__layout.matrixChanged)
             waitAutoLayout = true;
-        updateMatrix$1(leaf, checkAutoLayout, waitAutoLayout);
+        updateMatrix$1$1(leaf, checkAutoLayout, waitAutoLayout);
         if (leaf.isBranch) {
             const { children } = leaf;
             for (let i = 0, len = children.length; i < len; i++) {
-                updateAllMatrix$1(children[i], checkAutoLayout, waitAutoLayout);
+                updateAllMatrix$1$1(children[i], checkAutoLayout, waitAutoLayout);
             }
         }
     },
@@ -3900,17 +4132,17 @@ const LeafHelper = {
         if (leaf.isBranch) {
             const { children } = leaf;
             for (let i = 0, len = children.length; i < len; i++) {
-                updateAllWorldOpacity(children[i]);
+                updateAllWorldOpacity$1(children[i]);
             }
         }
     },
     updateAllChange(leaf) {
-        updateAllWorldOpacity(leaf);
+        updateAllWorldOpacity$1(leaf);
         leaf.__updateChange();
         if (leaf.isBranch) {
             const { children } = leaf;
             for (let i = 0, len = children.length; i < len; i++) {
-                updateAllChange(children[i]);
+                updateAllChange$1(children[i]);
             }
         }
     },
@@ -3942,7 +4174,7 @@ const LeafHelper = {
     },
     zoomOfLocal(t, origin, scaleX, scaleY = scaleX, resize) {
         copy$3$1(matrix$3, t.__localMatrix);
-        scaleOfOuter(matrix$3, origin, scaleX, scaleY);
+        scaleOfOuter$2(matrix$3, origin, scaleX, scaleY);
         if (t.origin || t.around) {
             L$7.setTransform(t, matrix$3, resize);
         }
@@ -3956,7 +4188,7 @@ const LeafHelper = {
     },
     rotateOfLocal(t, origin, angle) {
         copy$3$1(matrix$3, t.__localMatrix);
-        rotateOfOuter(matrix$3, origin, angle);
+        rotateOfOuter$2(matrix$3, origin, angle);
         if (t.origin || t.around) {
             L$7.setTransform(t, matrix$3);
         }
@@ -4002,7 +4234,7 @@ const LeafHelper = {
     getFlipTransform(t, axis) {
         const m = getMatrixData();
         const sign = axis === 'x' ? 1 : -1;
-        scaleOfOuter(m, L$7.getLocalOrigin(t, 'center'), -1 * sign, 1 * sign);
+        scaleOfOuter$2(m, L$7.getLocalOrigin(t, 'center'), -1 * sign, 1 * sign);
         return m;
     },
     getLocalOrigin(t, origin) {
@@ -4033,7 +4265,7 @@ const LeafHelper = {
     }
 };
 const L$7 = LeafHelper;
-const { updateAllMatrix: updateAllMatrix$1, updateMatrix: updateMatrix$1, updateAllWorldOpacity, updateAllChange } = L$7;
+const { updateAllMatrix: updateAllMatrix$1$1, updateMatrix: updateMatrix$1$1, updateAllWorldOpacity: updateAllWorldOpacity$1, updateAllChange: updateAllChange$1 } = L$7;
 function moveByMatrix(t, matrix) {
     const { e, f } = t.__localMatrix;
     t.x += matrix.e - e;
@@ -4089,7 +4321,7 @@ const BranchHelper = {
                 if (branch.isBranch) {
                     branch.__tempNumber = 1;
                     leafList.add(branch);
-                    pushAllChildBranch(branch, leafList);
+                    pushAllChildBranch$1(branch, leafList);
                 }
             }
         }
@@ -4145,7 +4377,7 @@ const BranchHelper = {
         }
     }
 };
-const { pushAllChildBranch, pushAllBranchStack, updateBoundsByBranchStack } = BranchHelper;
+const { pushAllChildBranch: pushAllChildBranch$1, pushAllBranchStack, updateBoundsByBranchStack } = BranchHelper;
 
 const WaitHelper = {
     run(wait) {
@@ -4728,8 +4960,8 @@ function __getListenerMap(eventer, capture, create) {
     }
 }
 
-const { on, on_, off, off_, once, emit, emitEvent, hasEvent, destroy } = Eventer.prototype;
-const LeafEventer = { on, on_, off, off_, once, emit, emitEvent, hasEvent, destroyEventer: destroy };
+const { on, on_, off, off_, once, emit: emit$2, emitEvent: emitEvent$1, hasEvent, destroy } = Eventer.prototype;
+const LeafEventer = { on, on_, off, off_, once, emit: emit$2, emitEvent: emitEvent$1, hasEvent, destroyEventer: destroy };
 
 const { isFinite } = Number;
 const debug$9 = Debug.get('setAttr');
@@ -4780,7 +5012,7 @@ const LeafDataProxy = {
 };
 
 const { setLayout, multiplyParent: multiplyParent$1, translateInner, defaultWorld } = MatrixHelper;
-const { toPoint: toPoint$1, tempPoint } = AroundHelper;
+const { toPoint: toPoint$4, tempPoint: tempPoint$2 } = AroundHelper;
 const LeafMatrix = {
     __updateWorldMatrix() {
         multiplyParent$1(this.__local || this.__layout, this.parent ? this.parent.__world : defaultWorld, this.__world, !!this.__layout.affectScaleOrRotation, this.__, this.parent && this.parent.__);
@@ -4797,17 +5029,17 @@ const LeafMatrix = {
             local.e = data.x + data.offsetX;
             local.f = data.y + data.offsetY;
             if (data.around || data.origin) {
-                toPoint$1(data.around || data.origin, layout.boxBounds, tempPoint);
-                translateInner(local, -tempPoint.x, -tempPoint.y, !data.around);
+                toPoint$4(data.around || data.origin, layout.boxBounds, tempPoint$2);
+                translateInner(local, -tempPoint$2.x, -tempPoint$2.y, !data.around);
             }
         }
         this.__layout.matrixChanged = false;
     }
 };
 
-const { updateMatrix: updateMatrix$2, updateAllMatrix } = LeafHelper;
-const { updateBounds } = BranchHelper;
-const { toOuterOf: toOuterOf$1, copyAndSpread: copyAndSpread$1, copy: copy$1$1 } = BoundsHelper;
+const { updateMatrix: updateMatrix$2, updateAllMatrix: updateAllMatrix$2 } = LeafHelper;
+const { updateBounds: updateBounds$2 } = BranchHelper;
+const { toOuterOf: toOuterOf$1, copyAndSpread: copyAndSpread$1, copy: copy$1$2 } = BoundsHelper;
 const { toBounds: toBounds$3 } = PathBounds;
 const LeafBounds = {
     __updateWorldBounds() {
@@ -4907,14 +5139,14 @@ const LeafBounds = {
             if (this.__.flow) {
                 if (this.__layout.boxChanged)
                     this.__updateFlowLayout();
-                updateAllMatrix(this);
-                updateBounds(this, this);
+                updateAllMatrix$2(this);
+                updateBounds$2(this, this);
                 if (this.__.__autoSide)
                     this.__updateBoxBounds(true);
             }
             else {
-                updateAllMatrix(this);
-                updateBounds(this, this);
+                updateAllMatrix$2(this);
+                updateBounds$2(this, this);
             }
         }
         else {
@@ -4932,7 +5164,7 @@ const LeafBounds = {
     },
     __updateRenderBounds() {
         const layout = this.__layout;
-        layout.renderSpread > 0 ? copyAndSpread$1(layout.renderBounds, layout.boxBounds, layout.renderSpread) : copy$1$1(layout.renderBounds, layout.strokeBounds);
+        layout.renderSpread > 0 ? copyAndSpread$1(layout.renderBounds, layout.boxBounds, layout.renderSpread) : copy$1$2(layout.renderBounds, layout.strokeBounds);
     }
 };
 
@@ -4973,7 +5205,7 @@ const LeafRender = {
     }
 };
 
-const { excludeRenderBounds } = LeafBoundsHelper;
+const { excludeRenderBounds: excludeRenderBounds$1 } = LeafBoundsHelper;
 const BranchRender = {
     __updateChange() {
         const { __layout: layout } = this;
@@ -5008,7 +5240,7 @@ const BranchRender = {
         else {
             const { children } = this;
             for (let i = 0, len = children.length; i < len; i++) {
-                if (excludeRenderBounds(children[i], options))
+                if (excludeRenderBounds$1(children[i], options))
                     continue;
                 children[i].__render(canvas, options);
             }
@@ -5018,7 +5250,7 @@ const BranchRender = {
         if (this.__worldOpacity) {
             const { children } = this;
             for (let i = 0, len = children.length; i < len; i++) {
-                if (excludeRenderBounds(children[i], options))
+                if (excludeRenderBounds$1(children[i], options))
                     continue;
                 children[i].__clip(canvas, options);
             }
@@ -5029,7 +5261,7 @@ const BranchRender = {
 const { LEAF, create } = IncrementId;
 const { toInnerPoint, toOuterPoint, multiplyParent } = MatrixHelper;
 const { toOuterOf } = BoundsHelper;
-const { copy: copy$5, move: move$1 } = PointHelper;
+const { copy: copy$8, move: move$1 } = PointHelper;
 const { moveLocal, zoomOfLocal, rotateOfLocal, skewOfLocal, moveWorld, zoomOfWorld, rotateOfWorld, skewOfWorld, transform, transformWorld, setTransform, getFlipTransform, getLocalOrigin, getRelativeWorld, drop } = LeafHelper;
 let Leaf = class Leaf {
     get tag() { return this.__tag; }
@@ -5235,7 +5467,7 @@ let Leaf = class Leaf {
         }
         else {
             if (to)
-                copy$5(to, world);
+                copy$8(to, world);
         }
     }
     localToWorld(local, to, distance, relative) {
@@ -5244,7 +5476,7 @@ let Leaf = class Leaf {
         }
         else {
             if (to)
-                copy$5(to, local);
+                copy$8(to, local);
         }
     }
     worldToInner(world, to, distance, relative) {
@@ -5427,7 +5659,7 @@ let Leaf = class Leaf {
         }
     }
 };
-Leaf = __decorate$3([
+Leaf = __decorate$4([
     useModule(LeafDataProxy),
     useModule(LeafMatrix),
     useModule(LeafBounds),
@@ -5575,7 +5807,7 @@ let Branch = class Branch extends Leaf {
         this.leafer.emitEvent(event);
     }
 };
-Branch = __decorate$3([
+Branch = __decorate$4([
     useModule(BranchRender)
 ], Branch);
 
@@ -5672,6 +5904,66 @@ class LeafList {
     }
 }
 
+class LeafLevelList {
+    get length() { return this._length; }
+    constructor(item) {
+        this._length = 0;
+        this.reset();
+        if (item)
+            item instanceof Array ? this.addList(item) : this.add(item);
+    }
+    has(leaf) {
+        return this.keys[leaf.innerId] !== undefined;
+    }
+    without(leaf) {
+        return this.keys[leaf.innerId] === undefined;
+    }
+    sort(reverse) {
+        const { levels } = this;
+        if (reverse) {
+            levels.sort((a, b) => b - a);
+        }
+        else {
+            levels.sort((a, b) => a - b);
+        }
+    }
+    addList(list) {
+        list.forEach(leaf => { this.add(leaf); });
+    }
+    add(leaf) {
+        const { keys, levelMap } = this;
+        if (!keys[leaf.innerId]) {
+            keys[leaf.innerId] = 1;
+            if (!levelMap[leaf.__level]) {
+                levelMap[leaf.__level] = [leaf];
+                this.levels.push(leaf.__level);
+            }
+            else {
+                levelMap[leaf.__level].push(leaf);
+            }
+            this._length++;
+        }
+    }
+    forEach(itemCallback) {
+        let list;
+        this.levels.forEach(level => {
+            list = this.levelMap[level];
+            for (let i = 0, len = list.length; i < len; i++) {
+                itemCallback(list[i]);
+            }
+        });
+    }
+    reset() {
+        this.levelMap = {};
+        this.keys = {};
+        this.levels = [];
+        this._length = 0;
+    }
+    destroy() {
+        this.levelMap = null;
+    }
+}
+
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
 
@@ -5689,7 +5981,7 @@ PERFORMANCE OF THIS SOFTWARE.
 /* global Reflect, Promise, SuppressedError, Symbol */
 
 
-function __decorate$2(decorators, target, key, desc) {
+function __decorate$3(decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
@@ -5736,6 +6028,7 @@ function zoomLayerType() {
 }
 
 const TextConvert = {};
+const ColorConvert = {};
 const UnitConvert = {
     number(value, percentRefer) {
         if (typeof value === 'object')
@@ -5746,12 +6039,17 @@ const UnitConvert = {
 const PathArrow = {};
 const Paint = {};
 const PaintImage = {};
+const PaintGradient = {};
 const Effect = {};
 const Export = {};
+const State = {
+    setStyleName(_leaf, _styleName, _value) { return needPlugin('state'); },
+    set(_leaf, _stateName) { return needPlugin('state'); }
+};
 
 const { parse, objectToCanvasData } = PathConvert;
 const emptyPaint = {};
-const debug$1$1 = Debug.get('UIData');
+const debug$1$2 = Debug.get('UIData');
 class UIData extends LeafData {
     get scale() { const { scaleX, scaleY } = this; return scaleX !== scaleY ? { x: scaleX, y: scaleY } : scaleX; }
     get __strokeWidth() {
@@ -5788,7 +6086,7 @@ class UIData extends LeafData {
         if (value < 0) {
             this._width = -value;
             this.__leaf.scaleX *= -1;
-            debug$1$1.warn('width < 0, instead -scaleX ', this);
+            debug$1$2.warn('width < 0, instead -scaleX ', this);
         }
         else
             this._width = value;
@@ -5797,7 +6095,7 @@ class UIData extends LeafData {
         if (value < 0) {
             this._height = -value;
             this.__leaf.scaleY *= -1;
-            debug$1$1.warn('height < 0, instead -scaleY', this);
+            debug$1$2.warn('height < 0, instead -scaleY', this);
         }
         else
             this._height = value;
@@ -6269,205 +6567,205 @@ let UI = UI_1 = class UI extends Leaf {
         super.destroy();
     }
 };
-__decorate$2([
+__decorate$3([
     dataProcessor(UIData)
 ], UI.prototype, "__", void 0);
-__decorate$2([
+__decorate$3([
     zoomLayerType()
 ], UI.prototype, "zoomLayer", void 0);
-__decorate$2([
+__decorate$3([
     dataType('')
 ], UI.prototype, "id", void 0);
-__decorate$2([
+__decorate$3([
     dataType('')
 ], UI.prototype, "name", void 0);
-__decorate$2([
+__decorate$3([
     dataType('')
 ], UI.prototype, "className", void 0);
-__decorate$2([
+__decorate$3([
     surfaceType('pass-through')
 ], UI.prototype, "blendMode", void 0);
-__decorate$2([
+__decorate$3([
     opacityType(1)
 ], UI.prototype, "opacity", void 0);
-__decorate$2([
+__decorate$3([
     visibleType(true)
 ], UI.prototype, "visible", void 0);
-__decorate$2([
+__decorate$3([
     surfaceType(false)
 ], UI.prototype, "locked", void 0);
-__decorate$2([
+__decorate$3([
     sortType(0)
 ], UI.prototype, "zIndex", void 0);
-__decorate$2([
+__decorate$3([
     maskType(false)
 ], UI.prototype, "mask", void 0);
-__decorate$2([
+__decorate$3([
     eraserType(false)
 ], UI.prototype, "eraser", void 0);
-__decorate$2([
+__decorate$3([
     positionType(0, true)
 ], UI.prototype, "x", void 0);
-__decorate$2([
+__decorate$3([
     positionType(0, true)
 ], UI.prototype, "y", void 0);
-__decorate$2([
+__decorate$3([
     boundsType(100, true)
 ], UI.prototype, "width", void 0);
-__decorate$2([
+__decorate$3([
     boundsType(100, true)
 ], UI.prototype, "height", void 0);
-__decorate$2([
+__decorate$3([
     scaleType(1, true)
 ], UI.prototype, "scaleX", void 0);
-__decorate$2([
+__decorate$3([
     scaleType(1, true)
 ], UI.prototype, "scaleY", void 0);
-__decorate$2([
+__decorate$3([
     rotationType(0, true)
 ], UI.prototype, "rotation", void 0);
-__decorate$2([
+__decorate$3([
     rotationType(0, true)
 ], UI.prototype, "skewX", void 0);
-__decorate$2([
+__decorate$3([
     rotationType(0, true)
 ], UI.prototype, "skewY", void 0);
-__decorate$2([
+__decorate$3([
     positionType(0, true)
 ], UI.prototype, "offsetX", void 0);
-__decorate$2([
+__decorate$3([
     positionType(0, true)
 ], UI.prototype, "offsetY", void 0);
-__decorate$2([
+__decorate$3([
     positionType(0, true)
 ], UI.prototype, "scrollX", void 0);
-__decorate$2([
+__decorate$3([
     positionType(0, true)
 ], UI.prototype, "scrollY", void 0);
-__decorate$2([
+__decorate$3([
     autoLayoutType()
 ], UI.prototype, "origin", void 0);
-__decorate$2([
+__decorate$3([
     autoLayoutType()
 ], UI.prototype, "around", void 0);
-__decorate$2([
+__decorate$3([
     dataType(false)
 ], UI.prototype, "lazy", void 0);
-__decorate$2([
+__decorate$3([
     naturalBoundsType(1)
 ], UI.prototype, "pixelRatio", void 0);
-__decorate$2([
+__decorate$3([
     pathInputType()
 ], UI.prototype, "path", void 0);
-__decorate$2([
+__decorate$3([
     pathType()
 ], UI.prototype, "windingRule", void 0);
-__decorate$2([
+__decorate$3([
     pathType(true)
 ], UI.prototype, "closed", void 0);
-__decorate$2([
+__decorate$3([
     boundsType(0)
 ], UI.prototype, "padding", void 0);
-__decorate$2([
+__decorate$3([
     boundsType(false)
 ], UI.prototype, "lockRatio", void 0);
-__decorate$2([
+__decorate$3([
     boundsType()
 ], UI.prototype, "widthRange", void 0);
-__decorate$2([
+__decorate$3([
     boundsType()
 ], UI.prototype, "heightRange", void 0);
-__decorate$2([
+__decorate$3([
     dataType(false)
 ], UI.prototype, "draggable", void 0);
-__decorate$2([
+__decorate$3([
     dataType()
 ], UI.prototype, "dragBounds", void 0);
-__decorate$2([
+__decorate$3([
     dataType(false)
 ], UI.prototype, "editable", void 0);
-__decorate$2([
+__decorate$3([
     hitType(true)
 ], UI.prototype, "hittable", void 0);
-__decorate$2([
+__decorate$3([
     hitType('path')
 ], UI.prototype, "hitFill", void 0);
-__decorate$2([
+__decorate$3([
     strokeType('path')
 ], UI.prototype, "hitStroke", void 0);
-__decorate$2([
+__decorate$3([
     hitType(false)
 ], UI.prototype, "hitBox", void 0);
-__decorate$2([
+__decorate$3([
     hitType(true)
 ], UI.prototype, "hitChildren", void 0);
-__decorate$2([
+__decorate$3([
     hitType(true)
 ], UI.prototype, "hitSelf", void 0);
-__decorate$2([
+__decorate$3([
     hitType()
 ], UI.prototype, "hitRadius", void 0);
-__decorate$2([
+__decorate$3([
     cursorType('')
 ], UI.prototype, "cursor", void 0);
-__decorate$2([
+__decorate$3([
     surfaceType()
 ], UI.prototype, "fill", void 0);
-__decorate$2([
+__decorate$3([
     strokeType()
 ], UI.prototype, "stroke", void 0);
-__decorate$2([
+__decorate$3([
     strokeType('inside')
 ], UI.prototype, "strokeAlign", void 0);
-__decorate$2([
+__decorate$3([
     strokeType(1)
 ], UI.prototype, "strokeWidth", void 0);
-__decorate$2([
+__decorate$3([
     strokeType(false)
 ], UI.prototype, "strokeWidthFixed", void 0);
-__decorate$2([
+__decorate$3([
     strokeType('none')
 ], UI.prototype, "strokeCap", void 0);
-__decorate$2([
+__decorate$3([
     strokeType('miter')
 ], UI.prototype, "strokeJoin", void 0);
-__decorate$2([
+__decorate$3([
     strokeType()
 ], UI.prototype, "dashPattern", void 0);
-__decorate$2([
+__decorate$3([
     strokeType()
 ], UI.prototype, "dashOffset", void 0);
-__decorate$2([
+__decorate$3([
     strokeType(10)
 ], UI.prototype, "miterLimit", void 0);
-__decorate$2([
+__decorate$3([
     pathType(0)
 ], UI.prototype, "cornerRadius", void 0);
-__decorate$2([
+__decorate$3([
     pathType()
 ], UI.prototype, "cornerSmoothing", void 0);
-__decorate$2([
+__decorate$3([
     effectType()
 ], UI.prototype, "shadow", void 0);
-__decorate$2([
+__decorate$3([
     effectType()
 ], UI.prototype, "innerShadow", void 0);
-__decorate$2([
+__decorate$3([
     effectType()
 ], UI.prototype, "blur", void 0);
-__decorate$2([
+__decorate$3([
     effectType()
 ], UI.prototype, "backgroundBlur", void 0);
-__decorate$2([
+__decorate$3([
     effectType()
 ], UI.prototype, "grayscale", void 0);
-__decorate$2([
+__decorate$3([
     dataType({})
 ], UI.prototype, "data", void 0);
-__decorate$2([
+__decorate$3([
     rewrite(Leaf.prototype.reset)
 ], UI.prototype, "reset", null);
-UI = UI_1 = __decorate$2([
+UI = UI_1 = __decorate$3([
     useModule(UIBounds),
     useModule(UIRender),
     rewriteAble()
@@ -6520,16 +6818,16 @@ let Group = class Group extends UI {
     removeAll(_destroy) { }
     clear() { }
 };
-__decorate$2([
+__decorate$3([
     dataProcessor(GroupData)
 ], Group.prototype, "__", void 0);
-Group = __decorate$2([
+Group = __decorate$3([
     useModule(Branch),
     registerUI()
 ], Group);
 
 var Leafer_1;
-const debug$2 = Debug.get('Leafer');
+const debug$6 = Debug.get('Leafer');
 let Leafer = Leafer_1 = class Leafer extends Group {
     get __tag() { return 'Leafer'; }
     get isApp() { return false; }
@@ -6693,7 +6991,7 @@ let Leafer = Leafer_1 = class Leafer extends Group {
         if (this.canvas) {
             if (canvasSizeAttrs.includes(attrName)) {
                 if (!newValue)
-                    debug$2.warn(attrName + ' is 0');
+                    debug$6.warn(attrName + ' is 0');
                 this.__changeCanvasSize(attrName, newValue);
             }
             else if (attrName === 'fill') {
@@ -6873,7 +7171,7 @@ let Leafer = Leafer_1 = class Leafer extends Group {
                     setTimeout(() => { ImageManager.clearRecycled(); }, 100);
                 }
                 catch (e) {
-                    debug$2.error(e);
+                    debug$6.error(e);
                 }
             }
         };
@@ -6881,13 +7179,13 @@ let Leafer = Leafer_1 = class Leafer extends Group {
     }
 };
 Leafer.list = new LeafList();
-__decorate$2([
+__decorate$3([
     dataProcessor(LeaferData)
 ], Leafer.prototype, "__", void 0);
-__decorate$2([
+__decorate$3([
     boundsType()
 ], Leafer.prototype, "pixelRatio", void 0);
-Leafer = Leafer_1 = __decorate$2([
+Leafer = Leafer_1 = __decorate$3([
     registerUI()
 ], Leafer);
 
@@ -6897,16 +7195,16 @@ let Rect = class Rect extends UI {
         super(data);
     }
 };
-__decorate$2([
+__decorate$3([
     dataProcessor(RectData)
 ], Rect.prototype, "__", void 0);
-Rect = __decorate$2([
+Rect = __decorate$3([
     useModule(RectRender),
     rewriteAble(),
     registerUI()
 ], Rect);
 
-const { copy: copy$3, add, includes: includes$1 } = BoundsHelper;
+const { copy: copy$4, add, includes: includes$1 } = BoundsHelper;
 const rect$1 = Rect.prototype, group$1 = Group.prototype;
 const childrenRenderBounds = {};
 let Box = class Box extends Group {
@@ -6950,7 +7248,7 @@ let Box = class Box extends Group {
         const { renderBounds } = this.__layout;
         if (this.children.length) {
             super.__updateRenderBounds();
-            copy$3(childrenRenderBounds, renderBounds);
+            copy$4(childrenRenderBounds, renderBounds);
             this.__updateRectRenderBounds();
             isOverflow = !includes$1(renderBounds, childrenRenderBounds);
             if (isOverflow && this.__.overflow !== 'hide')
@@ -6986,40 +7284,40 @@ let Box = class Box extends Group {
         }
     }
 };
-__decorate$2([
+__decorate$3([
     dataProcessor(BoxData)
 ], Box.prototype, "__", void 0);
-__decorate$2([
+__decorate$3([
     dataType(false)
 ], Box.prototype, "resizeChildren", void 0);
-__decorate$2([
+__decorate$3([
     affectRenderBoundsType('show')
 ], Box.prototype, "overflow", void 0);
-__decorate$2([
+__decorate$3([
     rewrite(rect$1.__updateStrokeSpread)
 ], Box.prototype, "__updateStrokeSpread", null);
-__decorate$2([
+__decorate$3([
     rewrite(rect$1.__updateRenderSpread)
 ], Box.prototype, "__updateRectRenderSpread", null);
-__decorate$2([
+__decorate$3([
     rewrite(rect$1.__updateBoxBounds)
 ], Box.prototype, "__updateRectBoxBounds", null);
-__decorate$2([
+__decorate$3([
     rewrite(rect$1.__updateStrokeBounds)
 ], Box.prototype, "__updateStrokeBounds", null);
-__decorate$2([
+__decorate$3([
     rewrite(rect$1.__updateRenderBounds)
 ], Box.prototype, "__updateRectRenderBounds", null);
-__decorate$2([
+__decorate$3([
     rewrite(rect$1.__updateChange)
 ], Box.prototype, "__updateRectChange", null);
-__decorate$2([
+__decorate$3([
     rewrite(rect$1.__render)
 ], Box.prototype, "__renderRect", null);
-__decorate$2([
+__decorate$3([
     rewrite(group$1.__render)
 ], Box.prototype, "__renderGroup", null);
-Box = __decorate$2([
+Box = __decorate$3([
     rewriteAble(),
     registerUI()
 ], Box);
@@ -7031,16 +7329,16 @@ let Frame = class Frame extends Box {
         super(data);
     }
 };
-__decorate$2([
+__decorate$3([
     dataProcessor(FrameData)
 ], Frame.prototype, "__", void 0);
-__decorate$2([
+__decorate$3([
     surfaceType('#FFFFFF')
 ], Frame.prototype, "fill", void 0);
-__decorate$2([
+__decorate$3([
     affectRenderBoundsType('hide')
 ], Frame.prototype, "overflow", void 0);
-Frame = __decorate$2([
+Frame = __decorate$3([
     registerUI()
 ], Frame);
 
@@ -7084,25 +7382,25 @@ let Ellipse = class Ellipse extends UI {
         }
     }
 };
-__decorate$2([
+__decorate$3([
     dataProcessor(EllipseData)
 ], Ellipse.prototype, "__", void 0);
-__decorate$2([
+__decorate$3([
     pathType(0)
 ], Ellipse.prototype, "innerRadius", void 0);
-__decorate$2([
+__decorate$3([
     pathType(0)
 ], Ellipse.prototype, "startAngle", void 0);
-__decorate$2([
+__decorate$3([
     pathType(0)
 ], Ellipse.prototype, "endAngle", void 0);
-Ellipse = __decorate$2([
+Ellipse = __decorate$3([
     registerUI()
 ], Ellipse);
 
 const { moveTo: moveTo$2, lineTo: lineTo$2, drawPoints: drawPoints$1 } = PathCommandDataHelper;
-const { rotate, getAngle, getDistance, defaultPoint } = PointHelper;
-const { toBounds } = PathBounds;
+const { rotate: rotate$1, getAngle: getAngle$1, getDistance: getDistance$2, defaultPoint } = PointHelper;
+const { toBounds: toBounds$1 } = PathBounds;
 let Line = class Line extends UI {
     get __tag() { return 'Line'; }
     get toPoint() {
@@ -7111,12 +7409,12 @@ let Line = class Line extends UI {
         if (width)
             to.x = width;
         if (rotation)
-            rotate(to, rotation);
+            rotate$1(to, rotation);
         return to;
     }
     set toPoint(value) {
-        this.width = getDistance(defaultPoint, value);
-        this.rotation = getAngle(defaultPoint, value);
+        this.width = getDistance$2(defaultPoint, value);
+        this.rotation = getAngle$1(defaultPoint, value);
         if (this.height)
             this.height = 0;
     }
@@ -7146,31 +7444,31 @@ let Line = class Line extends UI {
     }
     __updateBoxBounds() {
         if (this.points) {
-            toBounds(this.__.__pathForRender, this.__layout.boxBounds);
+            toBounds$1(this.__.__pathForRender, this.__layout.boxBounds);
         }
         else
             super.__updateBoxBounds();
     }
 };
-__decorate$2([
+__decorate$3([
     dataProcessor(LineData)
 ], Line.prototype, "__", void 0);
-__decorate$2([
+__decorate$3([
     affectStrokeBoundsType('center')
 ], Line.prototype, "strokeAlign", void 0);
-__decorate$2([
+__decorate$3([
     boundsType(0)
 ], Line.prototype, "height", void 0);
-__decorate$2([
+__decorate$3([
     pathType()
 ], Line.prototype, "points", void 0);
-__decorate$2([
+__decorate$3([
     pathType(0)
 ], Line.prototype, "curve", void 0);
-__decorate$2([
+__decorate$3([
     pathType(false)
 ], Line.prototype, "closed", void 0);
-Line = __decorate$2([
+Line = __decorate$3([
     registerUI()
 ], Line);
 
@@ -7200,25 +7498,25 @@ let Polygon = class Polygon extends UI {
     __updateRenderPath() { }
     __updateBoxBounds() { }
 };
-__decorate$2([
+__decorate$3([
     dataProcessor(PolygonData)
 ], Polygon.prototype, "__", void 0);
-__decorate$2([
+__decorate$3([
     pathType(3)
 ], Polygon.prototype, "sides", void 0);
-__decorate$2([
+__decorate$3([
     pathType()
 ], Polygon.prototype, "points", void 0);
-__decorate$2([
+__decorate$3([
     pathType(0)
 ], Polygon.prototype, "curve", void 0);
-__decorate$2([
+__decorate$3([
     rewrite(line.__updateRenderPath)
 ], Polygon.prototype, "__updateRenderPath", null);
-__decorate$2([
+__decorate$3([
     rewrite(line.__updateBoxBounds)
 ], Polygon.prototype, "__updateBoxBounds", null);
-Polygon = __decorate$2([
+Polygon = __decorate$3([
     rewriteAble(),
     registerUI()
 ], Polygon);
@@ -7241,20 +7539,20 @@ let Star = class Star extends UI {
         closePath(path);
     }
 };
-__decorate$2([
+__decorate$3([
     dataProcessor(StarData)
 ], Star.prototype, "__", void 0);
-__decorate$2([
+__decorate$3([
     pathType(5)
 ], Star.prototype, "corners", void 0);
-__decorate$2([
+__decorate$3([
     pathType(0.382)
 ], Star.prototype, "innerRadius", void 0);
-Star = __decorate$2([
+Star = __decorate$3([
     registerUI()
 ], Star);
 
-let Image = class Image extends Rect {
+let Image$1 = class Image extends Rect {
     get __tag() { return 'Image'; }
     get ready() { return this.image ? this.image.ready : false; }
     constructor(data) {
@@ -7269,15 +7567,15 @@ let Image = class Image extends Rect {
         super.destroy();
     }
 };
-__decorate$2([
+__decorate$3([
     dataProcessor(ImageData)
-], Image.prototype, "__", void 0);
-__decorate$2([
+], Image$1.prototype, "__", void 0);
+__decorate$3([
     boundsType('')
-], Image.prototype, "url", void 0);
-Image = __decorate$2([
+], Image$1.prototype, "url", void 0);
+Image$1 = __decorate$3([
     registerUI()
-], Image);
+], Image$1);
 
 let Canvas = class Canvas extends Rect {
     get __tag() { return 'Canvas'; }
@@ -7334,29 +7632,29 @@ let Canvas = class Canvas extends Rect {
         super.destroy();
     }
 };
-__decorate$2([
+__decorate$3([
     dataProcessor(CanvasData)
 ], Canvas.prototype, "__", void 0);
-__decorate$2([
+__decorate$3([
     resizeType(100)
 ], Canvas.prototype, "width", void 0);
-__decorate$2([
+__decorate$3([
     resizeType(100)
 ], Canvas.prototype, "height", void 0);
-__decorate$2([
+__decorate$3([
     resizeType(1)
 ], Canvas.prototype, "pixelRatio", void 0);
-__decorate$2([
+__decorate$3([
     resizeType(true)
 ], Canvas.prototype, "smooth", void 0);
-__decorate$2([
+__decorate$3([
     resizeType()
 ], Canvas.prototype, "contextSettings", void 0);
-Canvas = __decorate$2([
+Canvas = __decorate$3([
     registerUI()
 ], Canvas);
 
-const { copyAndSpread, includes, isSame, spread, setList } = BoundsHelper;
+const { copyAndSpread, includes, isSame: isSame$1, spread, setList } = BoundsHelper;
 let Text = class Text extends UI {
     get __tag() { return 'Text'; }
     get textDrawData() {
@@ -7422,7 +7720,7 @@ let Text = class Text extends UI {
         if (italic)
             b.width += fontSize * 0.16;
         const contentBounds = includes(b, bounds) ? b : bounds;
-        if (!isSame(contentBounds, layout.contentBounds)) {
+        if (!isSame$1(contentBounds, layout.contentBounds)) {
             layout.contentBounds = contentBounds;
             layout.renderChanged = true;
             setList(data.__textBoxBounds = {}, [b, bounds]);
@@ -7440,76 +7738,76 @@ let Text = class Text extends UI {
         copyAndSpread(this.__layout.renderBounds, this.__.__textBoxBounds, this.__layout.renderSpread);
     }
 };
-__decorate$2([
+__decorate$3([
     dataProcessor(TextData)
 ], Text.prototype, "__", void 0);
-__decorate$2([
+__decorate$3([
     boundsType(0)
 ], Text.prototype, "width", void 0);
-__decorate$2([
+__decorate$3([
     boundsType(0)
 ], Text.prototype, "height", void 0);
-__decorate$2([
+__decorate$3([
     dataType(false)
 ], Text.prototype, "resizeFontSize", void 0);
-__decorate$2([
+__decorate$3([
     surfaceType('#000000')
 ], Text.prototype, "fill", void 0);
-__decorate$2([
+__decorate$3([
     affectStrokeBoundsType('outside')
 ], Text.prototype, "strokeAlign", void 0);
-__decorate$2([
+__decorate$3([
     hitType('all')
 ], Text.prototype, "hitFill", void 0);
-__decorate$2([
+__decorate$3([
     boundsType('')
 ], Text.prototype, "text", void 0);
-__decorate$2([
+__decorate$3([
     boundsType('L')
 ], Text.prototype, "fontFamily", void 0);
-__decorate$2([
+__decorate$3([
     boundsType(12)
 ], Text.prototype, "fontSize", void 0);
-__decorate$2([
+__decorate$3([
     boundsType('normal')
 ], Text.prototype, "fontWeight", void 0);
-__decorate$2([
+__decorate$3([
     boundsType(false)
 ], Text.prototype, "italic", void 0);
-__decorate$2([
+__decorate$3([
     boundsType('none')
 ], Text.prototype, "textCase", void 0);
-__decorate$2([
+__decorate$3([
     boundsType('none')
 ], Text.prototype, "textDecoration", void 0);
-__decorate$2([
+__decorate$3([
     boundsType(0)
 ], Text.prototype, "letterSpacing", void 0);
-__decorate$2([
+__decorate$3([
     boundsType({ type: 'percent', value: 1.5 })
 ], Text.prototype, "lineHeight", void 0);
-__decorate$2([
+__decorate$3([
     boundsType(0)
 ], Text.prototype, "paraIndent", void 0);
-__decorate$2([
+__decorate$3([
     boundsType(0)
 ], Text.prototype, "paraSpacing", void 0);
-__decorate$2([
+__decorate$3([
     boundsType('left')
 ], Text.prototype, "textAlign", void 0);
-__decorate$2([
+__decorate$3([
     boundsType('top')
 ], Text.prototype, "verticalAlign", void 0);
-__decorate$2([
+__decorate$3([
     boundsType(true)
 ], Text.prototype, "autoSizeAlign", void 0);
-__decorate$2([
+__decorate$3([
     boundsType('normal')
 ], Text.prototype, "textWrap", void 0);
-__decorate$2([
+__decorate$3([
     boundsType('show')
 ], Text.prototype, "textOverflow", void 0);
-Text = __decorate$2([
+Text = __decorate$3([
     registerUI()
 ], Text);
 
@@ -7519,13 +7817,13 @@ let Path = class Path extends UI {
         super(data);
     }
 };
-__decorate$2([
+__decorate$3([
     dataProcessor(PathData)
 ], Path.prototype, "__", void 0);
-__decorate$2([
+__decorate$3([
     affectStrokeBoundsType('center')
 ], Path.prototype, "strokeAlign", void 0);
-Path = __decorate$2([
+Path = __decorate$3([
     registerUI()
 ], Path);
 
@@ -7561,13 +7859,13 @@ let Pen = class Pen extends Group {
             this.pathElement.forceUpdate('path');
     }
 };
-__decorate$2([
+__decorate$3([
     dataProcessor(PenData)
 ], Pen.prototype, "__", void 0);
-__decorate$2([
+__decorate$3([
     penPathType()
 ], Pen.prototype, "path", void 0);
-Pen = __decorate$2([
+Pen = __decorate$3([
     useModule(PathCreator, ['set', 'path', 'paint']),
     registerUI()
 ], Pen);
@@ -7596,7 +7894,7 @@ PERFORMANCE OF THIS SOFTWARE.
 /* global Reflect, Promise, SuppressedError, Symbol */
 
 
-function __decorate$1(decorators, target, key, desc) {
+function __decorate$2(decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
@@ -7731,7 +8029,7 @@ let App = class App extends Leafer {
             this.__eventIds.push(leafer.on_(RenderEvent.END, this.__onChildRenderEnd, this));
     }
 };
-App = __decorate$1([
+App = __decorate$2([
     registerUI()
 ], App);
 
@@ -7814,7 +8112,7 @@ PointerEvent.LONG_PRESS = 'long_press';
 PointerEvent.LONG_TAP = 'long_tap';
 PointerEvent.MENU = 'pointer.menu';
 PointerEvent.MENU_TAP = 'pointer.menu_tap';
-PointerEvent = __decorate$1([
+PointerEvent = __decorate$2([
     registerUIEvent()
 ], PointerEvent);
 
@@ -7913,7 +8211,7 @@ DragEvent.OVER = 'drag.over';
 DragEvent.OUT = 'drag.out';
 DragEvent.ENTER = 'drag.enter';
 DragEvent.LEAVE = 'drag.leave';
-DragEvent = __decorate$1([
+DragEvent = __decorate$2([
     registerUIEvent()
 ], DragEvent);
 
@@ -7926,7 +8224,7 @@ let DropEvent = class DropEvent extends PointerEvent {
     }
 };
 DropEvent.DROP = 'drop';
-DropEvent = __decorate$1([
+DropEvent = __decorate$2([
     registerUIEvent()
 ], DropEvent);
 
@@ -7936,7 +8234,7 @@ MoveEvent.BEFORE_MOVE = 'move.before_move';
 MoveEvent.START = 'move.start';
 MoveEvent.MOVE = 'move';
 MoveEvent.END = 'move.end';
-MoveEvent = __decorate$1([
+MoveEvent = __decorate$2([
     registerUIEvent()
 ], MoveEvent);
 
@@ -7946,7 +8244,7 @@ RotateEvent.BEFORE_ROTATE = 'rotate.before_rotate';
 RotateEvent.START = 'rotate.start';
 RotateEvent.ROTATE = 'rotate';
 RotateEvent.END = 'rotate.end';
-RotateEvent = __decorate$1([
+RotateEvent = __decorate$2([
     registerUIEvent()
 ], RotateEvent);
 
@@ -7957,7 +8255,7 @@ SwipeEvent.LEFT = 'swipe.left';
 SwipeEvent.RIGHT = 'swipe.right';
 SwipeEvent.UP = 'swipe.up';
 SwipeEvent.DOWN = 'swipe.down';
-SwipeEvent = __decorate$1([
+SwipeEvent = __decorate$2([
     registerUIEvent()
 ], SwipeEvent);
 
@@ -7967,7 +8265,7 @@ ZoomEvent.BEFORE_ZOOM = 'zoom.before_zoom';
 ZoomEvent.START = 'zoom.start';
 ZoomEvent.ZOOM = 'zoom';
 ZoomEvent.END = 'zoom.end';
-ZoomEvent = __decorate$1([
+ZoomEvent = __decorate$2([
     registerUIEvent()
 ], ZoomEvent);
 
@@ -7976,7 +8274,7 @@ let KeyEvent = class KeyEvent extends UIEvent {
 KeyEvent.DOWN = 'key.down';
 KeyEvent.HOLD = 'key.hold';
 KeyEvent.UP = 'key.up';
-KeyEvent = __decorate$1([
+KeyEvent = __decorate$2([
     registerUIEvent()
 ], KeyEvent);
 
@@ -7995,7 +8293,7 @@ function addInteractionWindow(leafer) {
     }));
 }
 
-function document(leafer) {
+function document$1(leafer) {
     addInteractionWindow(leafer);
     const { move, zoom } = leafer.config;
     move.scroll = 'limit';
@@ -8008,11 +8306,11 @@ function block(leafer) {
     (config.touch || (config.touch = {})).preventDefault = 'auto';
 }
 
-const debug$1 = Debug.get('LeaferTypeCreator');
+const debug$1$1 = Debug.get('LeaferTypeCreator');
 const LeaferTypeCreator = {
     list: {},
     register(name, fn) {
-        list$1[name] && debug$1.repeat(name);
+        list$1[name] && debug$1$1.repeat(name);
         list$1[name] = fn;
     },
     run(name, leafer) {
@@ -8022,7 +8320,7 @@ const LeaferTypeCreator = {
 };
 const { list: list$1, register } = LeaferTypeCreator;
 register('design', addInteractionWindow);
-register('document', document);
+register('document', document$1);
 register('block', block);
 
 const leafer$1 = Leafer.prototype;
@@ -8065,16 +8363,955 @@ leafer$1.getValidScale = function (changeScale) {
     return disabled ? 1 : changeScale;
 };
 
-new LeafList();
+class Transformer {
+    get transforming() { return !!(this.moveData || this.zoomData || this.rotateData); }
+    constructor(interaction) {
+        this.interaction = interaction;
+    }
+    move(data) {
+        const { interaction } = this;
+        if (!data.moveType)
+            data.moveType = 'move';
+        if (!this.moveData) {
+            const { path } = interaction.selector.getByPoint(data, interaction.hitRadius);
+            data.path = path;
+            this.moveData = Object.assign(Object.assign({}, data), { moveX: 0, moveY: 0 });
+            interaction.cancelHover();
+            interaction.emit(MoveEvent.START, this.moveData);
+        }
+        data.path = this.moveData.path;
+        interaction.emit(MoveEvent.BEFORE_MOVE, data);
+        interaction.emit(MoveEvent.MOVE, data);
+        this.transformEndWait();
+    }
+    zoom(data) {
+        const { interaction } = this;
+        if (!this.zoomData) {
+            const { path } = interaction.selector.getByPoint(data, interaction.hitRadius);
+            data.path = path;
+            this.zoomData = Object.assign(Object.assign({}, data), { scale: 1 });
+            interaction.cancelHover();
+            interaction.emit(ZoomEvent.START, this.zoomData);
+        }
+        data.path = this.zoomData.path;
+        interaction.emit(ZoomEvent.BEFORE_ZOOM, data);
+        interaction.emit(ZoomEvent.ZOOM, data);
+        this.transformEndWait();
+    }
+    rotate(data) {
+        const { interaction } = this;
+        if (!this.rotateData) {
+            const { path } = interaction.selector.getByPoint(data, interaction.hitRadius);
+            data.path = path;
+            this.rotateData = Object.assign(Object.assign({}, data), { rotation: 0 });
+            interaction.cancelHover();
+            interaction.emit(RotateEvent.START, this.rotateData);
+        }
+        data.path = this.rotateData.path;
+        interaction.emit(RotateEvent.BEFORE_ROTATE, data);
+        interaction.emit(RotateEvent.ROTATE, data);
+        this.transformEndWait();
+    }
+    transformEndWait() {
+        clearTimeout(this.transformTimer);
+        this.transformTimer = setTimeout(() => {
+            this.transformEnd();
+        }, this.interaction.config.pointer.transformTime);
+    }
+    transformEnd() {
+        this.moveEnd();
+        this.zoomEnd();
+        this.rotateEnd();
+    }
+    moveEnd() {
+        if (this.moveData) {
+            this.interaction.emit(MoveEvent.END, this.moveData);
+            this.moveData = null;
+        }
+    }
+    zoomEnd() {
+        if (this.zoomData) {
+            this.interaction.emit(ZoomEvent.END, this.zoomData);
+            this.zoomData = null;
+        }
+    }
+    rotateEnd() {
+        if (this.rotateData) {
+            this.interaction.emit(RotateEvent.END, this.rotateData);
+            this.rotateData = null;
+        }
+    }
+    destroy() {
+        this.zoomData = this.moveData = this.rotateData = null;
+    }
+}
 
-const { toInnerRadiusPointOf, copy: copy$2, setRadius } = PointHelper;
+const InteractionHelper = {
+    getMoveEventData(center, move, event) {
+        return Object.assign(Object.assign({}, event), { x: center.x, y: center.y, moveX: move.x, moveY: move.y });
+    },
+    getRotateEventData(center, angle, event) {
+        return Object.assign(Object.assign({}, event), { x: center.x, y: center.y, rotation: angle });
+    },
+    getZoomEventData(center, scale, event) {
+        return Object.assign(Object.assign({}, event), { x: center.x, y: center.y, scale });
+    },
+    getDragEventData(startPoint, lastPoint, event) {
+        return Object.assign(Object.assign({}, event), { x: event.x, y: event.y, moveX: event.x - lastPoint.x, moveY: event.y - lastPoint.y, totalX: event.x - startPoint.x, totalY: event.y - startPoint.y });
+    },
+    getDropEventData(event, list, data) {
+        return Object.assign(Object.assign({}, event), { list,
+            data });
+    },
+    getSwipeDirection(angle) {
+        if (angle < -45 && angle > -135) {
+            return SwipeEvent.UP;
+        }
+        else if (angle > 45 && angle < 135) {
+            return SwipeEvent.DOWN;
+        }
+        else if (angle <= 45 && angle >= -45) {
+            return SwipeEvent.RIGHT;
+        }
+        else {
+            return SwipeEvent.LEFT;
+        }
+    },
+    getSwipeEventData(startPoint, lastDragData, event) {
+        return Object.assign(Object.assign({}, event), { moveX: lastDragData.moveX, moveY: lastDragData.moveY, totalX: event.x - startPoint.x, totalY: event.y - startPoint.y, type: I.getSwipeDirection(PointHelper.getAngle(startPoint, event)) });
+    },
+    getBase(e) {
+        const pointerUpButtons = e.button === 1 ? 4 : e.button;
+        return {
+            altKey: e.altKey,
+            ctrlKey: e.ctrlKey,
+            shiftKey: e.shiftKey,
+            metaKey: e.metaKey,
+            buttons: e.buttons === undefined ? 1 : (e.buttons === 0 ? pointerUpButtons : e.buttons),
+            origin: e
+        };
+    },
+    pathHasEventType(path, type) {
+        const { list } = path;
+        for (let i = 0, len = list.length; i < len; i++) {
+            if (list[i].hasEvent(type))
+                return true;
+        }
+        return false;
+    },
+    filterPathByEventType(path, type) {
+        const find = new LeafList();
+        const { list } = path;
+        for (let i = 0, len = list.length; i < len; i++) {
+            if (list[i].hasEvent(type))
+                find.add(list[i]);
+        }
+        return find;
+    },
+    pathCanDrag(path) {
+        return path && path.list.some(item => item.draggable || item.editable || (!item.isLeafer && item.hasEvent(DragEvent.DRAG)));
+    },
+    pathHasOutside(path) {
+        return path && path.list.some(item => item.isOutside);
+    },
+};
+const I = InteractionHelper;
+
+const emptyList = new LeafList();
+const { getDragEventData, getDropEventData, getSwipeEventData } = InteractionHelper;
+class Dragger {
+    constructor(interaction) {
+        this.interaction = interaction;
+    }
+    setDragData(data) {
+        if (this.animateWait)
+            this.dragEndReal();
+        this.downData = this.interaction.downData;
+        this.dragData = getDragEventData(data, data, data);
+        this.canAnimate = this.canDragOut = true;
+    }
+    getList(realDraggable, hover) {
+        const { proxy } = this.interaction.selector;
+        const hasProxyList = proxy && proxy.list.length, dragList = DragEvent.list || this.draggableList || emptyList;
+        return this.dragging && (hasProxyList ? (realDraggable ? emptyList : new LeafList(hover ? [...proxy.list, ...proxy.dragHoverExclude] : proxy.list)) : dragList);
+    }
+    checkDrag(data, canDrag) {
+        const { interaction } = this;
+        if (this.moving && data.buttons < 1) {
+            this.canAnimate = false;
+            interaction.pointerCancel();
+            return;
+        }
+        if (!this.moving && canDrag) {
+            if (this.moving = interaction.canMove(this.downData) || interaction.isHoldRightKey || interaction.isMobileDragEmpty) {
+                this.dragData.moveType = 'drag';
+                interaction.emit(MoveEvent.START, this.dragData);
+            }
+        }
+        if (!this.moving) {
+            this.dragStart(data, canDrag);
+        }
+        this.drag(data);
+    }
+    dragStart(data, canDrag) {
+        if (!this.dragging) {
+            this.dragging = canDrag && PointerButton.left(data);
+            if (this.dragging) {
+                this.interaction.emit(DragEvent.START, this.dragData);
+                this.getDraggableList(this.dragData.path);
+                this.setDragStartPoints(this.realDraggableList = this.getList(true));
+            }
+        }
+    }
+    setDragStartPoints(list) {
+        this.dragStartPoints = {};
+        list.forEach(leaf => this.dragStartPoints[leaf.innerId] = { x: leaf.x, y: leaf.y });
+    }
+    getDraggableList(path) {
+        let leaf;
+        for (let i = 0, len = path.length; i < len; i++) {
+            leaf = path.list[i];
+            if ((leaf.draggable || leaf.editable) && leaf.hitSelf && !leaf.locked) {
+                this.draggableList = new LeafList(leaf);
+                break;
+            }
+        }
+    }
+    drag(data) {
+        const { interaction, dragData, downData } = this;
+        const { path, throughPath } = downData;
+        this.dragData = getDragEventData(downData, dragData, data);
+        if (throughPath)
+            this.dragData.throughPath = throughPath;
+        this.dragData.path = path;
+        if (this.moving) {
+            this.dragData.moveType = 'drag';
+            interaction.emit(MoveEvent.BEFORE_MOVE, this.dragData);
+            interaction.emit(MoveEvent.MOVE, this.dragData);
+        }
+        else if (this.dragging) {
+            this.dragReal();
+            interaction.emit(DragEvent.BEFORE_DRAG, this.dragData);
+            interaction.emit(DragEvent.DRAG, this.dragData);
+        }
+    }
+    dragReal() {
+        const { running } = this.interaction;
+        const list = this.realDraggableList;
+        if (list.length && running) {
+            const { totalX, totalY } = this.dragData;
+            list.forEach(leaf => leaf.draggable && leaf.move(DragEvent.getValidMove(leaf, this.dragStartPoints[leaf.innerId], { x: totalX, y: totalY })));
+        }
+    }
+    dragOverOrOut(data) {
+        const { interaction } = this;
+        const { dragOverPath } = this;
+        const { path } = data;
+        this.dragOverPath = path;
+        if (dragOverPath) {
+            if (path.indexAt(0) !== dragOverPath.indexAt(0)) {
+                interaction.emit(DragEvent.OUT, data, dragOverPath);
+                interaction.emit(DragEvent.OVER, data, path);
+            }
+        }
+        else
+            interaction.emit(DragEvent.OVER, data, path);
+    }
+    dragEnterOrLeave(data) {
+        const { interaction } = this;
+        const { dragEnterPath } = this;
+        const { path } = data;
+        interaction.emit(DragEvent.LEAVE, data, dragEnterPath, path);
+        interaction.emit(DragEvent.ENTER, data, path, dragEnterPath);
+        this.dragEnterPath = path;
+    }
+    dragEnd(data, speed) {
+        if (!this.dragging && !this.moving)
+            return;
+        const { moveX, moveY } = this.dragData;
+        if (this.interaction.config.move.dragAnimate && this.canAnimate && this.moving && (Math.abs(moveX) > 1 || Math.abs(moveY) > 1)) {
+            data = Object.assign({}, data);
+            speed = (speed || (data.pointerType === 'touch' ? 2 : 1)) * 0.9;
+            PointHelper.move(data, moveX * speed, moveY * speed);
+            this.drag(data);
+            this.animate(() => { this.dragEnd(data, 1); });
+        }
+        else
+            this.dragEndReal(data);
+    }
+    dragEndReal(data) {
+        const { interaction, downData, dragData } = this;
+        if (!data)
+            data = dragData;
+        const { path, throughPath } = downData;
+        const endDragData = getDragEventData(downData, data, data);
+        if (throughPath)
+            endDragData.throughPath = throughPath;
+        endDragData.path = path;
+        if (this.moving) {
+            this.moving = false;
+            endDragData.moveType = 'drag';
+            interaction.emit(MoveEvent.END, endDragData);
+        }
+        if (this.dragging) {
+            const dropList = this.getList();
+            this.dragging = false;
+            interaction.emit(DragEvent.END, endDragData);
+            this.swipe(data, downData, dragData, endDragData);
+            this.drop(data, dropList, this.dragEnterPath);
+        }
+        this.autoMoveCancel();
+        this.dragReset();
+        this.animate(null, 'off');
+    }
+    animate(func, off) {
+        const animateWait = func || this.animateWait;
+        if (animateWait)
+            this.interaction.target.nextRender(animateWait, null, off);
+        this.animateWait = func;
+    }
+    swipe(data, downData, dragData, endDragData) {
+        const { interaction } = this;
+        if (PointHelper.getDistance(downData, data) > interaction.config.pointer.swipeDistance) {
+            const swipeData = getSwipeEventData(downData, dragData, endDragData);
+            this.interaction.emit(swipeData.type, swipeData);
+        }
+    }
+    drop(data, dropList, dragEnterPath) {
+        const dropData = getDropEventData(data, dropList, DragEvent.data);
+        dropData.path = dragEnterPath;
+        this.interaction.emit(DropEvent.DROP, dropData);
+        this.interaction.emit(DragEvent.LEAVE, data, dragEnterPath);
+    }
+    dragReset() {
+        DragEvent.list = DragEvent.data = this.draggableList = this.dragData = this.downData = this.dragOverPath = this.dragEnterPath = null;
+    }
+    checkDragOut(data) {
+        const { interaction } = this;
+        this.autoMoveCancel();
+        if (this.dragging && !interaction.shrinkCanvasBounds.hitPoint(data))
+            this.autoMoveOnDragOut(data);
+    }
+    autoMoveOnDragOut(data) {
+        const { interaction, downData, canDragOut } = this;
+        const { autoDistance, dragOut } = interaction.config.move;
+        if (!dragOut || !canDragOut || !autoDistance)
+            return;
+        const bounds = interaction.shrinkCanvasBounds;
+        const { x, y } = bounds;
+        const right = BoundsHelper.maxX(bounds);
+        const bottom = BoundsHelper.maxY(bounds);
+        const moveX = data.x < x ? autoDistance : (right < data.x ? -autoDistance : 0);
+        const moveY = data.y < y ? autoDistance : (bottom < data.y ? -autoDistance : 0);
+        let totalX = 0, totalY = 0;
+        this.autoMoveTimer = setInterval(() => {
+            totalX += moveX;
+            totalY += moveY;
+            PointHelper.move(downData, moveX, moveY);
+            PointHelper.move(this.dragData, moveX, moveY);
+            interaction.move(Object.assign(Object.assign({}, data), { moveX, moveY, totalX, totalY, moveType: 'drag' }));
+            interaction.pointerMoveReal(data);
+        }, 10);
+    }
+    autoMoveCancel() {
+        if (this.autoMoveTimer) {
+            clearInterval(this.autoMoveTimer);
+            this.autoMoveTimer = 0;
+        }
+    }
+    destroy() {
+        this.dragReset();
+    }
+}
+
+const debug$5 = Debug.get('emit');
+function emit$1(type, data, path, excludePath) {
+    if (!path && !data.path)
+        return;
+    let leaf;
+    data.type = type;
+    if (path) {
+        data = Object.assign(Object.assign({}, data), { path });
+    }
+    else {
+        path = data.path;
+    }
+    data.target = path.indexAt(0);
+    try {
+        for (let i = path.length - 1; i > -1; i--) {
+            leaf = path.list[i];
+            if (emitEvent(leaf, type, data, true, excludePath))
+                return;
+            if (leaf.isApp)
+                emitAppChildren(leaf, type, data, true, excludePath);
+        }
+        for (let i = 0, len = path.length; i < len; i++) {
+            leaf = path.list[i];
+            if (leaf.isApp)
+                emitAppChildren(leaf, type, data, false, excludePath);
+            if (emitEvent(leaf, type, data, false, excludePath))
+                return;
+        }
+    }
+    catch (e) {
+        debug$5.error(e);
+    }
+}
+const allowTypes = ['move', 'zoom', 'rotate', 'key'];
+function emitAppChildren(leaf, type, data, capture, excludePath) {
+    if (allowTypes.some(name => type.startsWith(name)) && leaf.__.hitChildren && !exclude(leaf, excludePath)) {
+        let child;
+        for (let i = 0, len = leaf.children.length; i < len; i++) {
+            child = leaf.children[i];
+            if (!data.path.has(child) && child.__.hittable)
+                emitEvent(child, type, data, capture, excludePath);
+        }
+    }
+}
+function emitEvent(leaf, type, data, capture, excludePath) {
+    if (leaf.destroyed)
+        return false;
+    if (leaf.__.hitSelf && !exclude(leaf, excludePath)) {
+        if (State.updateEventStyle && !capture)
+            State.updateEventStyle(leaf, type);
+        if (leaf.hasEvent(type, capture)) {
+            data.phase = capture ? 1 : ((leaf === data.target) ? 2 : 3);
+            const event = EventCreator.get(type, data);
+            leaf.emitEvent(event, capture);
+            if (event.isStop)
+                return true;
+        }
+    }
+    return false;
+}
+function exclude(leaf, excludePath) {
+    return excludePath && excludePath.has(leaf);
+}
+
+const MultiTouchHelper = {
+    getData(list) {
+        const a = list[0];
+        const b = list[1];
+        const lastCenter = PointHelper.getCenter(a.from, b.from);
+        const center = PointHelper.getCenter(a.to, b.to);
+        const move = { x: center.x - lastCenter.x, y: center.y - lastCenter.y };
+        const lastDistance = PointHelper.getDistance(a.from, b.from);
+        const distance = PointHelper.getDistance(a.to, b.to);
+        const scale = distance / lastDistance;
+        const angle = PointHelper.getRotation(a.from, b.from, a.to, b.to);
+        return { move, scale, angle, center };
+    }
+};
+
+const config$1 = {
+    wheel: {
+        zoomSpeed: 0.5,
+        moveSpeed: 0.5,
+        rotateSpeed: 0.5,
+        delta: { x: 80 / 4, y: 8.0 },
+        preventDefault: true
+    },
+    pointer: {
+        hitRadius: 5,
+        tapTime: 120,
+        longPressTime: 800,
+        transformTime: 500,
+        hover: true,
+        dragHover: true,
+        dragDistance: 2,
+        swipeDistance: 20,
+        preventDefaultMenu: true
+    },
+    touch: {
+        preventDefault: true
+    },
+    multiTouch: {},
+    cursor: true,
+    keyEvent: true
+};
+
+const { pathHasEventType, getMoveEventData: getMoveEventData$1, getZoomEventData: getZoomEventData$1, getRotateEventData: getRotateEventData$1, pathCanDrag: pathCanDrag$1, pathHasOutside } = InteractionHelper;
+class InteractionBase {
+    get dragging() { return this.dragger.dragging; }
+    get transforming() { return this.transformer.transforming; }
+    get moveMode() { return this.m.drag === true || this.isHoldSpaceKey || this.isHoldMiddleKey || (this.isHoldRightKey && this.dragger.moving) || this.isDragEmpty; }
+    get canHover() { return this.p.hover && !this.config.mobile; }
+    get isDragEmpty() { return this.m.dragEmpty && this.isRootPath(this.hoverData) && (!this.downData || this.isRootPath(this.downData)); }
+    get isMobileDragEmpty() { return this.m.dragEmpty && !this.canHover && this.downData && this.isTreePath(this.downData); }
+    get isHoldMiddleKey() { return this.m.holdMiddleKey && this.downData && PointerButton.middle(this.downData); }
+    get isHoldRightKey() { return this.m.holdRightKey && this.downData && PointerButton.right(this.downData); }
+    get isHoldSpaceKey() { return this.m.holdSpaceKey && Keyboard.isHoldSpaceKey(); }
+    get m() { return this.config.move; }
+    get p() { return this.config.pointer; }
+    get hitRadius() { return this.p.hitRadius; }
+    constructor(target, canvas, selector, userConfig) {
+        this.config = DataHelper.clone(config$1);
+        this.tapCount = 0;
+        this.downKeyMap = {};
+        this.target = target;
+        this.canvas = canvas;
+        this.selector = selector;
+        this.defaultPath = new LeafList(target);
+        this.transformer = new Transformer(this);
+        this.dragger = new Dragger(this);
+        if (userConfig)
+            this.config = DataHelper.default(userConfig, this.config);
+        this.__listenEvents();
+    }
+    start() {
+        this.running = true;
+    }
+    stop() {
+        this.running = false;
+    }
+    receive(_event) { }
+    pointerDown(data, useDefaultPath) {
+        if (!data)
+            data = this.hoverData;
+        if (!data)
+            return;
+        PointerButton.defaultLeft(data);
+        this.updateDownData(data);
+        this.checkPath(data, useDefaultPath);
+        this.downTime = Date.now();
+        this.emit(PointerEvent.BEFORE_DOWN, data);
+        this.emit(PointerEvent.DOWN, data);
+        if (PointerButton.left(data)) {
+            this.tapWait();
+            this.longPressWait(data);
+        }
+        this.waitRightTap = PointerButton.right(data);
+        this.dragger.setDragData(data);
+        if (!this.isHoldRightKey)
+            this.updateCursor(data);
+    }
+    pointerMove(data) {
+        if (!data)
+            data = this.hoverData;
+        if (!data)
+            return;
+        const { downData } = this;
+        if (downData)
+            PointerButton.defaultLeft(data);
+        const hit = this.canvas.bounds.hitPoint(data);
+        if (hit || downData) {
+            this.pointerMoveReal(data);
+            if (downData)
+                this.dragger.checkDragOut(data);
+        }
+    }
+    pointerMoveReal(data) {
+        const { dragHover, dragDistance } = this.p;
+        this.emit(PointerEvent.BEFORE_MOVE, data, this.defaultPath);
+        if (this.downData) {
+            const canDrag = PointHelper.getDistance(this.downData, data) > dragDistance;
+            if (canDrag) {
+                if (this.waitTap)
+                    this.pointerWaitCancel();
+                this.waitRightTap = false;
+            }
+            this.dragger.checkDrag(data, canDrag);
+        }
+        if (!this.dragger.moving) {
+            this.updateHoverData(data);
+            this.checkPath(data);
+            this.emit(PointerEvent.MOVE, data);
+            if (!(this.dragging && !dragHover))
+                this.pointerHover(data);
+            if (this.dragger.dragging) {
+                this.dragger.dragOverOrOut(data);
+                this.dragger.dragEnterOrLeave(data);
+            }
+        }
+        this.updateCursor(this.downData || data);
+    }
+    pointerUp(data) {
+        const { downData } = this;
+        if (!data)
+            data = downData;
+        if (!downData)
+            return;
+        PointerButton.defaultLeft(data);
+        data.multiTouch = downData.multiTouch;
+        this.findPath(data);
+        const upData = Object.assign(Object.assign({}, data), { path: data.path.clone() });
+        data.path.addList(downData.path.list);
+        this.checkPath(data);
+        this.downData = null;
+        this.emit(PointerEvent.BEFORE_UP, data);
+        this.emit(PointerEvent.UP, data);
+        this.touchLeave(data);
+        if (!data.isCancel) {
+            this.tap(data);
+            this.menuTap(data);
+        }
+        this.dragger.dragEnd(data);
+        this.updateCursor(upData);
+    }
+    pointerCancel() {
+        const data = Object.assign({}, this.dragger.dragData);
+        data.isCancel = true;
+        this.pointerUp(data);
+    }
+    multiTouch(data, list) {
+        if (this.config.multiTouch.disabled)
+            return;
+        const { move, angle, scale, center } = MultiTouchHelper.getData(list);
+        this.rotate(getRotateEventData$1(center, angle, data));
+        this.zoom(getZoomEventData$1(center, scale, data));
+        this.move(getMoveEventData$1(center, move, data));
+    }
+    menu(data) {
+        this.findPath(data);
+        this.emit(PointerEvent.MENU, data);
+        this.waitMenuTap = true;
+        if (!this.downData && this.waitRightTap)
+            this.menuTap(data);
+    }
+    menuTap(data) {
+        if (this.waitRightTap && this.waitMenuTap) {
+            this.emit(PointerEvent.MENU_TAP, data);
+            this.waitRightTap = this.waitMenuTap = false;
+        }
+    }
+    move(data) {
+        this.transformer.move(data);
+    }
+    zoom(data) {
+        this.transformer.zoom(data);
+    }
+    rotate(data) {
+        this.transformer.rotate(data);
+    }
+    transformEnd() {
+        this.transformer.transformEnd();
+    }
+    keyDown(data) {
+        if (!this.config.keyEvent)
+            return;
+        const { code } = data;
+        if (!this.downKeyMap[code]) {
+            this.downKeyMap[code] = true;
+            Keyboard.setDownCode(code);
+            this.emit(KeyEvent.HOLD, data, this.defaultPath);
+            if (this.moveMode) {
+                this.cancelHover();
+                this.updateCursor();
+            }
+        }
+        this.emit(KeyEvent.DOWN, data, this.defaultPath);
+    }
+    keyUp(data) {
+        if (!this.config.keyEvent)
+            return;
+        const { code } = data;
+        this.downKeyMap[code] = false;
+        Keyboard.setUpCode(code);
+        this.emit(KeyEvent.UP, data, this.defaultPath);
+        if (this.cursor === 'grab')
+            this.updateCursor();
+    }
+    pointerHover(data) {
+        if (this.canHover) {
+            this.pointerOverOrOut(data);
+            this.pointerEnterOrLeave(data);
+        }
+    }
+    pointerOverOrOut(data) {
+        const { path } = data;
+        const { overPath } = this;
+        this.overPath = path;
+        if (overPath) {
+            if (path.indexAt(0) !== overPath.indexAt(0)) {
+                this.emit(PointerEvent.OUT, data, overPath);
+                this.emit(PointerEvent.OVER, data, path);
+            }
+        }
+        else {
+            this.emit(PointerEvent.OVER, data, path);
+        }
+    }
+    pointerEnterOrLeave(data) {
+        let { path } = data;
+        if (this.downData && !this.moveMode) {
+            path = path.clone();
+            this.downData.path.forEach(leaf => path.add(leaf));
+        }
+        const { enterPath } = this;
+        this.enterPath = path;
+        this.emit(PointerEvent.LEAVE, data, enterPath, path);
+        this.emit(PointerEvent.ENTER, data, path, enterPath);
+    }
+    touchLeave(data) {
+        if (data.pointerType === 'touch') {
+            if (this.enterPath) {
+                this.emit(PointerEvent.LEAVE, data);
+                if (this.dragger.dragging)
+                    this.emit(DropEvent.LEAVE, data);
+            }
+        }
+    }
+    tap(data) {
+        const { pointer } = this.config;
+        const hasLong = this.longTap(data);
+        if (!pointer.tapMore && hasLong)
+            return;
+        if (!this.waitTap)
+            return;
+        if (pointer.tapMore)
+            this.emitTap(data);
+        const useTime = Date.now() - this.downTime;
+        const hasDouble = [PointerEvent.DOUBLE_TAP, PointerEvent.DOUBLE_CLICK].some(type => pathHasEventType(data.path, type));
+        if (useTime < pointer.tapTime + 50 && hasDouble) {
+            this.tapCount++;
+            if (this.tapCount === 2) {
+                this.tapWaitCancel();
+                this.emitDoubleTap(data);
+            }
+            else {
+                clearTimeout(this.tapTimer);
+                this.tapTimer = setTimeout(() => {
+                    if (!pointer.tapMore) {
+                        this.tapWaitCancel();
+                        this.emitTap(data);
+                    }
+                }, pointer.tapTime);
+            }
+        }
+        else {
+            if (!pointer.tapMore) {
+                this.tapWaitCancel();
+                this.emitTap(data);
+            }
+        }
+    }
+    findPath(data, options) {
+        const { hitRadius, through } = this.p;
+        const { bottomList } = this;
+        const find = this.selector.getByPoint(data, hitRadius, Object.assign({ bottomList, name: data.type }, (options || { through })));
+        if (find.throughPath)
+            data.throughPath = find.throughPath;
+        data.path = find.path;
+        return find.path;
+    }
+    isRootPath(data) {
+        return data && data.path.list[0].isLeafer;
+    }
+    isTreePath(data) {
+        const app = this.target.app;
+        if (!app || !app.isApp)
+            return false;
+        return app.editor && (!data.path.has(app.editor) && data.path.has(app.tree) && !data.target.syncEventer);
+    }
+    checkPath(data, useDefaultPath) {
+        if (useDefaultPath || (this.moveMode && !pathHasOutside(data.path)))
+            data.path = this.defaultPath;
+    }
+    canMove(data) {
+        return data && (this.moveMode || (this.m.drag === 'auto' && !pathCanDrag$1(data.path))) && !pathHasOutside(data.path);
+    }
+    isDrag(leaf) {
+        return this.dragger.getList().has(leaf);
+    }
+    isPress(leaf) {
+        return this.downData && this.downData.path.has(leaf);
+    }
+    isHover(leaf) {
+        return this.enterPath && this.enterPath.has(leaf);
+    }
+    isFocus(leaf) {
+        return this.focusData === leaf;
+    }
+    cancelHover() {
+        const { hoverData } = this;
+        if (hoverData) {
+            hoverData.path = this.defaultPath;
+            this.pointerHover(hoverData);
+        }
+    }
+    updateDownData(data, options, merge) {
+        const { downData } = this;
+        if (!data && downData)
+            data = downData;
+        if (!data)
+            return;
+        this.findPath(data, options);
+        if (merge && downData)
+            data.path.addList(downData.path.list);
+        this.downData = data;
+    }
+    updateHoverData(data) {
+        if (!data)
+            data = this.hoverData;
+        if (!data)
+            return;
+        this.findPath(data, { exclude: this.dragger.getList(false, true), name: PointerEvent.MOVE });
+        this.hoverData = data;
+    }
+    updateCursor(data) {
+        if (!this.config.cursor || !this.canHover)
+            return;
+        if (!data) {
+            this.updateHoverData();
+            data = this.downData || this.hoverData;
+        }
+        if (this.dragger.moving) {
+            return this.setCursor('grabbing');
+        }
+        else if (this.canMove(data)) {
+            return this.setCursor(this.downData ? 'grabbing' : 'grab');
+        }
+        else if (!data)
+            return;
+        let leaf, cursor;
+        const { path } = data;
+        for (let i = 0, len = path.length; i < len; i++) {
+            leaf = path.list[i];
+            cursor = (leaf.syncEventer && leaf.syncEventer.cursor) || leaf.cursor;
+            if (cursor)
+                break;
+        }
+        this.setCursor(cursor);
+    }
+    setCursor(cursor) {
+        this.cursor = cursor;
+    }
+    getLocal(clientPoint, updateClient) {
+        const clientBounds = this.canvas.getClientBounds(updateClient);
+        return { x: clientPoint.clientX - clientBounds.x, y: clientPoint.clientY - clientBounds.y };
+    }
+    emitTap(data) {
+        this.emit(PointerEvent.TAP, data);
+        this.emit(PointerEvent.CLICK, data);
+    }
+    emitDoubleTap(data) {
+        this.emit(PointerEvent.DOUBLE_TAP, data);
+        this.emit(PointerEvent.DOUBLE_CLICK, data);
+    }
+    pointerWaitCancel() {
+        this.tapWaitCancel();
+        this.longPressWaitCancel();
+    }
+    tapWait() {
+        clearTimeout(this.tapTimer);
+        this.waitTap = true;
+    }
+    tapWaitCancel() {
+        clearTimeout(this.tapTimer);
+        this.waitTap = false;
+        this.tapCount = 0;
+    }
+    longPressWait(data) {
+        clearTimeout(this.longPressTimer);
+        this.longPressTimer = setTimeout(() => {
+            this.longPressed = true;
+            this.emit(PointerEvent.LONG_PRESS, data);
+        }, this.p.longPressTime);
+    }
+    longTap(data) {
+        let hasLong;
+        if (this.longPressed) {
+            this.emit(PointerEvent.LONG_TAP, data);
+            if (pathHasEventType(data.path, PointerEvent.LONG_TAP) || pathHasEventType(data.path, PointerEvent.LONG_PRESS))
+                hasLong = true;
+        }
+        this.longPressWaitCancel();
+        return hasLong;
+    }
+    longPressWaitCancel() {
+        clearTimeout(this.longPressTimer);
+        this.longPressed = false;
+    }
+    __onResize() {
+        this.shrinkCanvasBounds = new Bounds(this.canvas.bounds);
+        this.shrinkCanvasBounds.spread(-2);
+    }
+    __listenEvents() {
+        const { target } = this;
+        this.__eventIds = [target.on_(ResizeEvent.RESIZE, this.__onResize, this)];
+        target.once(LeaferEvent.READY, () => this.__onResize());
+    }
+    __removeListenEvents() {
+        this.target.off_(this.__eventIds);
+        this.__eventIds.length = 0;
+    }
+    emit(type, data, path, excludePath) {
+        if (this.running)
+            emit$1(type, data, path, excludePath);
+    }
+    destroy() {
+        if (this.__eventIds.length) {
+            this.stop();
+            this.__removeListenEvents();
+            this.dragger.destroy();
+            this.transformer.destroy();
+            this.downData = this.overPath = this.enterPath = null;
+        }
+    }
+}
+
+class Cursor {
+    static set(name, value) {
+        this.custom[name] = value;
+    }
+    static get(name) {
+        return this.custom[name];
+    }
+}
+Cursor.custom = {};
+
+class HitCanvasManager extends CanvasManager {
+    constructor() {
+        super(...arguments);
+        this.maxTotal = 1000;
+        this.pathList = new LeafList();
+        this.pixelList = new LeafList();
+    }
+    getPixelType(leaf, config) {
+        this.__autoClear();
+        this.pixelList.add(leaf);
+        return Creator.hitCanvas(config);
+    }
+    getPathType(leaf) {
+        this.__autoClear();
+        this.pathList.add(leaf);
+        return Creator.hitCanvas();
+    }
+    clearImageType() {
+        this.__clearLeafList(this.pixelList);
+    }
+    clearPathType() {
+        this.__clearLeafList(this.pathList);
+    }
+    __clearLeafList(leafList) {
+        if (leafList.length) {
+            leafList.forEach(leaf => {
+                if (leaf.__hitCanvas) {
+                    leaf.__hitCanvas.destroy();
+                    leaf.__hitCanvas = null;
+                }
+            });
+            leafList.reset();
+        }
+    }
+    __autoClear() {
+        if (this.pathList.length + this.pixelList.length > this.maxTotal)
+            this.clear();
+    }
+    clear() {
+        this.clearPathType();
+        this.clearImageType();
+    }
+}
+
+const { toInnerRadiusPointOf, copy: copy$3, setRadius } = PointHelper;
 const inner = {};
 const leaf$1 = Leaf.prototype;
 leaf$1.__hitWorld = function (point) {
     if (!this.__.hitSelf)
         return false;
     if (this.__.hitRadius) {
-        copy$2(inner, point), point = inner;
+        copy$3(inner, point), point = inner;
         setRadius(point, this.__.hitRadius);
     }
     toInnerRadiusPointOf(point, this.__world, inner);
@@ -8112,8 +9349,8 @@ ui$2.__updateHitCanvas = function () {
     if (isHitPixel) {
         const { renderBounds } = this.__layout;
         const size = Platform.image.hitCanvasSize;
-        const scale = h.hitScale = tempBounds.set(0, 0, size, size).getFitMatrix(renderBounds).a;
-        const { x, y, width, height } = tempBounds.set(renderBounds).scale(scale);
+        const scale = h.hitScale = tempBounds$1.set(0, 0, size, size).getFitMatrix(renderBounds).a;
+        const { x, y, width, height } = tempBounds$1.set(renderBounds).scale(scale);
         h.resize({ width, height, pixelRatio: 1 });
         h.clear();
         ImageManager.patternLocked = true;
@@ -8168,14 +9405,14 @@ ui$2.__hit = function (inner) {
     return hitWidth ? this.__hitStroke(inner, hitWidth) : false;
 };
 
-const ui$1 = UI.prototype, rect = Rect.prototype, box = Box.prototype;
-rect.__updateHitCanvas = box.__updateHitCanvas = function () {
+const ui$1 = UI.prototype, rect = Rect.prototype, box$1 = Box.prototype;
+rect.__updateHitCanvas = box$1.__updateHitCanvas = function () {
     if (this.stroke || this.cornerRadius || ((this.fill || this.__.__isCanvas) && this.hitFill === 'pixel') || this.hitStroke === 'all')
         ui$1.__updateHitCanvas.call(this);
     else if (this.__hitCanvas)
         this.__hitCanvas = null;
 };
-rect.__hitFill = box.__hitFill = function (inner) {
+rect.__hitFill = box$1.__hitFill = function (inner) {
     return this.__hitCanvas ? ui$1.__hitFill.call(this, inner) : BoundsHelper.hitRadiusPoint(this.__layout.boxBounds, inner);
 };
 
@@ -8194,6 +9431,3224 @@ group.pick = function (hitPoint, options) {
     if (!options)
         options = {};
     return getSelector(this).getByPoint(hitPoint, options.hitRadius || 0, Object.assign(Object.assign({}, options), { target: this }));
+};
+
+const canvas$1 = LeaferCanvasBase.prototype;
+canvas$1.hitFill = function (point, fillRule) {
+    return fillRule ? this.context.isPointInPath(point.x, point.y, fillRule) : this.context.isPointInPath(point.x, point.y);
+};
+canvas$1.hitStroke = function (point, strokeWidth) {
+    this.strokeWidth = strokeWidth;
+    return this.context.isPointInStroke(point.x, point.y);
+};
+canvas$1.hitPixel = function (radiusPoint, offset, scale = 1) {
+    let { x, y, radiusX, radiusY } = radiusPoint;
+    if (offset)
+        x -= offset.x, y -= offset.y;
+    tempBounds$1.set(x - radiusX, y - radiusY, radiusX * 2, radiusY * 2).scale(scale).ceil();
+    const { data } = this.context.getImageData(tempBounds$1.x, tempBounds$1.y, tempBounds$1.width || 1, tempBounds$1.height || 1);
+    for (let i = 0, len = data.length; i < len; i += 4) {
+        if (data[i + 3] > 0)
+            return true;
+    }
+    return data[3] > 0;
+};
+
+const debug$3 = Debug.get('LeaferCanvas');
+class LeaferCanvas extends LeaferCanvasBase {
+    set zIndex(zIndex) {
+        const { style } = this.view;
+        style.zIndex = zIndex;
+        this.setAbsolute(this.view);
+    }
+    set childIndex(index) {
+        const { view, parentView } = this;
+        if (view && parentView) {
+            const beforeNode = parentView.children[index];
+            if (beforeNode) {
+                this.setAbsolute(beforeNode);
+                parentView.insertBefore(view, beforeNode);
+            }
+            else {
+                parentView.appendChild(beforeNode);
+            }
+        }
+    }
+    init() {
+        const { config } = this;
+        const view = config.view || config.canvas;
+        view ? this.__createViewFrom(view) : this.__createView();
+        const { style } = this.view;
+        style.display || (style.display = 'block');
+        this.parentView = this.view.parentElement;
+        if (this.parentView) {
+            const pStyle = this.parentView.style;
+            pStyle.webkitUserSelect = pStyle.userSelect = 'none';
+        }
+        if (Platform.syncDomFont && !this.parentView) {
+            style.display = 'none';
+            document.body.appendChild(this.view);
+        }
+        this.__createContext();
+        if (!this.autoLayout)
+            this.resize(config);
+    }
+    set backgroundColor(color) { this.view.style.backgroundColor = color; }
+    get backgroundColor() { return this.view.style.backgroundColor; }
+    set hittable(hittable) { this.view.style.pointerEvents = hittable ? 'auto' : 'none'; }
+    get hittable() { return this.view.style.pointerEvents !== 'none'; }
+    __createView() {
+        this.view = document.createElement('canvas');
+    }
+    __createViewFrom(inputView) {
+        let find = (typeof inputView === 'string') ? document.getElementById(inputView) : inputView;
+        if (find) {
+            if (find instanceof HTMLCanvasElement) {
+                this.view = find;
+            }
+            else {
+                let parent = find;
+                if (find === window || find === document) {
+                    const div = document.createElement('div');
+                    const { style } = div;
+                    style.position = 'absolute';
+                    style.top = style.bottom = style.left = style.right = '0px';
+                    document.body.appendChild(div);
+                    parent = div;
+                }
+                this.__createView();
+                const view = this.view;
+                if (parent.hasChildNodes()) {
+                    this.setAbsolute(view);
+                    parent.style.position || (parent.style.position = 'relative');
+                }
+                parent.appendChild(view);
+            }
+        }
+        else {
+            debug$3.error(`no id: ${inputView}`);
+            this.__createView();
+        }
+    }
+    setAbsolute(view) {
+        const { style } = view;
+        style.position = 'absolute';
+        style.top = style.left = '0px';
+    }
+    updateViewSize() {
+        const { width, height, pixelRatio } = this;
+        const { style } = this.view;
+        style.width = width + 'px';
+        style.height = height + 'px';
+        this.view.width = Math.ceil(width * pixelRatio);
+        this.view.height = Math.ceil(height * pixelRatio);
+    }
+    updateClientBounds() {
+        this.clientBounds = this.view.getBoundingClientRect();
+    }
+    startAutoLayout(autoBounds, listener) {
+        this.resizeListener = listener;
+        if (autoBounds) {
+            this.autoBounds = autoBounds;
+            try {
+                this.resizeObserver = new ResizeObserver((entries) => {
+                    this.updateClientBounds();
+                    for (const entry of entries)
+                        this.checkAutoBounds(entry.contentRect);
+                });
+                const parent = this.parentView;
+                if (parent) {
+                    this.resizeObserver.observe(parent);
+                    this.checkAutoBounds(parent.getBoundingClientRect());
+                }
+                else {
+                    this.checkAutoBounds(this.view);
+                    debug$3.warn('no parent');
+                }
+            }
+            catch (_a) {
+                this.imitateResizeObserver();
+            }
+        }
+        else {
+            window.addEventListener('resize', () => {
+                const pixelRatio = Platform.devicePixelRatio;
+                if (this.pixelRatio !== pixelRatio) {
+                    const { width, height } = this;
+                    this.emitResize({ width, height, pixelRatio });
+                }
+            });
+        }
+    }
+    imitateResizeObserver() {
+        if (this.autoLayout) {
+            if (this.parentView)
+                this.checkAutoBounds(this.parentView.getBoundingClientRect());
+            Platform.requestRender(this.imitateResizeObserver.bind(this));
+        }
+    }
+    checkAutoBounds(parentSize) {
+        const view = this.view;
+        const { x, y, width, height } = this.autoBounds.getBoundsFrom(parentSize);
+        const size = { width, height, pixelRatio: Platform.devicePixelRatio };
+        if (!this.isSameSize(size)) {
+            const { style } = view;
+            style.marginLeft = x + 'px';
+            style.marginTop = y + 'px';
+            this.emitResize(size);
+        }
+    }
+    stopAutoLayout() {
+        this.autoLayout = false;
+        this.resizeListener = null;
+        if (this.resizeObserver) {
+            this.resizeObserver.disconnect();
+            this.resizeObserver = null;
+        }
+    }
+    emitResize(size) {
+        const oldSize = {};
+        DataHelper.copyAttrs(oldSize, this, canvasSizeAttrs);
+        this.resize(size);
+        if (this.resizeListener && this.width !== undefined)
+            this.resizeListener(new ResizeEvent(size, oldSize));
+    }
+    unrealCanvas() {
+        if (!this.unreal && this.parentView) {
+            const view = this.view;
+            if (view)
+                view.remove();
+            this.view = this.parentView;
+            this.unreal = true;
+        }
+    }
+    destroy() {
+        if (this.view) {
+            this.stopAutoLayout();
+            if (!this.unreal) {
+                const view = this.view;
+                if (view.parentElement)
+                    view.remove();
+            }
+            super.destroy();
+        }
+    }
+}
+
+canvasPatch(CanvasRenderingContext2D.prototype);
+canvasPatch(Path2D.prototype);
+
+const { mineType, fileType } = FileHelper;
+Object.assign(Creator, {
+    canvas: (options, manager) => new LeaferCanvas(options, manager),
+    image: (options) => new LeaferImage(options)
+});
+function useCanvas(_canvasType, _power) {
+    Platform.origin = {
+        createCanvas(width, height) {
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            return canvas;
+        },
+        canvasToDataURL: (canvas, type, quality) => canvas.toDataURL(mineType(type), quality),
+        canvasToBolb: (canvas, type, quality) => new Promise((resolve) => canvas.toBlob(resolve, mineType(type), quality)),
+        canvasSaveAs: (canvas, filename, quality) => {
+            const url = canvas.toDataURL(mineType(fileType(filename)), quality);
+            return Platform.origin.download(url, filename);
+        },
+        download(url, filename) {
+            return new Promise((resolve) => {
+                let el = document.createElement('a');
+                el.href = url;
+                el.download = filename;
+                document.body.appendChild(el);
+                el.click();
+                document.body.removeChild(el);
+                resolve();
+            });
+        },
+        loadImage(src) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                const { crossOrigin } = Platform.image;
+                if (crossOrigin) {
+                    img.setAttribute('crossOrigin', crossOrigin);
+                    img.crossOrigin = crossOrigin;
+                }
+                img.onload = () => { resolve(img); };
+                img.onerror = (e) => { reject(e); };
+                img.src = Platform.image.getRealURL(src);
+            });
+        }
+    };
+    Platform.event = {
+        stopDefault(origin) { origin.preventDefault(); },
+        stopNow(origin) { origin.stopImmediatePropagation(); },
+        stop(origin) { origin.stopPropagation(); }
+    };
+    Platform.canvas = Creator.canvas();
+    Platform.conicGradientSupport = !!Platform.canvas.context.createConicGradient;
+}
+Platform.name = 'web';
+Platform.isMobile = 'ontouchstart' in window;
+Platform.requestRender = function (render) { window.requestAnimationFrame(render); };
+defineKey(Platform, 'devicePixelRatio', { get() { return Math.max(1, devicePixelRatio); } });
+const { userAgent } = navigator;
+if (userAgent.indexOf("Firefox") > -1) {
+    Platform.conicGradientRotate90 = true;
+    Platform.intWheelDeltaY = true;
+    Platform.syncDomFont = true;
+}
+else if (userAgent.indexOf("Safari") > -1 && userAgent.indexOf("Chrome") === -1) {
+    Platform.fullImageShadow = true;
+}
+if (userAgent.indexOf('Windows') > -1) {
+    Platform.os = 'Windows';
+    Platform.intWheelDeltaY = true;
+}
+else if (userAgent.indexOf('Mac') > -1) {
+    Platform.os = 'Mac';
+}
+else if (userAgent.indexOf('Linux') > -1) {
+    Platform.os = 'Linux';
+}
+
+class Watcher {
+    get childrenChanged() { return this.hasAdd || this.hasRemove || this.hasVisible; }
+    get updatedList() {
+        if (this.hasRemove) {
+            const updatedList = new LeafList();
+            this.__updatedList.list.forEach(item => { if (item.leafer)
+                updatedList.add(item); });
+            return updatedList;
+        }
+        else {
+            return this.__updatedList;
+        }
+    }
+    constructor(target, userConfig) {
+        this.totalTimes = 0;
+        this.config = {};
+        this.__updatedList = new LeafList();
+        this.target = target;
+        if (userConfig)
+            this.config = DataHelper.default(userConfig, this.config);
+        this.__listenEvents();
+    }
+    start() {
+        if (this.disabled)
+            return;
+        this.running = true;
+    }
+    stop() {
+        this.running = false;
+    }
+    disable() {
+        this.stop();
+        this.__removeListenEvents();
+        this.disabled = true;
+    }
+    update() {
+        this.changed = true;
+        if (this.running)
+            this.target.emit(RenderEvent.REQUEST);
+    }
+    __onAttrChange(event) {
+        this.__updatedList.add(event.target);
+        this.update();
+    }
+    __onChildEvent(event) {
+        if (event.type === ChildEvent.ADD) {
+            this.hasAdd = true;
+            this.__pushChild(event.child);
+        }
+        else {
+            this.hasRemove = true;
+            this.__updatedList.add(event.parent);
+        }
+        this.update();
+    }
+    __pushChild(child) {
+        this.__updatedList.add(child);
+        if (child.isBranch)
+            this.__loopChildren(child);
+    }
+    __loopChildren(parent) {
+        const { children } = parent;
+        for (let i = 0, len = children.length; i < len; i++)
+            this.__pushChild(children[i]);
+    }
+    __onRquestData() {
+        this.target.emitEvent(new WatchEvent(WatchEvent.DATA, { updatedList: this.updatedList }));
+        this.__updatedList = new LeafList();
+        this.totalTimes++;
+        this.changed = false;
+        this.hasVisible = false;
+        this.hasRemove = false;
+        this.hasAdd = false;
+    }
+    __listenEvents() {
+        const { target } = this;
+        this.__eventIds = [
+            target.on_(PropertyEvent.CHANGE, this.__onAttrChange, this),
+            target.on_([ChildEvent.ADD, ChildEvent.REMOVE], this.__onChildEvent, this),
+            target.on_(WatchEvent.REQUEST, this.__onRquestData, this)
+        ];
+    }
+    __removeListenEvents() {
+        this.target.off_(this.__eventIds);
+    }
+    destroy() {
+        if (this.target) {
+            this.stop();
+            this.__removeListenEvents();
+            this.target = null;
+            this.__updatedList = null;
+        }
+    }
+}
+
+const { updateAllMatrix: updateAllMatrix$1, updateBounds: updateOneBounds, updateAllWorldOpacity } = LeafHelper;
+const { pushAllChildBranch, pushAllParent } = BranchHelper;
+function updateMatrix$1(updateList, levelList) {
+    let layout;
+    updateList.list.forEach(leaf => {
+        layout = leaf.__layout;
+        if (levelList.without(leaf) && !layout.proxyZoom) {
+            if (layout.matrixChanged) {
+                updateAllMatrix$1(leaf, true);
+                levelList.add(leaf);
+                if (leaf.isBranch)
+                    pushAllChildBranch(leaf, levelList);
+                pushAllParent(leaf, levelList);
+            }
+            else if (layout.boundsChanged) {
+                levelList.add(leaf);
+                if (leaf.isBranch)
+                    leaf.__tempNumber = 0;
+                pushAllParent(leaf, levelList);
+            }
+        }
+    });
+}
+function updateBounds(boundsList) {
+    let list, branch, children;
+    boundsList.sort(true);
+    boundsList.levels.forEach(level => {
+        list = boundsList.levelMap[level];
+        for (let i = 0, len = list.length; i < len; i++) {
+            branch = list[i];
+            if (branch.isBranch && branch.__tempNumber) {
+                children = branch.children;
+                for (let j = 0, jLen = children.length; j < jLen; j++) {
+                    if (!children[j].isBranch) {
+                        updateOneBounds(children[j]);
+                    }
+                }
+            }
+            updateOneBounds(branch);
+        }
+    });
+}
+function updateChange(updateList) {
+    let layout;
+    updateList.list.forEach(leaf => {
+        layout = leaf.__layout;
+        if (layout.opacityChanged)
+            updateAllWorldOpacity(leaf);
+        if (layout.stateStyleChanged)
+            setTimeout(() => layout.stateStyleChanged && leaf.updateState());
+        leaf.__updateChange();
+    });
+}
+
+const { worldBounds } = LeafBoundsHelper;
+const bigBounds = { x: 0, y: 0, width: 100000, height: 100000 };
+class LayoutBlockData {
+    constructor(list) {
+        this.updatedBounds = new Bounds();
+        this.beforeBounds = new Bounds();
+        this.afterBounds = new Bounds();
+        if (list instanceof Array)
+            list = new LeafList(list);
+        this.updatedList = list;
+    }
+    setBefore() {
+        this.beforeBounds.setListWithFn(this.updatedList.list, worldBounds);
+    }
+    setAfter() {
+        const { list } = this.updatedList;
+        if (list.some(leaf => leaf.noBounds)) {
+            this.afterBounds.set(bigBounds);
+        }
+        else {
+            this.afterBounds.setListWithFn(list, worldBounds);
+        }
+        this.updatedBounds.setList([this.beforeBounds, this.afterBounds]);
+    }
+    merge(data) {
+        this.updatedList.addList(data.updatedList.list);
+        this.beforeBounds.add(data.beforeBounds);
+        this.afterBounds.add(data.afterBounds);
+        this.updatedBounds.add(data.updatedBounds);
+    }
+    destroy() {
+        this.updatedList = null;
+    }
+}
+
+const { updateAllMatrix, updateAllChange } = LeafHelper;
+const debug$2 = Debug.get('Layouter');
+class Layouter {
+    constructor(target, userConfig) {
+        this.totalTimes = 0;
+        this.config = {};
+        this.__levelList = new LeafLevelList();
+        this.target = target;
+        if (userConfig)
+            this.config = DataHelper.default(userConfig, this.config);
+        this.__listenEvents();
+    }
+    start() {
+        if (this.disabled)
+            return;
+        this.running = true;
+    }
+    stop() {
+        this.running = false;
+    }
+    disable() {
+        this.stop();
+        this.__removeListenEvents();
+        this.disabled = true;
+    }
+    layout() {
+        if (!this.running)
+            return;
+        const { target } = this;
+        this.times = 0;
+        try {
+            target.emit(LayoutEvent.START);
+            this.layoutOnce();
+            target.emitEvent(new LayoutEvent(LayoutEvent.END, this.layoutedBlocks, this.times));
+        }
+        catch (e) {
+            debug$2.error(e);
+        }
+        this.layoutedBlocks = null;
+    }
+    layoutAgain() {
+        if (this.layouting) {
+            this.waitAgain = true;
+        }
+        else {
+            this.layoutOnce();
+        }
+    }
+    layoutOnce() {
+        if (this.layouting)
+            return debug$2.warn('layouting');
+        if (this.times > 3)
+            return debug$2.warn('layout max times');
+        this.times++;
+        this.totalTimes++;
+        this.layouting = true;
+        this.target.emit(WatchEvent.REQUEST);
+        if (this.totalTimes > 1) {
+            this.partLayout();
+        }
+        else {
+            this.fullLayout();
+        }
+        this.layouting = false;
+        if (this.waitAgain) {
+            this.waitAgain = false;
+            this.layoutOnce();
+        }
+    }
+    partLayout() {
+        var _a;
+        if (!((_a = this.__updatedList) === null || _a === void 0 ? void 0 : _a.length))
+            return;
+        const t = Run.start('PartLayout');
+        const { target, __updatedList: updateList } = this;
+        const { BEFORE, LAYOUT, AFTER } = LayoutEvent;
+        const blocks = this.getBlocks(updateList);
+        blocks.forEach(item => item.setBefore());
+        target.emitEvent(new LayoutEvent(BEFORE, blocks, this.times));
+        this.extraBlock = null;
+        updateList.sort();
+        updateMatrix$1(updateList, this.__levelList);
+        updateBounds(this.__levelList);
+        updateChange(updateList);
+        if (this.extraBlock)
+            blocks.push(this.extraBlock);
+        blocks.forEach(item => item.setAfter());
+        target.emitEvent(new LayoutEvent(LAYOUT, blocks, this.times));
+        target.emitEvent(new LayoutEvent(AFTER, blocks, this.times));
+        this.addBlocks(blocks);
+        this.__levelList.reset();
+        this.__updatedList = null;
+        Run.end(t);
+    }
+    fullLayout() {
+        const t = Run.start('FullLayout');
+        const { target } = this;
+        const { BEFORE, LAYOUT, AFTER } = LayoutEvent;
+        const blocks = this.getBlocks(new LeafList(target));
+        target.emitEvent(new LayoutEvent(BEFORE, blocks, this.times));
+        Layouter.fullLayout(target);
+        blocks.forEach(item => { item.setAfter(); });
+        target.emitEvent(new LayoutEvent(LAYOUT, blocks, this.times));
+        target.emitEvent(new LayoutEvent(AFTER, blocks, this.times));
+        this.addBlocks(blocks);
+        Run.end(t);
+    }
+    static fullLayout(target) {
+        updateAllMatrix(target, true);
+        if (target.isBranch) {
+            BranchHelper.updateBounds(target);
+        }
+        else {
+            LeafHelper.updateBounds(target);
+        }
+        updateAllChange(target);
+    }
+    addExtra(leaf) {
+        if (!this.__updatedList.has(leaf)) {
+            const { updatedList, beforeBounds } = this.extraBlock || (this.extraBlock = new LayoutBlockData([]));
+            updatedList.length ? beforeBounds.add(leaf.__world) : beforeBounds.set(leaf.__world);
+            updatedList.add(leaf);
+        }
+    }
+    createBlock(data) {
+        return new LayoutBlockData(data);
+    }
+    getBlocks(list) {
+        return [this.createBlock(list)];
+    }
+    addBlocks(current) {
+        this.layoutedBlocks ? this.layoutedBlocks.push(...current) : this.layoutedBlocks = current;
+    }
+    __onReceiveWatchData(event) {
+        this.__updatedList = event.data.updatedList;
+    }
+    __listenEvents() {
+        const { target } = this;
+        this.__eventIds = [
+            target.on_(LayoutEvent.REQUEST, this.layout, this),
+            target.on_(LayoutEvent.AGAIN, this.layoutAgain, this),
+            target.on_(WatchEvent.DATA, this.__onReceiveWatchData, this)
+        ];
+    }
+    __removeListenEvents() {
+        this.target.off_(this.__eventIds);
+    }
+    destroy() {
+        if (this.target) {
+            this.stop();
+            this.__removeListenEvents();
+            this.target = this.config = null;
+        }
+    }
+}
+
+const debug$1 = Debug.get('Renderer');
+class Renderer {
+    get needFill() { return !!(!this.canvas.allowBackgroundColor && this.config.fill); }
+    constructor(target, canvas, userConfig) {
+        this.FPS = 60;
+        this.totalTimes = 0;
+        this.times = 0;
+        this.config = {
+            usePartRender: true,
+            maxFPS: 60
+        };
+        this.target = target;
+        this.canvas = canvas;
+        if (userConfig)
+            this.config = DataHelper.default(userConfig, this.config);
+        this.__listenEvents();
+        this.__requestRender();
+    }
+    start() {
+        this.running = true;
+    }
+    stop() {
+        this.running = false;
+    }
+    update() {
+        this.changed = true;
+    }
+    requestLayout() {
+        this.target.emit(LayoutEvent.REQUEST);
+    }
+    render(callback) {
+        if (!(this.running && this.canvas.view)) {
+            this.changed = true;
+            return;
+        }
+        const { target } = this;
+        this.times = 0;
+        this.totalBounds = new Bounds();
+        debug$1.log(target.innerName, '--->');
+        try {
+            if (!target.isApp)
+                target.app.emit(RenderEvent.CHILD_START, target);
+            this.emitRender(RenderEvent.START);
+            this.renderOnce(callback);
+            this.emitRender(RenderEvent.END, this.totalBounds);
+            ImageManager.clearRecycled();
+        }
+        catch (e) {
+            this.rendering = false;
+            debug$1.error(e);
+        }
+        debug$1.log('-------------|');
+    }
+    renderAgain() {
+        if (this.rendering) {
+            this.waitAgain = true;
+        }
+        else {
+            this.renderOnce();
+        }
+    }
+    renderOnce(callback) {
+        if (this.rendering)
+            return debug$1.warn('rendering');
+        if (this.times > 3)
+            return debug$1.warn('render max times');
+        this.times++;
+        this.totalTimes++;
+        this.rendering = true;
+        this.changed = false;
+        this.renderBounds = new Bounds();
+        this.renderOptions = {};
+        if (callback) {
+            this.emitRender(RenderEvent.BEFORE);
+            callback();
+        }
+        else {
+            this.requestLayout();
+            if (this.ignore) {
+                this.ignore = this.rendering = false;
+                return;
+            }
+            this.emitRender(RenderEvent.BEFORE);
+            if (this.config.usePartRender && this.totalTimes > 1) {
+                this.partRender();
+            }
+            else {
+                this.fullRender();
+            }
+        }
+        this.emitRender(RenderEvent.RENDER, this.renderBounds, this.renderOptions);
+        this.emitRender(RenderEvent.AFTER, this.renderBounds, this.renderOptions);
+        this.updateBlocks = null;
+        this.rendering = false;
+        if (this.waitAgain) {
+            this.waitAgain = false;
+            this.renderOnce();
+        }
+    }
+    partRender() {
+        const { canvas, updateBlocks: list } = this;
+        if (!list)
+            return debug$1.warn('PartRender: need update attr');
+        this.mergeBlocks();
+        list.forEach(block => { if (canvas.bounds.hit(block) && !block.isEmpty())
+            this.clipRender(block); });
+    }
+    clipRender(block) {
+        const t = Run.start('PartRender');
+        const { canvas } = this;
+        const bounds = block.getIntersect(canvas.bounds);
+        const includes = block.includes(this.target.__world);
+        const realBounds = new Bounds(bounds);
+        canvas.save();
+        if (includes && !Debug.showRepaint) {
+            canvas.clear();
+        }
+        else {
+            bounds.spread(10 + 1 / this.canvas.pixelRatio).ceil();
+            canvas.clearWorld(bounds, true);
+            canvas.clipWorld(bounds, true);
+        }
+        this.__render(bounds, includes, realBounds);
+        canvas.restore();
+        Run.end(t);
+    }
+    fullRender() {
+        const t = Run.start('FullRender');
+        const { canvas } = this;
+        canvas.save();
+        canvas.clear();
+        this.__render(canvas.bounds, true);
+        canvas.restore();
+        Run.end(t);
+    }
+    __render(bounds, includes, realBounds) {
+        const options = bounds.includes(this.target.__world) ? { includes } : { bounds, includes };
+        if (this.needFill)
+            this.canvas.fillWorld(bounds, this.config.fill);
+        if (Debug.showRepaint)
+            this.canvas.strokeWorld(bounds, 'red');
+        this.target.__render(this.canvas, options);
+        this.renderBounds = realBounds = realBounds || bounds;
+        this.renderOptions = options;
+        this.totalBounds.isEmpty() ? this.totalBounds = realBounds : this.totalBounds.add(realBounds);
+        if (Debug.showHitView)
+            this.renderHitView(options);
+        if (Debug.showBoundsView)
+            this.renderBoundsView(options);
+        this.canvas.updateRender(realBounds);
+    }
+    renderHitView(_options) { }
+    renderBoundsView(_options) { }
+    addBlock(block) {
+        if (!this.updateBlocks)
+            this.updateBlocks = [];
+        this.updateBlocks.push(block);
+    }
+    mergeBlocks() {
+        const { updateBlocks: list } = this;
+        if (list) {
+            const bounds = new Bounds();
+            bounds.setList(list);
+            list.length = 0;
+            list.push(bounds);
+        }
+    }
+    __requestRender() {
+        const startTime = Date.now();
+        Platform.requestRender(() => {
+            this.FPS = Math.min(60, Math.ceil(1000 / (Date.now() - startTime)));
+            if (this.running) {
+                if (this.changed && this.canvas.view)
+                    this.render();
+                this.target.emit(RenderEvent.NEXT);
+            }
+            if (this.target)
+                this.__requestRender();
+        });
+    }
+    __onResize(e) {
+        if (this.canvas.unreal)
+            return;
+        if (e.bigger || !e.samePixelRatio) {
+            const { width, height } = e.old;
+            const bounds = new Bounds(0, 0, width, height);
+            if (!bounds.includes(this.target.__world) || this.needFill || !e.samePixelRatio) {
+                this.addBlock(this.canvas.bounds);
+                this.target.forceUpdate('surface');
+                return;
+            }
+        }
+        this.addBlock(new Bounds(0, 0, 1, 1));
+        this.changed = true;
+    }
+    __onLayoutEnd(event) {
+        if (event.data)
+            event.data.map(item => {
+                let empty;
+                if (item.updatedList)
+                    item.updatedList.list.some(leaf => {
+                        empty = (!leaf.__world.width || !leaf.__world.height);
+                        if (empty) {
+                            if (!leaf.isLeafer)
+                                debug$1.tip(leaf.innerName, ': empty');
+                            empty = (!leaf.isBranch || leaf.isBranchLeaf);
+                        }
+                        return empty;
+                    });
+                this.addBlock(empty ? this.canvas.bounds : item.updatedBounds);
+            });
+    }
+    emitRender(type, bounds, options) {
+        this.target.emitEvent(new RenderEvent(type, this.times, bounds, options));
+    }
+    __listenEvents() {
+        const { target } = this;
+        this.__eventIds = [
+            target.on_(RenderEvent.REQUEST, this.update, this),
+            target.on_(LayoutEvent.END, this.__onLayoutEnd, this),
+            target.on_(RenderEvent.AGAIN, this.renderAgain, this),
+            target.on_(ResizeEvent.RESIZE, this.__onResize, this)
+        ];
+    }
+    __removeListenEvents() {
+        this.target.off_(this.__eventIds);
+    }
+    destroy() {
+        if (this.target) {
+            this.stop();
+            this.__removeListenEvents();
+            this.target = this.canvas = this.config = null;
+        }
+    }
+}
+
+const { hitRadiusPoint } = BoundsHelper;
+class Picker {
+    constructor(target, selector) {
+        this.target = target;
+        this.selector = selector;
+    }
+    getByPoint(hitPoint, hitRadius, options) {
+        if (!hitRadius)
+            hitRadius = 0;
+        if (!options)
+            options = {};
+        const through = options.through || false;
+        const ignoreHittable = options.ignoreHittable || false;
+        const target = options.target || this.target;
+        this.exclude = options.exclude || null;
+        this.point = { x: hitPoint.x, y: hitPoint.y, radiusX: hitRadius, radiusY: hitRadius };
+        this.findList = new LeafList(options.findList);
+        if (!options.findList)
+            this.hitBranch(target);
+        const { list } = this.findList;
+        const leaf = this.getBestMatchLeaf(list, options.bottomList, ignoreHittable);
+        const path = ignoreHittable ? this.getPath(leaf) : this.getHitablePath(leaf);
+        this.clear();
+        return through ? { path, target: leaf, throughPath: list.length ? this.getThroughPath(list) : path } : { path, target: leaf };
+    }
+    getBestMatchLeaf(list, bottomList, ignoreHittable) {
+        if (list.length) {
+            let find;
+            this.findList = new LeafList();
+            const { x, y } = this.point;
+            const point = { x, y, radiusX: 0, radiusY: 0 };
+            for (let i = 0, len = list.length; i < len; i++) {
+                find = list[i];
+                if (ignoreHittable || LeafHelper.worldHittable(find)) {
+                    this.hitChild(find, point);
+                    if (this.findList.length)
+                        return this.findList.list[0];
+                }
+            }
+        }
+        if (bottomList) {
+            for (let i = 0, len = bottomList.length; i < len; i++) {
+                this.hitChild(bottomList[i].target, this.point, bottomList[i].proxy);
+                if (this.findList.length)
+                    return this.findList.list[0];
+            }
+        }
+        return list[0];
+    }
+    getPath(leaf) {
+        const path = new LeafList();
+        while (leaf) {
+            path.add(leaf);
+            leaf = leaf.parent;
+        }
+        if (this.target)
+            path.add(this.target);
+        return path;
+    }
+    getHitablePath(leaf) {
+        const path = this.getPath(leaf && leaf.hittable ? leaf : null);
+        let item, hittablePath = new LeafList();
+        for (let i = path.list.length - 1; i > -1; i--) {
+            item = path.list[i];
+            if (!item.__.hittable)
+                break;
+            hittablePath.addAt(item, 0);
+            if (!item.__.hitChildren)
+                break;
+        }
+        return hittablePath;
+    }
+    getThroughPath(list) {
+        const throughPath = new LeafList();
+        const pathList = [];
+        for (let i = list.length - 1; i > -1; i--) {
+            pathList.push(this.getPath(list[i]));
+        }
+        let path, nextPath, leaf;
+        for (let i = 0, len = pathList.length; i < len; i++) {
+            path = pathList[i], nextPath = pathList[i + 1];
+            for (let j = 0, jLen = path.length; j < jLen; j++) {
+                leaf = path.list[j];
+                if (nextPath && nextPath.has(leaf))
+                    break;
+                throughPath.add(leaf);
+            }
+        }
+        return throughPath;
+    }
+    hitBranch(branch) {
+        this.eachFind(branch.children, branch.__onlyHitMask);
+    }
+    eachFind(children, hitMask) {
+        let child, hit;
+        const { point } = this, len = children.length;
+        for (let i = len - 1; i > -1; i--) {
+            child = children[i];
+            if (!child.__.visible || (hitMask && !child.__.mask))
+                continue;
+            hit = child.__.hitRadius ? true : hitRadiusPoint(child.__world, point);
+            if (child.isBranch) {
+                if (hit || child.__ignoreHitWorld) {
+                    this.eachFind(child.children, child.__onlyHitMask);
+                    if (child.isBranchLeaf)
+                        this.hitChild(child, point);
+                }
+            }
+            else {
+                if (hit)
+                    this.hitChild(child, point);
+            }
+        }
+    }
+    hitChild(child, point, proxy) {
+        if (this.exclude && this.exclude.has(child))
+            return;
+        if (child.__hitWorld(point)) {
+            const { parent } = child;
+            if (parent && parent.__hasMask && !child.__.mask && !parent.children.some(item => item.__.mask && item.__hitWorld(point)))
+                return;
+            this.findList.add(proxy || child);
+        }
+    }
+    clear() {
+        this.point = null;
+        this.findList = null;
+        this.exclude = null;
+    }
+    destroy() {
+        this.clear();
+    }
+}
+
+const { Yes: Yes$1, NoAndSkip: NoAndSkip$1, YesAndSkip: YesAndSkip$1 } = Answer;
+const idCondition = {}, classNameCondition = {}, tagCondition = {};
+class Selector {
+    constructor(target, userConfig) {
+        this.config = {};
+        this.innerIdMap = {};
+        this.idMap = {};
+        this.methods = {
+            id: (leaf, name) => leaf.id === name ? (this.target && (this.idMap[name] = leaf), 1) : 0,
+            innerId: (leaf, innerId) => leaf.innerId === innerId ? (this.target && (this.innerIdMap[innerId] = leaf), 1) : 0,
+            className: (leaf, name) => leaf.className === name ? 1 : 0,
+            tag: (leaf, name) => leaf.__tag === name ? 1 : 0,
+            tags: (leaf, nameMap) => nameMap[leaf.__tag] ? 1 : 0
+        };
+        this.target = target;
+        if (userConfig)
+            this.config = DataHelper.default(userConfig, this.config);
+        this.picker = new Picker(target, this);
+        if (target)
+            this.__listenEvents();
+    }
+    getBy(condition, branch, one, options) {
+        switch (typeof condition) {
+            case 'number':
+                const leaf = this.getByInnerId(condition, branch);
+                return one ? leaf : (leaf ? [leaf] : []);
+            case 'string':
+                switch (condition[0]) {
+                    case '#':
+                        idCondition.id = condition.substring(1), condition = idCondition;
+                        break;
+                    case '.':
+                        classNameCondition.className = condition.substring(1), condition = classNameCondition;
+                        break;
+                    default:
+                        tagCondition.tag = condition, condition = tagCondition;
+                }
+            case 'object':
+                if (condition.id !== undefined) {
+                    const leaf = this.getById(condition.id, branch);
+                    return one ? leaf : (leaf ? [leaf] : []);
+                }
+                else if (condition.tag) {
+                    const { tag } = condition, isArray = tag instanceof Array;
+                    return this.getByMethod(isArray ? this.methods.tags : this.methods.tag, branch, one, isArray ? DataHelper.toMap(tag) : tag);
+                }
+                else {
+                    return this.getByMethod(this.methods.className, branch, one, condition.className);
+                }
+            case 'function':
+                return this.getByMethod(condition, branch, one, options);
+        }
+    }
+    getByPoint(hitPoint, hitRadius, options) {
+        if (Platform.name === 'node' && this.target)
+            this.target.emit(LayoutEvent.CHECK_UPDATE);
+        return this.picker.getByPoint(hitPoint, hitRadius, options);
+    }
+    getByInnerId(innerId, branch) {
+        const cache = this.innerIdMap[innerId];
+        if (cache)
+            return cache;
+        this.eachFind(this.toChildren(branch), this.methods.innerId, null, innerId);
+        return this.findLeaf;
+    }
+    getById(id, branch) {
+        const cache = this.idMap[id];
+        if (cache && LeafHelper.hasParent(cache, branch || this.target))
+            return cache;
+        this.eachFind(this.toChildren(branch), this.methods.id, null, id);
+        return this.findLeaf;
+    }
+    getByClassName(className, branch) {
+        return this.getByMethod(this.methods.className, branch, false, className);
+    }
+    getByTag(tag, branch) {
+        return this.getByMethod(this.methods.tag, branch, false, tag);
+    }
+    getByMethod(method, branch, one, options) {
+        const list = one ? null : [];
+        this.eachFind(this.toChildren(branch), method, list, options);
+        return list || this.findLeaf;
+    }
+    eachFind(children, method, list, options) {
+        let child, result;
+        for (let i = 0, len = children.length; i < len; i++) {
+            child = children[i];
+            result = method(child, options);
+            if (result === Yes$1 || result === YesAndSkip$1) {
+                if (list) {
+                    list.push(child);
+                }
+                else {
+                    this.findLeaf = child;
+                    return;
+                }
+            }
+            if (child.isBranch && result < NoAndSkip$1)
+                this.eachFind(child.children, method, list, options);
+        }
+    }
+    toChildren(branch) {
+        this.findLeaf = null;
+        return [branch || this.target];
+    }
+    __onRemoveChild(event) {
+        const { id, innerId } = event.child;
+        if (this.idMap[id])
+            delete this.idMap[id];
+        if (this.innerIdMap[innerId])
+            delete this.innerIdMap[innerId];
+    }
+    __checkIdChange(event) {
+        if (event.attrName === 'id') {
+            const id = event.oldValue;
+            if (this.idMap[id])
+                delete this.idMap[id];
+        }
+    }
+    __listenEvents() {
+        this.__eventIds = [
+            this.target.on_(ChildEvent.REMOVE, this.__onRemoveChild, this),
+            this.target.on_(PropertyEvent.CHANGE, this.__checkIdChange, this)
+        ];
+    }
+    __removeListenEvents() {
+        this.target.off_(this.__eventIds);
+        this.__eventIds.length = 0;
+    }
+    destroy() {
+        if (this.__eventIds.length) {
+            this.__removeListenEvents();
+            this.picker.destroy();
+            this.findLeaf = null;
+            this.innerIdMap = {};
+            this.idMap = {};
+        }
+    }
+}
+
+Object.assign(Creator, {
+    watcher: (target, options) => new Watcher(target, options),
+    layouter: (target, options) => new Layouter(target, options),
+    renderer: (target, canvas, options) => new Renderer(target, canvas, options),
+    selector: (target, options) => new Selector(target, options)
+});
+Platform.layout = Layouter.fullLayout;
+
+const PointerEventHelper = {
+    convert(e, local) {
+        const base = InteractionHelper.getBase(e);
+        const data = Object.assign(Object.assign({}, base), { x: local.x, y: local.y, width: e.width, height: e.height, pointerType: e.pointerType, pressure: e.pressure });
+        if (data.pointerType === 'pen') {
+            data.tangentialPressure = e.tangentialPressure;
+            data.tiltX = e.tiltX;
+            data.tiltY = e.tiltY;
+            data.twist = e.twist;
+        }
+        return data;
+    },
+    convertMouse(e, local) {
+        const base = InteractionHelper.getBase(e);
+        return Object.assign(Object.assign({}, base), { x: local.x, y: local.y, width: 1, height: 1, pointerType: 'mouse', pressure: 0.5 });
+    },
+    convertTouch(e, local) {
+        const touch = PointerEventHelper.getTouch(e);
+        const base = InteractionHelper.getBase(e);
+        return Object.assign(Object.assign({}, base), { x: local.x, y: local.y, width: 1, height: 1, pointerType: 'touch', multiTouch: e.touches.length > 1, pressure: touch.force });
+    },
+    getTouch(e) {
+        return e.targetTouches[0] || e.changedTouches[0];
+    }
+};
+
+const WheelEventHelper = {
+    getMove(e, config) {
+        let { moveSpeed } = config;
+        let { deltaX, deltaY } = e;
+        if (e.shiftKey && !deltaX) {
+            deltaX = deltaY;
+            deltaY = 0;
+        }
+        if (deltaX > 50)
+            deltaX = Math.max(50, deltaX / 3);
+        if (deltaY > 50)
+            deltaY = Math.max(50, deltaY / 3);
+        return { x: -deltaX * moveSpeed * 2, y: -deltaY * moveSpeed * 2 };
+    },
+    getScale(e, config) {
+        let zoom;
+        let scale = 1;
+        let { zoomMode, zoomSpeed } = config;
+        const delta = e.deltaY || e.deltaX;
+        if (zoomMode) {
+            zoom = (zoomMode === 'mouse') ? true : (!e.deltaX && (Platform.intWheelDeltaY ? Math.abs(delta) > 17 : Math.ceil(delta) !== delta));
+            if (e.shiftKey || e.metaKey || e.ctrlKey)
+                zoom = true;
+        }
+        else {
+            zoom = !e.shiftKey && (e.metaKey || e.ctrlKey);
+        }
+        if (zoom) {
+            zoomSpeed = MathHelper.within(zoomSpeed, 0, 1);
+            const min = e.deltaY ? config.delta.y : config.delta.x;
+            scale = 1 - delta / (min * 4) * zoomSpeed;
+            if (scale < 0.5)
+                scale = 0.5;
+            if (scale >= 1.5)
+                scale = 1.5;
+        }
+        return scale;
+    }
+};
+
+const KeyEventHelper = {
+    convert(e) {
+        const base = InteractionHelper.getBase(e);
+        const data = Object.assign(Object.assign({}, base), { code: e.code, key: e.key });
+        return data;
+    }
+};
+
+const { getMoveEventData, getZoomEventData, getRotateEventData, pathCanDrag } = InteractionHelper;
+class Interaction extends InteractionBase {
+    __listenEvents() {
+        super.__listenEvents();
+        const view = this.view = this.canvas.view;
+        this.viewEvents = {
+            'pointerdown': this.onPointerDown,
+            'mousedown': this.onMouseDown,
+            'touchstart': this.onTouchStart,
+            'contextmenu': this.onContextMenu,
+            'wheel': this.onWheel,
+            'gesturestart': this.onGesturestart,
+            'gesturechange': this.onGesturechange,
+            'gestureend': this.onGestureend
+        };
+        this.windowEvents = {
+            'pointermove': this.onPointerMove,
+            'pointerup': this.onPointerUp,
+            'pointercancel': this.onPointerCancel,
+            'mousemove': this.onMouseMove,
+            'mouseup': this.onMouseUp,
+            'touchmove': this.onTouchMove,
+            'touchend': this.onTouchEnd,
+            'touchcancel': this.onTouchCancel,
+            'keydown': this.onKeyDown,
+            'keyup': this.onKeyUp,
+            'scroll': this.onScroll
+        };
+        const { viewEvents, windowEvents } = this;
+        for (let name in viewEvents) {
+            viewEvents[name] = viewEvents[name].bind(this);
+            view.addEventListener(name, viewEvents[name]);
+        }
+        for (let name in windowEvents) {
+            windowEvents[name] = windowEvents[name].bind(this);
+            window.addEventListener(name, windowEvents[name]);
+        }
+    }
+    __removeListenEvents() {
+        super.__removeListenEvents();
+        const { viewEvents, windowEvents } = this;
+        for (let name in viewEvents) {
+            this.view.removeEventListener(name, viewEvents[name]);
+            this.viewEvents = {};
+        }
+        for (let name in windowEvents) {
+            window.removeEventListener(name, windowEvents[name]);
+            this.windowEvents = {};
+        }
+    }
+    getTouches(touches) {
+        const list = [];
+        for (let i = 0, len = touches.length; i < len; i++) {
+            list.push(touches[i]);
+        }
+        return list;
+    }
+    preventDefaultPointer(e) {
+        const { pointer } = this.config;
+        if (pointer.preventDefault)
+            e.preventDefault();
+    }
+    preventDefaultWheel(e) {
+        const { wheel } = this.config;
+        if (wheel.preventDefault)
+            e.preventDefault();
+    }
+    preventWindowPointer(e) {
+        return !this.downData && e.target !== this.view;
+    }
+    onKeyDown(e) {
+        this.keyDown(KeyEventHelper.convert(e));
+    }
+    onKeyUp(e) {
+        this.keyUp(KeyEventHelper.convert(e));
+    }
+    onContextMenu(e) {
+        if (this.config.pointer.preventDefaultMenu)
+            e.preventDefault();
+        this.menu(PointerEventHelper.convert(e, this.getLocal(e)));
+    }
+    onScroll() {
+        this.canvas.updateClientBounds();
+    }
+    onPointerDown(e) {
+        this.preventDefaultPointer(e);
+        if (this.config.pointer.touch || this.useMultiTouch)
+            return;
+        this.usePointer || (this.usePointer = true);
+        this.pointerDown(PointerEventHelper.convert(e, this.getLocal(e)));
+    }
+    onPointerMove(e) {
+        if (this.config.pointer.touch || this.useMultiTouch || this.preventWindowPointer(e))
+            return;
+        this.usePointer || (this.usePointer = true);
+        this.pointerMove(PointerEventHelper.convert(e, this.getLocal(e, true)));
+    }
+    onPointerUp(e) {
+        if (this.downData)
+            this.preventDefaultPointer(e);
+        if (this.config.pointer.touch || this.useMultiTouch || this.preventWindowPointer(e))
+            return;
+        this.pointerUp(PointerEventHelper.convert(e, this.getLocal(e)));
+    }
+    onPointerCancel() {
+        if (this.useMultiTouch)
+            return;
+        this.pointerCancel();
+    }
+    onMouseDown(e) {
+        this.preventDefaultPointer(e);
+        if (this.useTouch || this.usePointer)
+            return;
+        this.pointerDown(PointerEventHelper.convertMouse(e, this.getLocal(e)));
+    }
+    onMouseMove(e) {
+        if (this.useTouch || this.usePointer || this.preventWindowPointer(e))
+            return;
+        this.pointerMove(PointerEventHelper.convertMouse(e, this.getLocal(e, true)));
+    }
+    onMouseUp(e) {
+        if (this.downData)
+            this.preventDefaultPointer(e);
+        if (this.useTouch || this.usePointer || this.preventWindowPointer(e))
+            return;
+        this.pointerUp(PointerEventHelper.convertMouse(e, this.getLocal(e)));
+    }
+    onMouseCancel() {
+        if (this.useTouch || this.usePointer)
+            return;
+        this.pointerCancel();
+    }
+    onTouchStart(e) {
+        const touch = PointerEventHelper.getTouch(e);
+        const local = this.getLocal(touch, true);
+        const { preventDefault } = this.config.touch;
+        if (preventDefault === true || (preventDefault === 'auto' && pathCanDrag(this.findPath(local))))
+            e.preventDefault();
+        this.multiTouchStart(e);
+        if (this.usePointer)
+            return;
+        if (this.touchTimer) {
+            window.clearTimeout(this.touchTimer);
+            this.touchTimer = 0;
+        }
+        this.useTouch = true;
+        this.pointerDown(PointerEventHelper.convertTouch(e, local));
+    }
+    onTouchMove(e) {
+        this.multiTouchMove(e);
+        if (this.usePointer || this.preventWindowPointer(e))
+            return;
+        const touch = PointerEventHelper.getTouch(e);
+        this.pointerMove(PointerEventHelper.convertTouch(e, this.getLocal(touch)));
+    }
+    onTouchEnd(e) {
+        this.multiTouchEnd();
+        if (this.usePointer || this.preventWindowPointer(e))
+            return;
+        if (this.touchTimer)
+            clearTimeout(this.touchTimer);
+        this.touchTimer = setTimeout(() => {
+            this.useTouch = false;
+        }, 500);
+        const touch = PointerEventHelper.getTouch(e);
+        this.pointerUp(PointerEventHelper.convertTouch(e, this.getLocal(touch)));
+    }
+    onTouchCancel() {
+        if (this.usePointer)
+            return;
+        this.pointerCancel();
+    }
+    multiTouchStart(e) {
+        this.useMultiTouch = (e.touches.length > 1);
+        this.touches = this.useMultiTouch ? this.getTouches(e.touches) : undefined;
+        if (this.useMultiTouch)
+            this.pointerCancel();
+    }
+    multiTouchMove(e) {
+        if (!this.useMultiTouch)
+            return;
+        if (e.touches.length > 1) {
+            const touches = this.getTouches(e.touches);
+            const list = this.getKeepTouchList(this.touches, touches);
+            if (list.length > 1) {
+                this.multiTouch(InteractionHelper.getBase(e), list);
+                this.touches = touches;
+            }
+        }
+    }
+    multiTouchEnd() {
+        this.touches = null;
+        this.useMultiTouch = false;
+        this.transformEnd();
+    }
+    getKeepTouchList(old, touches) {
+        let to;
+        const list = [];
+        old.forEach(from => {
+            to = touches.find(touch => touch.identifier === from.identifier);
+            if (to)
+                list.push({ from: this.getLocal(from), to: this.getLocal(to) });
+        });
+        return list;
+    }
+    getLocalTouchs(points) {
+        return points.map(point => this.getLocal(point));
+    }
+    onWheel(e) {
+        this.preventDefaultWheel(e);
+        const { wheel } = this.config;
+        if (wheel.disabled)
+            return;
+        const scale = wheel.getScale ? wheel.getScale(e, wheel) : WheelEventHelper.getScale(e, wheel);
+        const local = this.getLocal(e);
+        const eventBase = InteractionHelper.getBase(e);
+        scale !== 1 ? this.zoom(getZoomEventData(local, scale, eventBase)) : this.move(getMoveEventData(local, wheel.getMove ? wheel.getMove(e, wheel) : WheelEventHelper.getMove(e, wheel), eventBase));
+    }
+    onGesturestart(e) {
+        if (this.useMultiTouch)
+            return;
+        this.preventDefaultWheel(e);
+        this.lastGestureScale = 1;
+        this.lastGestureRotation = 0;
+    }
+    onGesturechange(e) {
+        if (this.useMultiTouch)
+            return;
+        this.preventDefaultWheel(e);
+        const local = this.getLocal(e);
+        const eventBase = InteractionHelper.getBase(e);
+        const changeScale = e.scale / this.lastGestureScale;
+        const changeAngle = e.rotation - this.lastGestureRotation;
+        let { rotateSpeed } = this.config.wheel;
+        rotateSpeed = MathHelper.within(rotateSpeed, 0, 1);
+        this.zoom(getZoomEventData(local, changeScale * changeScale, eventBase));
+        this.rotate(getRotateEventData(local, changeAngle / Math.PI * 180 * (rotateSpeed / 4 + 0.1), eventBase));
+        this.lastGestureScale = e.scale;
+        this.lastGestureRotation = e.rotation;
+    }
+    onGestureend(e) {
+        if (this.useMultiTouch)
+            return;
+        this.preventDefaultWheel(e);
+        this.transformEnd();
+    }
+    setCursor(cursor) {
+        super.setCursor(cursor);
+        const list = [];
+        this.eachCursor(cursor, list);
+        if (typeof list[list.length - 1] === 'object')
+            list.push('default');
+        this.canvas.view.style.cursor = list.map(item => (typeof item === 'object') ? `url(${item.url}) ${item.x || 0} ${item.y || 0}` : item).join(',');
+    }
+    eachCursor(cursor, list, level = 0) {
+        level++;
+        if (cursor instanceof Array) {
+            cursor.forEach(item => this.eachCursor(item, list, level));
+        }
+        else {
+            const custom = typeof cursor === 'string' && Cursor.get(cursor);
+            if (custom && level < 2) {
+                this.eachCursor(custom, list, level);
+            }
+            else {
+                list.push(cursor);
+            }
+        }
+    }
+    destroy() {
+        if (this.view) {
+            super.destroy();
+            this.view = null;
+            this.touches = null;
+        }
+    }
+}
+
+function fillText(ui, canvas) {
+    let row;
+    const { rows, decorationY, decorationHeight } = ui.__.__textDrawData;
+    for (let i = 0, len = rows.length; i < len; i++) {
+        row = rows[i];
+        if (row.text)
+            canvas.fillText(row.text, row.x, row.y);
+        else if (row.data)
+            row.data.forEach(charData => { canvas.fillText(charData.char, charData.x, row.y); });
+        if (decorationY)
+            canvas.fillRect(row.x, row.y + decorationY, row.width, decorationHeight);
+    }
+}
+
+function fill(fill, ui, canvas) {
+    canvas.fillStyle = fill;
+    ui.__.__font ? fillText(ui, canvas) : (ui.__.windingRule ? canvas.fill(ui.__.windingRule) : canvas.fill());
+}
+function fills(fills, ui, canvas) {
+    let item;
+    const { windingRule, __font } = ui.__;
+    for (let i = 0, len = fills.length; i < len; i++) {
+        item = fills[i];
+        if (item.image && PaintImage.checkImage(ui, canvas, item, !__font))
+            continue;
+        if (item.style) {
+            canvas.fillStyle = item.style;
+            if (item.transform) {
+                canvas.save();
+                canvas.transform(item.transform);
+                if (item.blendMode)
+                    canvas.blendMode = item.blendMode;
+                __font ? fillText(ui, canvas) : (windingRule ? canvas.fill(windingRule) : canvas.fill());
+                canvas.restore();
+            }
+            else {
+                if (item.blendMode) {
+                    canvas.saveBlendMode(item.blendMode);
+                    __font ? fillText(ui, canvas) : (windingRule ? canvas.fill(windingRule) : canvas.fill());
+                    canvas.restoreBlendMode();
+                }
+                else {
+                    __font ? fillText(ui, canvas) : (windingRule ? canvas.fill(windingRule) : canvas.fill());
+                }
+            }
+        }
+    }
+}
+
+function strokeText(stroke, ui, canvas) {
+    const { strokeAlign } = ui.__;
+    const isStrokes = typeof stroke !== 'string';
+    switch (strokeAlign) {
+        case 'center':
+            canvas.setStroke(isStrokes ? undefined : stroke, ui.__.strokeWidth, ui.__);
+            isStrokes ? drawStrokesStyle(stroke, true, ui, canvas) : drawTextStroke(ui, canvas);
+            break;
+        case 'inside':
+            drawAlignStroke('inside', stroke, isStrokes, ui, canvas);
+            break;
+        case 'outside':
+            drawAlignStroke('outside', stroke, isStrokes, ui, canvas);
+            break;
+    }
+}
+function drawAlignStroke(align, stroke, isStrokes, ui, canvas) {
+    const { __strokeWidth, __font } = ui.__;
+    const out = canvas.getSameCanvas(true, true);
+    out.setStroke(isStrokes ? undefined : stroke, __strokeWidth * 2, ui.__);
+    out.font = __font;
+    isStrokes ? drawStrokesStyle(stroke, true, ui, out) : drawTextStroke(ui, out);
+    out.blendMode = align === 'outside' ? 'destination-out' : 'destination-in';
+    fillText(ui, out);
+    out.blendMode = 'normal';
+    if (ui.__worldFlipped)
+        canvas.copyWorldByReset(out, ui.__nowWorld);
+    else
+        canvas.copyWorldToInner(out, ui.__nowWorld, ui.__layout.renderBounds);
+    out.recycle(ui.__nowWorld);
+}
+function drawTextStroke(ui, canvas) {
+    let row;
+    const { rows, decorationY, decorationHeight } = ui.__.__textDrawData;
+    for (let i = 0, len = rows.length; i < len; i++) {
+        row = rows[i];
+        if (row.text)
+            canvas.strokeText(row.text, row.x, row.y);
+        else if (row.data)
+            row.data.forEach(charData => { canvas.strokeText(charData.char, charData.x, row.y); });
+        if (decorationY)
+            canvas.strokeRect(row.x, row.y + decorationY, row.width, decorationHeight);
+    }
+}
+function drawStrokesStyle(strokes, isText, ui, canvas) {
+    let item;
+    for (let i = 0, len = strokes.length; i < len; i++) {
+        item = strokes[i];
+        if (item.image && PaintImage.checkImage(ui, canvas, item, false))
+            continue;
+        if (item.style) {
+            canvas.strokeStyle = item.style;
+            if (item.blendMode) {
+                canvas.saveBlendMode(item.blendMode);
+                isText ? drawTextStroke(ui, canvas) : canvas.stroke();
+                canvas.restoreBlendMode();
+            }
+            else {
+                isText ? drawTextStroke(ui, canvas) : canvas.stroke();
+            }
+        }
+    }
+}
+
+function stroke(stroke, ui, canvas) {
+    const options = ui.__;
+    const { __strokeWidth, strokeAlign, __font } = options;
+    if (!__strokeWidth)
+        return;
+    if (__font) {
+        strokeText(stroke, ui, canvas);
+    }
+    else {
+        switch (strokeAlign) {
+            case 'center':
+                canvas.setStroke(stroke, __strokeWidth, options);
+                canvas.stroke();
+                break;
+            case 'inside':
+                canvas.save();
+                canvas.setStroke(stroke, __strokeWidth * 2, options);
+                options.windingRule ? canvas.clip(options.windingRule) : canvas.clip();
+                canvas.stroke();
+                canvas.restore();
+                break;
+            case 'outside':
+                const out = canvas.getSameCanvas(true, true);
+                out.setStroke(stroke, __strokeWidth * 2, options);
+                ui.__drawRenderPath(out);
+                out.stroke();
+                options.windingRule ? out.clip(options.windingRule) : out.clip();
+                out.clearWorld(ui.__layout.renderBounds);
+                if (ui.__worldFlipped)
+                    canvas.copyWorldByReset(out, ui.__nowWorld);
+                else
+                    canvas.copyWorldToInner(out, ui.__nowWorld, ui.__layout.renderBounds);
+                out.recycle(ui.__nowWorld);
+                break;
+        }
+    }
+}
+function strokes(strokes, ui, canvas) {
+    const options = ui.__;
+    const { __strokeWidth, strokeAlign, __font } = options;
+    if (!__strokeWidth)
+        return;
+    if (__font) {
+        strokeText(strokes, ui, canvas);
+    }
+    else {
+        switch (strokeAlign) {
+            case 'center':
+                canvas.setStroke(undefined, __strokeWidth, options);
+                drawStrokesStyle(strokes, false, ui, canvas);
+                break;
+            case 'inside':
+                canvas.save();
+                canvas.setStroke(undefined, __strokeWidth * 2, options);
+                options.windingRule ? canvas.clip(options.windingRule) : canvas.clip();
+                drawStrokesStyle(strokes, false, ui, canvas);
+                canvas.restore();
+                break;
+            case 'outside':
+                const { renderBounds } = ui.__layout;
+                const out = canvas.getSameCanvas(true, true);
+                ui.__drawRenderPath(out);
+                out.setStroke(undefined, __strokeWidth * 2, options);
+                drawStrokesStyle(strokes, false, ui, out);
+                options.windingRule ? out.clip(options.windingRule) : out.clip();
+                out.clearWorld(renderBounds);
+                if (ui.__worldFlipped)
+                    canvas.copyWorldByReset(out, ui.__nowWorld);
+                else
+                    canvas.copyWorldToInner(out, ui.__nowWorld, renderBounds);
+                out.recycle(ui.__nowWorld);
+                break;
+        }
+    }
+}
+
+const { getSpread, getOuterOf, getByMove, getIntersectData } = BoundsHelper;
+function shape$1(ui, current, options) {
+    const canvas = current.getSameCanvas();
+    const nowWorld = ui.__nowWorld;
+    let bounds, fitMatrix, shapeBounds, worldCanvas;
+    let { scaleX, scaleY } = nowWorld;
+    if (scaleX < 0)
+        scaleX = -scaleX;
+    if (scaleY < 0)
+        scaleY = -scaleY;
+    if (current.bounds.includes(nowWorld)) {
+        worldCanvas = canvas;
+        bounds = shapeBounds = nowWorld;
+    }
+    else {
+        const { renderShapeSpread: spread } = ui.__layout;
+        const worldClipBounds = getIntersectData(spread ? getSpread(current.bounds, scaleX === scaleY ? spread * scaleX : [spread * scaleY, spread * scaleX]) : current.bounds, nowWorld);
+        fitMatrix = current.bounds.getFitMatrix(worldClipBounds);
+        let { a: fitScaleX, d: fitScaleY } = fitMatrix;
+        if (fitMatrix.a < 1) {
+            worldCanvas = current.getSameCanvas();
+            ui.__renderShape(worldCanvas, options);
+            scaleX *= fitScaleX;
+            scaleY *= fitScaleY;
+        }
+        shapeBounds = getOuterOf(nowWorld, fitMatrix);
+        bounds = getByMove(shapeBounds, -fitMatrix.e, -fitMatrix.f);
+        if (options.matrix) {
+            const { matrix } = options;
+            fitMatrix.multiply(matrix);
+            fitScaleX *= matrix.scaleX;
+            fitScaleY *= matrix.scaleY;
+        }
+        options = Object.assign(Object.assign({}, options), { matrix: fitMatrix.withScale(fitScaleX, fitScaleY) });
+    }
+    ui.__renderShape(canvas, options);
+    return {
+        canvas, matrix: fitMatrix, bounds,
+        worldCanvas, shapeBounds, scaleX, scaleY
+    };
+}
+
+let recycleMap;
+function compute(attrName, ui) {
+    const data = ui.__, leafPaints = [];
+    let paints = data.__input[attrName], hasOpacityPixel;
+    if (!(paints instanceof Array))
+        paints = [paints];
+    recycleMap = PaintImage.recycleImage(attrName, data);
+    for (let i = 0, len = paints.length, item; i < len; i++) {
+        item = getLeafPaint(attrName, paints[i], ui);
+        if (item)
+            leafPaints.push(item);
+    }
+    data['_' + attrName] = leafPaints.length ? leafPaints : undefined;
+    if (leafPaints.length && leafPaints[0].image)
+        hasOpacityPixel = leafPaints[0].image.hasOpacityPixel;
+    attrName === 'fill' ? data.__pixelFill = hasOpacityPixel : data.__pixelStroke = hasOpacityPixel;
+}
+function getLeafPaint(attrName, paint, ui) {
+    if (typeof paint !== 'object' || paint.visible === false || paint.opacity === 0)
+        return undefined;
+    const { boxBounds } = ui.__layout;
+    switch (paint.type) {
+        case 'solid':
+            let { type, blendMode, color, opacity } = paint;
+            return { type, blendMode, style: ColorConvert.string(color, opacity) };
+        case 'image':
+            return PaintImage.image(ui, attrName, paint, boxBounds, !recycleMap || !recycleMap[paint.url]);
+        case 'linear':
+            return PaintGradient.linearGradient(paint, boxBounds);
+        case 'radial':
+            return PaintGradient.radialGradient(paint, boxBounds);
+        case 'angular':
+            return PaintGradient.conicGradient(paint, boxBounds);
+        default:
+            return paint.r !== undefined ? { type: 'solid', style: ColorConvert.string(paint) } : undefined;
+    }
+}
+
+const PaintModule = {
+    compute,
+    fill,
+    fills,
+    fillText,
+    stroke,
+    strokes,
+    strokeText,
+    drawTextStroke,
+    shape: shape$1
+};
+
+let origin$1 = {};
+const { get: get$3, rotateOfOuter: rotateOfOuter$1, translate: translate$1, scaleOfOuter: scaleOfOuter$1, scale: scaleHelper, rotate } = MatrixHelper;
+function fillOrFitMode(data, box, x, y, scaleX, scaleY, rotation) {
+    const transform = get$3();
+    translate$1(transform, box.x + x, box.y + y);
+    scaleHelper(transform, scaleX, scaleY);
+    if (rotation)
+        rotateOfOuter$1(transform, { x: box.x + box.width / 2, y: box.y + box.height / 2 }, rotation);
+    data.transform = transform;
+}
+function clipMode(data, box, x, y, scaleX, scaleY, rotation) {
+    const transform = get$3();
+    translate$1(transform, box.x + x, box.y + y);
+    if (scaleX)
+        scaleHelper(transform, scaleX, scaleY);
+    if (rotation)
+        rotate(transform, rotation);
+    data.transform = transform;
+}
+function repeatMode(data, box, width, height, x, y, scaleX, scaleY, rotation, align) {
+    const transform = get$3();
+    if (rotation) {
+        if (align === 'center') {
+            rotateOfOuter$1(transform, { x: width / 2, y: height / 2 }, rotation);
+        }
+        else {
+            rotate(transform, rotation);
+            switch (rotation) {
+                case 90:
+                    translate$1(transform, height, 0);
+                    break;
+                case 180:
+                    translate$1(transform, width, height);
+                    break;
+                case 270:
+                    translate$1(transform, 0, width);
+                    break;
+            }
+        }
+    }
+    origin$1.x = box.x + x;
+    origin$1.y = box.y + y;
+    translate$1(transform, origin$1.x, origin$1.y);
+    if (scaleX)
+        scaleOfOuter$1(transform, origin$1, scaleX, scaleY);
+    data.transform = transform;
+}
+
+const { get: get$2, translate } = MatrixHelper;
+const tempBox = new Bounds();
+const tempPoint = {};
+const tempScaleData = {};
+function createData(leafPaint, image, paint, box) {
+    const { blendMode, sync } = paint;
+    if (blendMode)
+        leafPaint.blendMode = blendMode;
+    if (sync)
+        leafPaint.sync = sync;
+    leafPaint.data = getPatternData(paint, box, image);
+}
+function getPatternData(paint, box, image) {
+    let { width, height } = image;
+    if (paint.padding)
+        box = tempBox.set(box).shrink(paint.padding);
+    if (paint.mode === 'strench')
+        paint.mode = 'stretch';
+    const { opacity, mode, align, offset, scale, size, rotation, repeat } = paint;
+    const sameBox = box.width === width && box.height === height;
+    const data = { mode };
+    const swapSize = align !== 'center' && (rotation || 0) % 180 === 90;
+    const swapWidth = swapSize ? height : width, swapHeight = swapSize ? width : height;
+    let x = 0, y = 0, scaleX, scaleY;
+    if (!mode || mode === 'cover' || mode === 'fit') {
+        if (!sameBox || rotation) {
+            const sw = box.width / swapWidth, sh = box.height / swapHeight;
+            scaleX = scaleY = mode === 'fit' ? Math.min(sw, sh) : Math.max(sw, sh);
+            x += (box.width - width * scaleX) / 2, y += (box.height - height * scaleY) / 2;
+        }
+    }
+    else if (scale || size) {
+        MathHelper.getScaleData(scale, size, image, tempScaleData);
+        scaleX = tempScaleData.scaleX;
+        scaleY = tempScaleData.scaleY;
+    }
+    if (align) {
+        const imageBounds = { x, y, width: swapWidth, height: swapHeight };
+        if (scaleX)
+            imageBounds.width *= scaleX, imageBounds.height *= scaleY;
+        AlignHelper.toPoint(align, imageBounds, box, tempPoint, true);
+        x += tempPoint.x, y += tempPoint.y;
+    }
+    if (offset)
+        x += offset.x, y += offset.y;
+    switch (mode) {
+        case 'stretch':
+            if (!sameBox)
+                width = box.width, height = box.height;
+            break;
+        case 'normal':
+        case 'clip':
+            if (x || y || scaleX || rotation)
+                clipMode(data, box, x, y, scaleX, scaleY, rotation);
+            break;
+        case 'repeat':
+            if (!sameBox || scaleX || rotation)
+                repeatMode(data, box, width, height, x, y, scaleX, scaleY, rotation, align);
+            if (!repeat)
+                data.repeat = 'repeat';
+            break;
+        case 'fit':
+        case 'cover':
+        default:
+            if (scaleX)
+                fillOrFitMode(data, box, x, y, scaleX, scaleY, rotation);
+    }
+    if (!data.transform) {
+        if (box.x || box.y) {
+            data.transform = get$2();
+            translate(data.transform, box.x, box.y);
+        }
+    }
+    if (scaleX && mode !== 'stretch') {
+        data.scaleX = scaleX;
+        data.scaleY = scaleY;
+    }
+    data.width = width;
+    data.height = height;
+    if (opacity)
+        data.opacity = opacity;
+    if (repeat)
+        data.repeat = typeof repeat === 'string' ? (repeat === 'x' ? 'repeat-x' : 'repeat-y') : 'repeat';
+    return data;
+}
+
+let cache, box = new Bounds();
+const { isSame } = BoundsHelper;
+function image(ui, attrName, paint, boxBounds, firstUse) {
+    let leafPaint, event;
+    const image = ImageManager.get(paint);
+    if (cache && paint === cache.paint && isSame(boxBounds, cache.boxBounds)) {
+        leafPaint = cache.leafPaint;
+    }
+    else {
+        leafPaint = { type: paint.type, image };
+        cache = image.use > 1 ? { leafPaint, paint, boxBounds: box.set(boxBounds) } : null;
+    }
+    if (firstUse || image.loading)
+        event = { image, attrName, attrValue: paint };
+    if (image.ready) {
+        checkSizeAndCreateData(ui, attrName, paint, image, leafPaint, boxBounds);
+        if (firstUse) {
+            onLoad(ui, event);
+            onLoadSuccess(ui, event);
+        }
+    }
+    else if (image.error) {
+        if (firstUse)
+            onLoadError(ui, event, image.error);
+    }
+    else {
+        if (firstUse) {
+            ignoreRender(ui, true);
+            onLoad(ui, event);
+        }
+        leafPaint.loadId = image.load(() => {
+            ignoreRender(ui, false);
+            if (!ui.destroyed) {
+                if (checkSizeAndCreateData(ui, attrName, paint, image, leafPaint, boxBounds)) {
+                    if (image.hasOpacityPixel)
+                        ui.__layout.hitCanvasChanged = true;
+                    ui.forceUpdate('surface');
+                }
+                onLoadSuccess(ui, event);
+            }
+            leafPaint.loadId = null;
+        }, (error) => {
+            ignoreRender(ui, false);
+            onLoadError(ui, event, error);
+            leafPaint.loadId = null;
+        });
+    }
+    return leafPaint;
+}
+function checkSizeAndCreateData(ui, attrName, paint, image, leafPaint, boxBounds) {
+    if (attrName === 'fill' && !ui.__.__naturalWidth) {
+        const data = ui.__;
+        data.__naturalWidth = image.width / data.pixelRatio;
+        data.__naturalHeight = image.height / data.pixelRatio;
+        if (data.__autoSide) {
+            ui.forceUpdate('width');
+            if (ui.__proxyData) {
+                ui.setProxyAttr('width', data.width);
+                ui.setProxyAttr('height', data.height);
+            }
+            return false;
+        }
+    }
+    if (!leafPaint.data)
+        createData(leafPaint, image, paint, boxBounds);
+    return true;
+}
+function onLoad(ui, event) {
+    emit(ui, ImageEvent.LOAD, event);
+}
+function onLoadSuccess(ui, event) {
+    emit(ui, ImageEvent.LOADED, event);
+}
+function onLoadError(ui, event, error) {
+    event.error = error;
+    ui.forceUpdate('surface');
+    emit(ui, ImageEvent.ERROR, event);
+}
+function emit(ui, type, data) {
+    if (ui.hasEvent(type))
+        ui.emitEvent(new ImageEvent(type, data));
+}
+function ignoreRender(ui, value) {
+    const { leafer } = ui;
+    if (leafer && leafer.viewReady)
+        leafer.renderer.ignore = value;
+}
+
+const { get: get$1, scale: scale$1, copy: copy$1$1 } = MatrixHelper;
+const { ceil, abs: abs$1 } = Math;
+function createPattern(ui, paint, pixelRatio) {
+    let { scaleX, scaleY } = ImageManager.patternLocked ? ui.__world : ui.__nowWorld;
+    const id = scaleX + '-' + scaleY + '-' + pixelRatio;
+    if (paint.patternId !== id && !ui.destroyed) {
+        scaleX = abs$1(scaleX);
+        scaleY = abs$1(scaleY);
+        const { image, data } = paint;
+        let imageScale, imageMatrix, { width, height, scaleX: sx, scaleY: sy, opacity, transform, repeat } = data;
+        if (sx) {
+            imageMatrix = get$1();
+            copy$1$1(imageMatrix, transform);
+            scale$1(imageMatrix, 1 / sx, 1 / sy);
+            scaleX *= sx;
+            scaleY *= sy;
+        }
+        scaleX *= pixelRatio;
+        scaleY *= pixelRatio;
+        width *= scaleX;
+        height *= scaleY;
+        const size = width * height;
+        if (!repeat) {
+            if (size > Platform.image.maxCacheSize)
+                return false;
+        }
+        let maxSize = Platform.image.maxPatternSize;
+        if (!image.isSVG) {
+            const imageSize = image.width * image.height;
+            if (maxSize > imageSize)
+                maxSize = imageSize;
+        }
+        if (size > maxSize)
+            imageScale = Math.sqrt(size / maxSize);
+        if (imageScale) {
+            scaleX /= imageScale;
+            scaleY /= imageScale;
+            width /= imageScale;
+            height /= imageScale;
+        }
+        if (sx) {
+            scaleX /= sx;
+            scaleY /= sy;
+        }
+        if (transform || scaleX !== 1 || scaleY !== 1) {
+            if (!imageMatrix) {
+                imageMatrix = get$1();
+                if (transform)
+                    copy$1$1(imageMatrix, transform);
+            }
+            scale$1(imageMatrix, 1 / scaleX, 1 / scaleY);
+        }
+        const canvas = image.getCanvas(ceil(width) || 1, ceil(height) || 1, opacity);
+        const pattern = image.getPattern(canvas, repeat || (Platform.origin.noRepeat || 'no-repeat'), imageMatrix, paint);
+        paint.style = pattern;
+        paint.patternId = id;
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+/******************************************************************************
+Copyright (c) Microsoft Corporation.
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+***************************************************************************** */
+/* global Reflect, Promise, SuppressedError, Symbol */
+
+
+function __awaiter(thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+}
+
+typeof SuppressedError === "function" ? SuppressedError : function (error, suppressed, message) {
+    var e = new Error(message);
+    return e.name = "SuppressedError", e.error = error, e.suppressed = suppressed, e;
+};
+
+const { abs: abs$2 } = Math;
+function checkImage(ui, canvas, paint, allowPaint) {
+    const { scaleX, scaleY } = ImageManager.patternLocked ? ui.__world : ui.__nowWorld;
+    const { pixelRatio } = canvas;
+    if (!paint.data || (paint.patternId === scaleX + '-' + scaleY + '-' + pixelRatio && !Export.running)) {
+        return false;
+    }
+    else {
+        const { data } = paint;
+        if (allowPaint) {
+            if (!data.repeat) {
+                let { width, height } = data;
+                width *= abs$2(scaleX) * pixelRatio;
+                height *= abs$2(scaleY) * pixelRatio;
+                if (data.scaleX) {
+                    width *= data.scaleX;
+                    height *= data.scaleY;
+                }
+                allowPaint = (width * height > Platform.image.maxCacheSize) || Export.running;
+            }
+            else {
+                allowPaint = false;
+            }
+        }
+        if (allowPaint) {
+            canvas.save();
+            ui.windingRule ? canvas.clip(ui.windingRule) : canvas.clip();
+            if (paint.blendMode)
+                canvas.blendMode = paint.blendMode;
+            if (data.opacity)
+                canvas.opacity *= data.opacity;
+            if (data.transform)
+                canvas.transform(data.transform);
+            canvas.drawImage(paint.image.view, 0, 0, data.width, data.height);
+            canvas.restore();
+            return true;
+        }
+        else {
+            if (!paint.style || paint.sync || Export.running) {
+                createPattern(ui, paint, pixelRatio);
+            }
+            else {
+                if (!paint.patternTask) {
+                    paint.patternTask = ImageManager.patternTasker.add(() => __awaiter(this, void 0, void 0, function* () {
+                        paint.patternTask = null;
+                        if (canvas.bounds.hit(ui.__nowWorld))
+                            createPattern(ui, paint, pixelRatio);
+                        ui.forceUpdate('surface');
+                    }), 300);
+                }
+            }
+            return false;
+        }
+    }
+}
+
+function recycleImage(attrName, data) {
+    const paints = data['_' + attrName];
+    if (paints instanceof Array) {
+        let image, recycleMap, input, url;
+        for (let i = 0, len = paints.length; i < len; i++) {
+            image = paints[i].image;
+            url = image && image.url;
+            if (url) {
+                if (!recycleMap)
+                    recycleMap = {};
+                recycleMap[url] = true;
+                ImageManager.recycle(image);
+                if (image.loading) {
+                    if (!input) {
+                        input = (data.__input && data.__input[attrName]) || [];
+                        if (!(input instanceof Array))
+                            input = [input];
+                    }
+                    image.unload(paints[i].loadId, !input.some((item) => item.url === url));
+                }
+            }
+        }
+        return recycleMap;
+    }
+    return null;
+}
+
+const PaintImageModule = {
+    image,
+    checkImage,
+    createPattern,
+    recycleImage,
+    createData,
+    getPatternData,
+    fillOrFitMode,
+    clipMode,
+    repeatMode
+};
+
+const { toPoint: toPoint$2 } = AroundHelper;
+const realFrom$2 = {};
+const realTo$2 = {};
+function linearGradient(paint, box) {
+    let { from, to, type, blendMode, opacity } = paint;
+    toPoint$2(from || 'top', box, realFrom$2);
+    toPoint$2(to || 'bottom', box, realTo$2);
+    const style = Platform.canvas.createLinearGradient(realFrom$2.x, realFrom$2.y, realTo$2.x, realTo$2.y);
+    applyStops(style, paint.stops, opacity);
+    const data = { type, style };
+    if (blendMode)
+        data.blendMode = blendMode;
+    return data;
+}
+function applyStops(gradient, stops, opacity) {
+    if (stops) {
+        let stop;
+        for (let i = 0, len = stops.length; i < len; i++) {
+            stop = stops[i];
+            if (typeof stop === 'string') {
+                gradient.addColorStop(i / (len - 1), ColorConvert.string(stop, opacity));
+            }
+            else {
+                gradient.addColorStop(stop.offset, ColorConvert.string(stop.color, opacity));
+            }
+        }
+    }
+}
+
+const { getAngle, getDistance: getDistance$1 } = PointHelper;
+const { get, rotateOfOuter, scaleOfOuter } = MatrixHelper;
+const { toPoint: toPoint$1 } = AroundHelper;
+const realFrom$1 = {};
+const realTo$1 = {};
+function radialGradient(paint, box) {
+    let { from, to, type, opacity, blendMode, stretch } = paint;
+    toPoint$1(from || 'center', box, realFrom$1);
+    toPoint$1(to || 'bottom', box, realTo$1);
+    const style = Platform.canvas.createRadialGradient(realFrom$1.x, realFrom$1.y, 0, realFrom$1.x, realFrom$1.y, getDistance$1(realFrom$1, realTo$1));
+    applyStops(style, paint.stops, opacity);
+    const data = { type, style };
+    const transform = getTransform(box, realFrom$1, realTo$1, stretch, true);
+    if (transform)
+        data.transform = transform;
+    if (blendMode)
+        data.blendMode = blendMode;
+    return data;
+}
+function getTransform(box, from, to, stretch, rotate90) {
+    let transform;
+    const { width, height } = box;
+    if (width !== height || stretch) {
+        const angle = getAngle(from, to);
+        transform = get();
+        if (rotate90) {
+            scaleOfOuter(transform, from, width / height * (stretch || 1), 1);
+            rotateOfOuter(transform, from, angle + 90);
+        }
+        else {
+            scaleOfOuter(transform, from, 1, width / height * (stretch || 1));
+            rotateOfOuter(transform, from, angle);
+        }
+    }
+    return transform;
+}
+
+const { getDistance } = PointHelper;
+const { toPoint: toPoint$3 } = AroundHelper;
+const realFrom = {};
+const realTo = {};
+function conicGradient(paint, box) {
+    let { from, to, type, opacity, blendMode, stretch } = paint;
+    toPoint$3(from || 'center', box, realFrom);
+    toPoint$3(to || 'bottom', box, realTo);
+    const style = Platform.conicGradientSupport ? Platform.canvas.createConicGradient(0, realFrom.x, realFrom.y) : Platform.canvas.createRadialGradient(realFrom.x, realFrom.y, 0, realFrom.x, realFrom.y, getDistance(realFrom, realTo));
+    applyStops(style, paint.stops, opacity);
+    const data = { type, style };
+    const transform = getTransform(box, realFrom, realTo, stretch || 1, Platform.conicGradientRotate90);
+    if (transform)
+        data.transform = transform;
+    if (blendMode)
+        data.blendMode = blendMode;
+    return data;
+}
+
+const PaintGradientModule = {
+    linearGradient,
+    radialGradient,
+    conicGradient,
+    getTransform
+};
+
+const { copy: copy$2, toOffsetOutBounds: toOffsetOutBounds$1 } = BoundsHelper;
+const tempBounds = {};
+const offsetOutBounds$1 = {};
+function shadow(ui, current, shape) {
+    let copyBounds, spreadScale;
+    const { __nowWorld: nowWorld, __layout } = ui;
+    const { shadow } = ui.__;
+    const { worldCanvas, bounds, shapeBounds, scaleX, scaleY } = shape;
+    const other = current.getSameCanvas();
+    const end = shadow.length - 1;
+    toOffsetOutBounds$1(bounds, offsetOutBounds$1);
+    shadow.forEach((item, index) => {
+        other.setWorldShadow((offsetOutBounds$1.offsetX + item.x * scaleX), (offsetOutBounds$1.offsetY + item.y * scaleY), item.blur * scaleX, item.color);
+        spreadScale = item.spread ? 1 + item.spread * 2 / (__layout.boxBounds.width + (__layout.strokeBoxSpread || 0) * 2) : 0;
+        drawWorldShadow(other, offsetOutBounds$1, spreadScale, shape);
+        copyBounds = bounds;
+        if (item.box) {
+            other.restore();
+            other.save();
+            if (worldCanvas) {
+                other.copyWorld(other, bounds, nowWorld, 'copy');
+                copyBounds = nowWorld;
+            }
+            worldCanvas ? other.copyWorld(worldCanvas, nowWorld, nowWorld, 'destination-out') : other.copyWorld(shape.canvas, shapeBounds, bounds, 'destination-out');
+        }
+        if (ui.__worldFlipped) {
+            current.copyWorldByReset(other, copyBounds, nowWorld, item.blendMode);
+        }
+        else {
+            current.copyWorldToInner(other, copyBounds, __layout.renderBounds, item.blendMode);
+        }
+        if (end && index < end)
+            other.clearWorld(copyBounds, true);
+    });
+    other.recycle(copyBounds);
+}
+function drawWorldShadow(canvas, outBounds, spreadScale, shape) {
+    const { bounds, shapeBounds } = shape;
+    if (Platform.fullImageShadow) {
+        copy$2(tempBounds, canvas.bounds);
+        tempBounds.x += (outBounds.x - shapeBounds.x);
+        tempBounds.y += (outBounds.y - shapeBounds.y);
+        if (spreadScale) {
+            const { matrix } = shape;
+            tempBounds.x -= (bounds.x + (matrix ? matrix.e : 0) + bounds.width / 2) * (spreadScale - 1);
+            tempBounds.y -= (bounds.y + (matrix ? matrix.f : 0) + bounds.height / 2) * (spreadScale - 1);
+            tempBounds.width *= spreadScale;
+            tempBounds.height *= spreadScale;
+        }
+        canvas.copyWorld(shape.canvas, canvas.bounds, tempBounds);
+    }
+    else {
+        if (spreadScale) {
+            copy$2(tempBounds, outBounds);
+            tempBounds.x -= (outBounds.width / 2) * (spreadScale - 1);
+            tempBounds.y -= (outBounds.height / 2) * (spreadScale - 1);
+            tempBounds.width *= spreadScale;
+            tempBounds.height *= spreadScale;
+        }
+        canvas.copyWorld(shape.canvas, shapeBounds, spreadScale ? tempBounds : outBounds);
+    }
+}
+
+const { toOffsetOutBounds } = BoundsHelper;
+const offsetOutBounds = {};
+function innerShadow(ui, current, shape) {
+    let copyBounds, spreadScale;
+    const { __nowWorld: nowWorld, __layout: __layout } = ui;
+    const { innerShadow } = ui.__;
+    const { worldCanvas, bounds, shapeBounds, scaleX, scaleY } = shape;
+    const other = current.getSameCanvas();
+    const end = innerShadow.length - 1;
+    toOffsetOutBounds(bounds, offsetOutBounds);
+    innerShadow.forEach((item, index) => {
+        other.save();
+        other.setWorldShadow((offsetOutBounds.offsetX + item.x * scaleX), (offsetOutBounds.offsetY + item.y * scaleY), item.blur * scaleX);
+        spreadScale = item.spread ? 1 - item.spread * 2 / (__layout.boxBounds.width + (__layout.strokeBoxSpread || 0) * 2) : 0;
+        drawWorldShadow(other, offsetOutBounds, spreadScale, shape);
+        other.restore();
+        if (worldCanvas) {
+            other.copyWorld(other, bounds, nowWorld, 'copy');
+            other.copyWorld(worldCanvas, nowWorld, nowWorld, 'source-out');
+            copyBounds = nowWorld;
+        }
+        else {
+            other.copyWorld(shape.canvas, shapeBounds, bounds, 'source-out');
+            copyBounds = bounds;
+        }
+        other.fillWorld(copyBounds, item.color, 'source-in');
+        if (ui.__worldFlipped) {
+            current.copyWorldByReset(other, copyBounds, nowWorld, item.blendMode);
+        }
+        else {
+            current.copyWorldToInner(other, copyBounds, __layout.renderBounds, item.blendMode);
+        }
+        if (end && index < end)
+            other.clearWorld(copyBounds, true);
+    });
+    other.recycle(copyBounds);
+}
+
+function blur(ui, current, origin) {
+    const { blur } = ui.__;
+    origin.setWorldBlur(blur * ui.__nowWorld.a);
+    origin.copyWorldToInner(current, ui.__nowWorld, ui.__layout.renderBounds);
+    origin.filter = 'none';
+}
+
+function backgroundBlur(_ui, _current, _shape) {
+}
+
+const EffectModule = {
+    shadow,
+    innerShadow,
+    blur,
+    backgroundBlur
+};
+
+const { excludeRenderBounds } = LeafBoundsHelper;
+Group.prototype.__renderMask = function (canvas, options) {
+    let child, maskCanvas, contentCanvas, maskOpacity, currentMask, mask;
+    const { children } = this;
+    for (let i = 0, len = children.length; i < len; i++) {
+        child = children[i], mask = child.__.mask;
+        if (mask) {
+            if (currentMask) {
+                maskEnd(this, currentMask, canvas, contentCanvas, maskCanvas, maskOpacity);
+                maskCanvas = contentCanvas = null;
+            }
+            if (mask === 'path' || mask === 'clipping-path') {
+                if (child.opacity < 1) {
+                    currentMask = 'opacity-path';
+                    maskOpacity = child.opacity;
+                    if (!contentCanvas)
+                        contentCanvas = getCanvas(canvas);
+                }
+                else {
+                    currentMask = 'path';
+                    canvas.save();
+                }
+                child.__clip(contentCanvas || canvas, options);
+            }
+            else {
+                currentMask = mask === 'grayscale' ? 'grayscale' : 'alpha';
+                if (!maskCanvas)
+                    maskCanvas = getCanvas(canvas);
+                if (!contentCanvas)
+                    contentCanvas = getCanvas(canvas);
+                child.__render(maskCanvas, options);
+            }
+            if (!(mask === 'clipping' || mask === 'clipping-path'))
+                continue;
+        }
+        if (excludeRenderBounds(child, options))
+            continue;
+        child.__render(contentCanvas || canvas, options);
+    }
+    maskEnd(this, currentMask, canvas, contentCanvas, maskCanvas, maskOpacity);
+};
+function maskEnd(leaf, maskMode, canvas, contentCanvas, maskCanvas, maskOpacity) {
+    switch (maskMode) {
+        case 'grayscale':
+            maskCanvas.useGrayscaleAlpha(leaf.__nowWorld);
+        case 'alpha':
+            usePixelMask(leaf, canvas, contentCanvas, maskCanvas);
+            break;
+        case 'opacity-path':
+            copyContent(leaf, canvas, contentCanvas, maskOpacity);
+            break;
+        case 'path':
+            canvas.restore();
+    }
+}
+function getCanvas(canvas) {
+    return canvas.getSameCanvas(false, true);
+}
+function usePixelMask(leaf, canvas, content, mask) {
+    const realBounds = leaf.__nowWorld;
+    content.resetTransform();
+    content.opacity = 1;
+    content.useMask(mask, realBounds);
+    mask.recycle(realBounds);
+    copyContent(leaf, canvas, content, 1);
+}
+function copyContent(leaf, canvas, content, maskOpacity) {
+    const realBounds = leaf.__nowWorld;
+    canvas.resetTransform();
+    canvas.opacity = maskOpacity;
+    canvas.copyWorld(content, realBounds);
+    content.recycle(realBounds);
+}
+
+const money = '¥￥＄€£￡¢￠';
+const letter = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz';
+const langBefore = '《（「〈『〖【〔｛┌＜‘“＝' + money;
+const langAfter = '》）」〉』〗】〕｝┐＞’”！？，、。：；‰';
+const langSymbol = '≮≯≈≠＝…';
+const langBreak$1 = '—／～｜┆·';
+const beforeChar = '{[(<\'"' + langBefore;
+const afterChar = '>)]}%!?,.:;\'"' + langAfter;
+const symbolChar = afterChar + '_#~&*+\\=|' + langSymbol;
+const breakChar = '- ' + langBreak$1;
+const cjkRangeList = [
+    [0x4E00, 0x9FFF],
+    [0x3400, 0x4DBF],
+    [0x20000, 0x2A6DF],
+    [0x2A700, 0x2B73F],
+    [0x2B740, 0x2B81F],
+    [0x2B820, 0x2CEAF],
+    [0x2CEB0, 0x2EBEF],
+    [0x30000, 0x3134F],
+    [0x31350, 0x323AF],
+    [0x2E80, 0x2EFF],
+    [0x2F00, 0x2FDF],
+    [0x2FF0, 0x2FFF],
+    [0x3000, 0x303F],
+    [0x31C0, 0x31EF],
+    [0x3200, 0x32FF],
+    [0x3300, 0x33FF],
+    [0xF900, 0xFAFF],
+    [0xFE30, 0xFE4F],
+    [0x1F200, 0x1F2FF],
+    [0x2F800, 0x2FA1F],
+];
+const cjkReg = new RegExp(cjkRangeList.map(([start, end]) => `[\\u${start.toString(16)}-\\u${end.toString(16)}]`).join('|'));
+function mapChar(str) {
+    const map = {};
+    str.split('').forEach(char => map[char] = true);
+    return map;
+}
+const letterMap = mapChar(letter);
+const beforeMap = mapChar(beforeChar);
+const afterMap = mapChar(afterChar);
+const symbolMap = mapChar(symbolChar);
+const breakMap = mapChar(breakChar);
+var CharType;
+(function (CharType) {
+    CharType[CharType["Letter"] = 0] = "Letter";
+    CharType[CharType["Single"] = 1] = "Single";
+    CharType[CharType["Before"] = 2] = "Before";
+    CharType[CharType["After"] = 3] = "After";
+    CharType[CharType["Symbol"] = 4] = "Symbol";
+    CharType[CharType["Break"] = 5] = "Break";
+})(CharType || (CharType = {}));
+const { Letter: Letter$1, Single: Single$1, Before: Before$1, After: After$1, Symbol: Symbol$1, Break: Break$1 } = CharType;
+function getCharType(char) {
+    if (letterMap[char]) {
+        return Letter$1;
+    }
+    else if (breakMap[char]) {
+        return Break$1;
+    }
+    else if (beforeMap[char]) {
+        return Before$1;
+    }
+    else if (afterMap[char]) {
+        return After$1;
+    }
+    else if (symbolMap[char]) {
+        return Symbol$1;
+    }
+    else if (cjkReg.test(char)) {
+        return Single$1;
+    }
+    else {
+        return Letter$1;
+    }
+}
+
+const TextRowHelper = {
+    trimRight(row) {
+        const { words } = row;
+        let trimRight = 0, len = words.length, char;
+        for (let i = len - 1; i > -1; i--) {
+            char = words[i].data[0];
+            if (char.char === ' ') {
+                trimRight++;
+                row.width -= char.width;
+            }
+            else {
+                break;
+            }
+        }
+        if (trimRight)
+            words.splice(len - trimRight, trimRight);
+    }
+};
+
+function getTextCase(char, textCase, firstChar) {
+    switch (textCase) {
+        case 'title':
+            return firstChar ? char.toUpperCase() : char;
+        case 'upper':
+            return char.toUpperCase();
+        case 'lower':
+            return char.toLowerCase();
+        default:
+            return char;
+    }
+}
+
+const { trimRight } = TextRowHelper;
+const { Letter, Single, Before, After, Symbol, Break } = CharType;
+let word, row, wordWidth, rowWidth, realWidth;
+let char, charWidth, startCharSize, charSize, charType, lastCharType, langBreak, afterBreak, paraStart;
+let textDrawData, rows = [], bounds$1, findMaxWidth;
+function createRows(drawData, content, style) {
+    textDrawData = drawData;
+    rows = drawData.rows;
+    bounds$1 = drawData.bounds;
+    findMaxWidth = !bounds$1.width && !style.autoSizeAlign;
+    const { __letterSpacing, paraIndent, textCase } = style;
+    const { canvas } = Platform;
+    const { width, height } = bounds$1;
+    const charMode = width || height || __letterSpacing || (textCase !== 'none');
+    if (charMode) {
+        const wrap = style.textWrap !== 'none';
+        const breakAll = style.textWrap === 'break';
+        paraStart = true;
+        lastCharType = null;
+        startCharSize = charWidth = charSize = wordWidth = rowWidth = 0;
+        word = { data: [] }, row = { words: [] };
+        for (let i = 0, len = content.length; i < len; i++) {
+            char = content[i];
+            if (char === '\n') {
+                if (wordWidth)
+                    addWord();
+                row.paraEnd = true;
+                addRow();
+                paraStart = true;
+            }
+            else {
+                charType = getCharType(char);
+                if (charType === Letter && textCase !== 'none')
+                    char = getTextCase(char, textCase, !wordWidth);
+                charWidth = canvas.measureText(char).width;
+                if (__letterSpacing) {
+                    if (__letterSpacing < 0)
+                        charSize = charWidth;
+                    charWidth += __letterSpacing;
+                }
+                langBreak = (charType === Single && (lastCharType === Single || lastCharType === Letter)) || (lastCharType === Single && charType !== After);
+                afterBreak = ((charType === Before || charType === Single) && (lastCharType === Symbol || lastCharType === After));
+                realWidth = paraStart && paraIndent ? width - paraIndent : width;
+                if (wrap && (width && rowWidth + wordWidth + charWidth > realWidth)) {
+                    if (breakAll) {
+                        if (wordWidth)
+                            addWord();
+                        if (rowWidth)
+                            addRow();
+                    }
+                    else {
+                        if (!afterBreak)
+                            afterBreak = charType === Letter && lastCharType == After;
+                        if (langBreak || afterBreak || charType === Break || charType === Before || charType === Single || (wordWidth + charWidth > realWidth)) {
+                            if (wordWidth)
+                                addWord();
+                            if (rowWidth)
+                                addRow();
+                        }
+                        else {
+                            if (rowWidth)
+                                addRow();
+                        }
+                    }
+                }
+                if (char === ' ' && paraStart !== true && (rowWidth + wordWidth) === 0) ;
+                else {
+                    if (charType === Break) {
+                        if (char === ' ' && wordWidth)
+                            addWord();
+                        addChar(char, charWidth);
+                        addWord();
+                    }
+                    else if (langBreak || afterBreak) {
+                        if (wordWidth)
+                            addWord();
+                        addChar(char, charWidth);
+                    }
+                    else {
+                        addChar(char, charWidth);
+                    }
+                }
+                lastCharType = charType;
+            }
+        }
+        if (wordWidth)
+            addWord();
+        if (rowWidth)
+            addRow();
+        rows.length > 0 && (rows[rows.length - 1].paraEnd = true);
+    }
+    else {
+        content.split('\n').forEach(content => {
+            textDrawData.paraNumber++;
+            rowWidth = canvas.measureText(content).width;
+            rows.push({ x: paraIndent || 0, text: content, width: rowWidth, paraStart: true });
+            if (findMaxWidth)
+                setMaxWidth();
+        });
+    }
+}
+function addChar(char, width) {
+    if (charSize && !startCharSize)
+        startCharSize = charSize;
+    word.data.push({ char, width });
+    wordWidth += width;
+}
+function addWord() {
+    rowWidth += wordWidth;
+    word.width = wordWidth;
+    row.words.push(word);
+    word = { data: [] };
+    wordWidth = 0;
+}
+function addRow() {
+    if (paraStart) {
+        textDrawData.paraNumber++;
+        row.paraStart = true;
+        paraStart = false;
+    }
+    if (charSize) {
+        row.startCharSize = startCharSize;
+        row.endCharSize = charSize;
+        startCharSize = 0;
+    }
+    row.width = rowWidth;
+    if (bounds$1.width)
+        trimRight(row);
+    else if (findMaxWidth)
+        setMaxWidth();
+    rows.push(row);
+    row = { words: [] };
+    rowWidth = 0;
+}
+function setMaxWidth() {
+    if (rowWidth > (textDrawData.maxWidth || 0))
+        textDrawData.maxWidth = rowWidth;
+}
+
+const CharMode = 0;
+const WordMode = 1;
+const TextMode = 2;
+function layoutChar(drawData, style, width, _height) {
+    const { rows } = drawData;
+    const { textAlign, paraIndent, letterSpacing } = style;
+    let charX, addWordWidth, indentWidth, mode, wordChar;
+    rows.forEach(row => {
+        if (row.words) {
+            indentWidth = paraIndent && row.paraStart ? paraIndent : 0;
+            addWordWidth = (width && textAlign === 'justify' && row.words.length > 1) ? (width - row.width - indentWidth) / (row.words.length - 1) : 0;
+            mode = (letterSpacing || row.isOverflow) ? CharMode : (addWordWidth > 0.01 ? WordMode : TextMode);
+            if (row.isOverflow && !letterSpacing)
+                row.textMode = true;
+            if (mode === TextMode) {
+                row.x += indentWidth;
+                toTextChar$1(row);
+            }
+            else {
+                row.x += indentWidth;
+                charX = row.x;
+                row.data = [];
+                row.words.forEach(word => {
+                    if (mode === WordMode) {
+                        wordChar = { char: '', x: charX };
+                        charX = toWordChar(word.data, charX, wordChar);
+                        if (row.isOverflow || wordChar.char !== ' ')
+                            row.data.push(wordChar);
+                    }
+                    else {
+                        charX = toChar(word.data, charX, row.data, row.isOverflow);
+                    }
+                    if (!row.paraEnd && addWordWidth) {
+                        charX += addWordWidth;
+                        row.width += addWordWidth;
+                    }
+                });
+            }
+            row.words = null;
+        }
+    });
+}
+function toTextChar$1(row) {
+    row.text = '';
+    row.words.forEach(word => {
+        word.data.forEach(char => {
+            row.text += char.char;
+        });
+    });
+}
+function toWordChar(data, charX, wordChar) {
+    data.forEach(char => {
+        wordChar.char += char.char;
+        charX += char.width;
+    });
+    return charX;
+}
+function toChar(data, charX, rowData, isOverflow) {
+    data.forEach(char => {
+        if (isOverflow || char.char !== ' ') {
+            char.x = charX;
+            rowData.push(char);
+        }
+        charX += char.width;
+    });
+    return charX;
+}
+
+function layoutText(drawData, style) {
+    const { rows, bounds } = drawData;
+    const { __lineHeight, __baseLine, __letterSpacing, __clipText, textAlign, verticalAlign, paraSpacing, autoSizeAlign } = style;
+    let { x, y, width, height } = bounds, realHeight = __lineHeight * rows.length + (paraSpacing ? paraSpacing * (drawData.paraNumber - 1) : 0);
+    let starY = __baseLine;
+    if (__clipText && realHeight > height) {
+        realHeight = Math.max(height, __lineHeight);
+        drawData.overflow = rows.length;
+    }
+    else if (height || autoSizeAlign) {
+        switch (verticalAlign) {
+            case 'middle':
+                y += (height - realHeight) / 2;
+                break;
+            case 'bottom': y += (height - realHeight);
+        }
+    }
+    starY += y;
+    let row, rowX, rowWidth, layoutWidth = (width || autoSizeAlign) ? width : drawData.maxWidth;
+    for (let i = 0, len = rows.length; i < len; i++) {
+        row = rows[i];
+        row.x = x;
+        if (row.width < width || (row.width > width && !__clipText)) {
+            switch (textAlign) {
+                case 'center':
+                    row.x += (layoutWidth - row.width) / 2;
+                    break;
+                case 'right': row.x += layoutWidth - row.width;
+            }
+        }
+        if (row.paraStart && paraSpacing && i > 0)
+            starY += paraSpacing;
+        row.y = starY;
+        starY += __lineHeight;
+        if (drawData.overflow > i && starY > realHeight) {
+            row.isOverflow = true;
+            drawData.overflow = i + 1;
+        }
+        rowX = row.x;
+        rowWidth = row.width;
+        if (__letterSpacing < 0) {
+            if (row.width < 0) {
+                rowWidth = -row.width + style.fontSize + __letterSpacing;
+                rowX -= rowWidth;
+                rowWidth += style.fontSize;
+            }
+            else {
+                rowWidth -= __letterSpacing;
+            }
+        }
+        if (rowX < bounds.x)
+            bounds.x = rowX;
+        if (rowWidth > bounds.width)
+            bounds.width = rowWidth;
+        if (__clipText && width && width < rowWidth) {
+            row.isOverflow = true;
+            if (!drawData.overflow)
+                drawData.overflow = rows.length;
+        }
+    }
+    bounds.y = y;
+    bounds.height = realHeight;
+}
+
+function clipText(drawData, style, x, width) {
+    if (!width)
+        return;
+    const { rows, overflow } = drawData;
+    let { textOverflow } = style;
+    rows.splice(overflow);
+    if (textOverflow && textOverflow !== 'show') {
+        if (textOverflow === 'hide')
+            textOverflow = '';
+        else if (textOverflow === 'ellipsis')
+            textOverflow = '...';
+        let char, charRight;
+        const ellipsisWidth = textOverflow ? Platform.canvas.measureText(textOverflow).width : 0;
+        const right = x + width - ellipsisWidth;
+        const list = style.textWrap === 'none' ? rows : [rows[overflow - 1]];
+        list.forEach(row => {
+            if (row.isOverflow && row.data) {
+                let end = row.data.length - 1;
+                for (let i = end; i > -1; i--) {
+                    char = row.data[i];
+                    charRight = char.x + char.width;
+                    if (i === end && charRight < right) {
+                        break;
+                    }
+                    else if (charRight < right && char.char !== ' ') {
+                        row.data.splice(i + 1);
+                        row.width -= char.width;
+                        break;
+                    }
+                    row.width -= char.width;
+                }
+                row.width += ellipsisWidth;
+                row.data.push({ char: textOverflow, x: charRight });
+                if (row.textMode)
+                    toTextChar(row);
+            }
+        });
+    }
+}
+function toTextChar(row) {
+    row.text = '';
+    row.data.forEach(char => {
+        row.text += char.char;
+    });
+    row.data = null;
+}
+
+function decorationText(drawData, style) {
+    const { fontSize } = style;
+    drawData.decorationHeight = fontSize / 11;
+    switch (style.textDecoration) {
+        case 'under':
+            drawData.decorationY = fontSize * 0.15;
+            break;
+        case 'delete':
+            drawData.decorationY = -fontSize * 0.35;
+    }
+}
+
+const { top: top$2, right: right$3, bottom: bottom$2, left: left$3 } = Direction4;
+function getDrawData(content, style) {
+    if (typeof content !== 'string')
+        content = String(content);
+    let x = 0, y = 0;
+    let width = style.__getInput('width') || 0;
+    let height = style.__getInput('height') || 0;
+    const { textDecoration, __font, __padding: padding } = style;
+    if (padding) {
+        if (width)
+            x = padding[left$3], width -= (padding[right$3] + padding[left$3]);
+        else if (!style.autoSizeAlign)
+            x = padding[left$3];
+        if (height)
+            y = padding[top$2], height -= (padding[top$2] + padding[bottom$2]);
+        else if (!style.autoSizeAlign)
+            y = padding[top$2];
+    }
+    const drawData = {
+        bounds: { x, y, width, height },
+        rows: [],
+        paraNumber: 0,
+        font: Platform.canvas.font = __font
+    };
+    createRows(drawData, content, style);
+    if (padding)
+        padAutoText(padding, drawData, style, width, height);
+    layoutText(drawData, style);
+    layoutChar(drawData, style, width);
+    if (drawData.overflow)
+        clipText(drawData, style, x, width);
+    if (textDecoration !== 'none')
+        decorationText(drawData, style);
+    return drawData;
+}
+function padAutoText(padding, drawData, style, width, height) {
+    if (!width && style.autoSizeAlign) {
+        switch (style.textAlign) {
+            case 'left':
+                offsetText(drawData, 'x', padding[left$3]);
+                break;
+            case 'right': offsetText(drawData, 'x', -padding[right$3]);
+        }
+    }
+    if (!height && style.autoSizeAlign) {
+        switch (style.verticalAlign) {
+            case 'top':
+                offsetText(drawData, 'y', padding[top$2]);
+                break;
+            case 'bottom': offsetText(drawData, 'y', -padding[bottom$2]);
+        }
+    }
+}
+function offsetText(drawData, attrName, value) {
+    const { bounds, rows } = drawData;
+    bounds[attrName] += value;
+    for (let i = 0; i < rows.length; i++)
+        rows[i][attrName] += value;
+}
+
+const TextConvertModule = {
+    getDrawData
+};
+
+function string(color, opacity) {
+    const doOpacity = typeof opacity === 'number' && opacity !== 1;
+    if (typeof color === 'string') {
+        if (doOpacity && ColorConvert.object)
+            color = ColorConvert.object(color);
+        else
+            return color;
+    }
+    let a = color.a === undefined ? 1 : color.a;
+    if (doOpacity)
+        a *= opacity;
+    const rgb = color.r + ',' + color.g + ',' + color.b;
+    return a === 1 ? 'rgb(' + rgb + ')' : 'rgba(' + rgb + ',' + a + ')';
+}
+
+const ColorConvertModule = {
+    string
+};
+
+const { setPoint, addPoint, toBounds } = TwoPointBoundsHelper;
+function getTrimBounds(canvas) {
+    const { width, height } = canvas.view;
+    const { data } = canvas.context.getImageData(0, 0, width, height);
+    let x, y, pointBounds, index = 0;
+    for (let i = 0; i < data.length; i += 4) {
+        if (data[i + 3] !== 0) {
+            x = index % width;
+            y = (index - x) / width;
+            pointBounds ? addPoint(pointBounds, x, y) : setPoint(pointBounds = {}, x, y);
+        }
+        index++;
+    }
+    const bounds = new Bounds();
+    toBounds(pointBounds, bounds);
+    return bounds.scale(1 / canvas.pixelRatio).ceil();
+}
+
+const ExportModule = {
+    export(leaf, filename, options) {
+        this.running = true;
+        const fileType = FileHelper.fileType(filename);
+        const isDownload = filename.includes('.');
+        options = FileHelper.getExportOptions(options);
+        return addTask((success) => new Promise((resolve) => {
+            const over = (result) => {
+                success(result);
+                resolve();
+                this.running = false;
+            };
+            const { toURL } = Platform;
+            const { download } = Platform.origin;
+            if (fileType === 'json') {
+                isDownload && download(toURL(JSON.stringify(leaf.toJSON(options.json)), 'text'), filename);
+                return over({ data: isDownload ? true : leaf.toJSON(options.json) });
+            }
+            if (fileType === 'svg') {
+                isDownload && download(toURL(leaf.toSVG(), 'svg'), filename);
+                return over({ data: isDownload ? true : leaf.toSVG() });
+            }
+            const { leafer } = leaf;
+            if (leafer) {
+                checkLazy(leaf);
+                leafer.waitViewCompleted(() => __awaiter(this, void 0, void 0, function* () {
+                    let renderBounds, trimBounds, scaleX = 1, scaleY = 1;
+                    const { worldTransform, isLeafer, isFrame } = leaf;
+                    const { slice, trim, onCanvas } = options;
+                    const smooth = options.smooth === undefined ? leafer.config.smooth : options.smooth;
+                    const contextSettings = options.contextSettings || leafer.config.contextSettings;
+                    const screenshot = options.screenshot || leaf.isApp;
+                    const fill = (isLeafer && screenshot) ? (options.fill === undefined ? leaf.fill : options.fill) : options.fill;
+                    const needFill = FileHelper.isOpaqueImage(filename) || fill, matrix = new Matrix();
+                    if (screenshot) {
+                        renderBounds = screenshot === true ? (isLeafer ? leafer.canvas.bounds : leaf.worldRenderBounds) : screenshot;
+                    }
+                    else {
+                        let relative = options.relative || (isLeafer ? 'inner' : 'local');
+                        scaleX = worldTransform.scaleX;
+                        scaleY = worldTransform.scaleY;
+                        switch (relative) {
+                            case 'inner':
+                                matrix.set(worldTransform);
+                                break;
+                            case 'local':
+                                matrix.set(worldTransform).divide(leaf.localTransform);
+                                scaleX /= leaf.scaleX;
+                                scaleY /= leaf.scaleY;
+                                break;
+                            case 'world':
+                                scaleX = 1;
+                                scaleY = 1;
+                                break;
+                            case 'page':
+                                relative = leaf.leafer;
+                            default:
+                                matrix.set(worldTransform).divide(leaf.getTransform(relative));
+                                const l = relative.worldTransform;
+                                scaleX /= scaleX / l.scaleX;
+                                scaleY /= scaleY / l.scaleY;
+                        }
+                        renderBounds = leaf.getBounds('render', relative);
+                    }
+                    const scaleData = { scaleX: 1, scaleY: 1 };
+                    MathHelper.getScaleData(options.scale, options.size, renderBounds, scaleData);
+                    let pixelRatio = options.pixelRatio || 1;
+                    if (leaf.isApp) {
+                        scaleData.scaleX *= pixelRatio;
+                        scaleData.scaleY *= pixelRatio;
+                        pixelRatio = leaf.app.pixelRatio;
+                    }
+                    const { x, y, width, height } = new Bounds(renderBounds).scale(scaleData.scaleX, scaleData.scaleY);
+                    const renderOptions = { matrix: matrix.scale(1 / scaleData.scaleX, 1 / scaleData.scaleY).invert().translate(-x, -y).withScale(1 / scaleX * scaleData.scaleX, 1 / scaleY * scaleData.scaleY) };
+                    let canvas = Creator.canvas({ width: Math.round(width), height: Math.round(height), pixelRatio, smooth, contextSettings });
+                    let sliceLeaf;
+                    if (slice) {
+                        sliceLeaf = leaf;
+                        sliceLeaf.__worldOpacity = 0;
+                        leaf = leafer;
+                        renderOptions.bounds = canvas.bounds;
+                    }
+                    canvas.save();
+                    if (isFrame && fill !== undefined) {
+                        const oldFill = leaf.get('fill');
+                        leaf.fill = '';
+                        leaf.__render(canvas, renderOptions);
+                        leaf.fill = oldFill;
+                    }
+                    else {
+                        leaf.__render(canvas, renderOptions);
+                    }
+                    canvas.restore();
+                    if (sliceLeaf)
+                        sliceLeaf.__updateWorldOpacity();
+                    if (trim) {
+                        trimBounds = getTrimBounds(canvas);
+                        const old = canvas, { width, height } = trimBounds;
+                        const config = { x: 0, y: 0, width, height, pixelRatio };
+                        canvas = Creator.canvas(config);
+                        canvas.copyWorld(old, trimBounds, config);
+                    }
+                    if (needFill)
+                        canvas.fillWorld(canvas.bounds, fill || '#FFFFFF', 'destination-over');
+                    if (onCanvas)
+                        onCanvas(canvas);
+                    const data = filename === 'canvas' ? canvas : yield canvas.export(filename, options);
+                    over({ data, width: canvas.pixelWidth, height: canvas.pixelHeight, renderBounds, trimBounds });
+                }));
+            }
+            else {
+                over({ data: false });
+            }
+        }));
+    }
+};
+let tasker;
+function addTask(task) {
+    if (!tasker)
+        tasker = new TaskProcessor();
+    return new Promise((resolve) => {
+        tasker.add(() => __awaiter(this, void 0, void 0, function* () { return yield task(resolve); }), { parallel: false });
+    });
+}
+function checkLazy(leaf) {
+    if (leaf.__.__needComputePaint)
+        leaf.__.__computePaint();
+    if (leaf.isBranch)
+        leaf.children.forEach(child => checkLazy(child));
+}
+
+const canvas = LeaferCanvasBase.prototype;
+const debug$4 = Debug.get('@leafer-ui/export');
+canvas.export = function (filename, options) {
+    const { quality, blob } = FileHelper.getExportOptions(options);
+    if (filename.includes('.'))
+        return this.saveAs(filename, quality);
+    else if (blob)
+        return this.toBlob(filename, quality);
+    else
+        return this.toDataURL(filename, quality);
+};
+canvas.toBlob = function (type, quality) {
+    return new Promise((resolve) => {
+        Platform.origin.canvasToBolb(this.view, type, quality).then((blob) => {
+            resolve(blob);
+        }).catch((e) => {
+            debug$4.error(e);
+            resolve(null);
+        });
+    });
+};
+canvas.toDataURL = function (type, quality) {
+    return Platform.origin.canvasToDataURL(this.view, type, quality);
+};
+canvas.saveAs = function (filename, quality) {
+    return new Promise((resolve) => {
+        Platform.origin.canvasSaveAs(this.view, filename, quality).then(() => {
+            resolve(true);
+        }).catch((e) => {
+            debug$4.error(e);
+            resolve(false);
+        });
+    });
+};
+
+Object.assign(TextConvert, TextConvertModule);
+Object.assign(ColorConvert, ColorConvertModule);
+Object.assign(Paint, PaintModule);
+Object.assign(PaintImage, PaintImageModule);
+Object.assign(PaintGradient, PaintGradientModule);
+Object.assign(Effect, EffectModule);
+Object.assign(Export, ExportModule);
+
+Object.assign(Creator, {
+    interaction: (target, canvas, selector, options) => new Interaction(target, canvas, selector, options),
+    hitCanvas: (options, manager) => new LeaferCanvas(options, manager),
+    hitCanvasManager: () => new HitCanvasManager()
+});
+useCanvas();
+
+/******************************************************************************
+Copyright (c) Microsoft Corporation.
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+***************************************************************************** */
+/* global Reflect, Promise, SuppressedError, Symbol, Iterator */
+
+
+function __decorate$1(decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+}
+
+typeof SuppressedError === "function" ? SuppressedError : function (error, suppressed, message) {
+    var e = new Error(message);
+    return e.name = "SuppressedError", e.error = error, e.suppressed = suppressed, e;
 };
 
 const { M: M$1, L: L$1, C: C$1, Q: Q$1, Z: Z$1, N, D, X, G, F, O, P, U } = PathCommandMap;
@@ -10628,13 +15083,13 @@ let SVGPathEditor = class SVGPathEditor extends InnerEditor {
         });
     }
 };
-SVGPathEditor = __decorate$4([
+SVGPathEditor = __decorate$1([
     registerInnerEditor()
 ], SVGPathEditor);
 Path.setEditInner('SVGPathEditor');
 
-const leafer = new App$1({ view: window, editor: {} });
-const shape = new Path$1({
+const leafer = new App({ view: window, editor: {} });
+const shape = new Path({
     x: 100,
     y: 100,
     fill: '#32cd79',

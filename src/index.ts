@@ -1,1 +1,1 @@
-export * from './svg-path-editor';
+import './svg-path-editor';
