@@ -1,3 +1,5 @@
+type PointType = 'start' | 'end';
+
 export interface IPoint {
   /** 当前顶点 */
   x?: number;
@@ -14,7 +16,8 @@ export interface IPoint {
   y2?: number;
   // 模式
   mode?: string;
-  name: string;
+  // 顶点类型
+  type: PointType;
 }
 
 export type AnyObject = Record<string, any>;

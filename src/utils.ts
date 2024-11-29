@@ -71,15 +71,13 @@ export function pathData2Point(path: IPathCommandData) {
     const point: IPoint = {} as IPoint;
 
     if (path[i] === M) {
-      point.name = 'M';
       point.x = path[++i];
       point.y = path[++i];
+      point.type = 'start';
     } else if (path[i] === L) {
-      point.name = 'L';
       point.x = path[++i];
       point.y = path[++i];
     } else if (path[i] === C) {
-      point.name = 'C';
       pointData[pointData.length - 1].x2 = path[++i];
       pointData[pointData.length - 1].y2 = path[++i];
       point.x1 = path[++i];
@@ -87,13 +85,12 @@ export function pathData2Point(path: IPathCommandData) {
       point.x = path[++i];
       point.y = path[++i];
     } else if (path[i] === Q) {
-      point.name = 'Q';
       pointData[pointData.length - 1].x2 = path[++i];
       pointData[pointData.length - 1].y2 = path[++i];
       point.x = path[++i];
       point.y = path[++i];
     } else if (path[i] === Z) {
-      point.name = 'Z';
+      point.type = 'end';
     }
     pointData.push(point);
   }
@@ -111,21 +108,42 @@ export function pathData2Point(path: IPathCommandData) {
 export function point2PathData(points: IPoint[]) {
   const pathData: IPathCommandData = [];
 
+  const getPrev = (index: number) => {
+    if (index === 0) {
+      return points[points.length - 1];
+    }
+    return points[index - 1];
+  };
+
   points.forEach((point, index) => {
-    const { name, x = 0, y = 0, x1 = 0, y1 = 0 } = point;
+    const { type, x, y, x1, y1 } = point;
 
-    const prev = points[index - 1];
+    const prev = getPrev(index);
 
-    if (name === 'M') {
-      pathData.push(M, x, y);
-    } else if (name === 'L') {
-      pathData.push(L, x, y);
-    } else if (name === 'C') {
-      pathData.push(C, prev.x2 || 0, prev.y2 || 0, x1, y1, x, y);
-    } else if (name === 'Q') {
-      pathData.push(Q, prev.x2 || 0, prev.y2 || 0, x, y);
-    } else if (name === 'Z') {
+    if (type === 'end') {
       pathData.push(Z);
+    } else if (type === 'start') {
+      pathData.push(M, x, y);
+    } else {
+      if (
+        prev.x2 === undefined &&
+        prev.y2 === undefined &&
+        x1 === undefined &&
+        y1 === undefined
+      ) {
+        pathData.push(L, x, y);
+      } else if (
+        prev.x2 !== undefined &&
+        prev.y2 !== undefined &&
+        x1 !== undefined &&
+        y1 !== undefined
+      ) {
+        pathData.push(C, prev.x2 || 0, prev.y2 || 0, x1, y1, x, y);
+      } else if (prev.x2 !== undefined && prev.y2 !== undefined) {
+        pathData.push(Q, prev.x2 || 0, prev.y2 || 0, x, y);
+      } else if (x1 !== undefined && y1 !== undefined) {
+        pathData.push(Q, x1, y1, x, y);
+      }
     }
   });
 

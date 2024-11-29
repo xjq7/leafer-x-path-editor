@@ -59,6 +59,12 @@ export class SVGPathEditor extends InnerEditor {
   // 用来实时绘制编辑形状的副本
   private editTargetDuplicate!: Path;
 
+  // 键盘事件
+  private keyEvents: { type: string; event: any }[] = [];
+
+  // 当前按下的键
+  private downKey: number[] = [];
+
   constructor(props: any) {
     super(props);
     this.pointsBox = new Box();
@@ -76,6 +82,35 @@ export class SVGPathEditor extends InnerEditor {
         this.editor.closeInnerEditor();
       }),
     ];
+  }
+
+  private isCtrl() {
+    if (this.downKey.length !== 1) return false;
+    return this.downKey.some((val) => [17, 91].includes(val));
+  }
+
+  private addKeyEventListener() {
+    const handleKeyDownEvent = (e: any) => {
+      this.downKey.push(e.keyCode);
+    };
+
+    document.addEventListener('keydown', handleKeyDownEvent);
+
+    const handleKeyUpEvent = (e: any) => {
+      this.downKey = this.downKey.filter((val) => e.keyCode !== val);
+    };
+
+    document.addEventListener('keyup', handleKeyUpEvent);
+
+    this.keyEvents.push({ type: 'keydown', event: handleKeyDownEvent });
+    this.keyEvents.push({ type: 'keyup', event: handleKeyUpEvent });
+  }
+
+  private removeKeyEventListener() {
+    this.keyEvents.forEach(({ type, event }) => {
+      document.removeEventListener(type, event);
+    });
+    this.keyEvents = [];
   }
 
   public onLoad(): void {
@@ -97,12 +132,14 @@ export class SVGPathEditor extends InnerEditor {
 
     // 2. 载入控制点
     this.editBox.add(this.view); // 添加在 editor 或 editBox 中都可以， 注意editBox本身具有定位
+    this.addKeyEventListener();
   }
 
   public onUpdate(): void {}
 
   public onUnload(): void {
     this.closeInnerEditor();
+    this.removeKeyEventListener();
     // 4. 卸载控制点
     this.editBox.remove(this.view);
   }
@@ -115,6 +152,27 @@ export class SVGPathEditor extends InnerEditor {
    * @memberof SVGPathEditor
    */
   private handlePointTap(e: any) {
+    if (this.isCtrl()) {
+      const { innerId } = e.target;
+      const pointIdx = this.pointIdxMap.get(innerId);
+      const point = this.points[pointIdx.index];
+      const prev = this.points[pointIdx.leftIdx]
+      const next = this.points[pointIdx.rightIdx]
+
+      if (
+        (point.x1 !== undefined && point.y1 !== undefined) ||
+        (point.x2 !== undefined && point.y2 !== undefined)
+      ) {
+        point.x1 = undefined;
+        point.x2 = undefined;
+        point.y1 = undefined;
+        point.y2 = undefined;
+      } else {
+        
+      }
+      this.drawInnerPath();
+    }
+
     this.handleSelectPoint(e.target);
     this.updateControl();
   }
@@ -155,7 +213,6 @@ export class SVGPathEditor extends InnerEditor {
 
       this.updateControl();
       this.drawInnerPath();
-      this.drawStroke();
     }
   }
 
@@ -201,8 +258,6 @@ export class SVGPathEditor extends InnerEditor {
       this.updateControl();
       // 更新 path
       this.drawInnerPath();
-
-      this.drawStroke();
     }
   }
 
@@ -301,6 +356,7 @@ export class SVGPathEditor extends InnerEditor {
     this.editTargetDuplicate.set({
       path: point2PathData(this.outerTransform(this.points)),
     });
+    this.drawStroke();
   }
 
   /**
@@ -320,8 +376,8 @@ export class SVGPathEditor extends InnerEditor {
     // 这里绘制顶点时, 同时记录了顶点与相邻点的关系, 用 leftIdx 跟 rightIdx 来记录
     const points = this.points
       .map((pointObj, index) => {
-        const { x = 0, y = 0, name } = pointObj;
-        if (name === 'Z') return null;
+        const { x = 0, y = 0, type } = pointObj;
+        if (type === 'end') return null;
 
         if (!firstIdx) firstIdx = index;
 

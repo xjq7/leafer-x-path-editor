@@ -14756,17 +14756,15 @@ function pathData2Point(path) {
     for (let i = 0; i < path.length; i++) {
         const point = {};
         if (path[i] === M) {
-            point.name = 'M';
             point.x = path[++i];
             point.y = path[++i];
+            point.type = 'start';
         }
         else if (path[i] === L) {
-            point.name = 'L';
             point.x = path[++i];
             point.y = path[++i];
         }
         else if (path[i] === C) {
-            point.name = 'C';
             pointData[pointData.length - 1].x2 = path[++i];
             pointData[pointData.length - 1].y2 = path[++i];
             point.x1 = path[++i];
@@ -14775,14 +14773,13 @@ function pathData2Point(path) {
             point.y = path[++i];
         }
         else if (path[i] === Q) {
-            point.name = 'Q';
             pointData[pointData.length - 1].x2 = path[++i];
             pointData[pointData.length - 1].y2 = path[++i];
             point.x = path[++i];
             point.y = path[++i];
         }
         else if (path[i] === Z) {
-            point.name = 'Z';
+            point.type = 'end';
         }
         pointData.push(point);
     }
@@ -14790,23 +14787,40 @@ function pathData2Point(path) {
 }
 function point2PathData(points) {
     const pathData = [];
+    const getPrev = (index) => {
+        if (index === 0) {
+            return points[points.length - 1];
+        }
+        return points[index - 1];
+    };
     points.forEach((point, index) => {
-        const { name, x = 0, y = 0, x1 = 0, y1 = 0 } = point;
-        const prev = points[index - 1];
-        if (name === 'M') {
+        const { type, x, y, x1, y1 } = point;
+        const prev = getPrev(index);
+        if (type === 'end') {
+            pathData.push(Z);
+        }
+        else if (type === 'start') {
             pathData.push(M, x, y);
         }
-        else if (name === 'L') {
-            pathData.push(L, x, y);
-        }
-        else if (name === 'C') {
-            pathData.push(C, prev.x2 || 0, prev.y2 || 0, x1, y1, x, y);
-        }
-        else if (name === 'Q') {
-            pathData.push(Q, prev.x2 || 0, prev.y2 || 0, x, y);
-        }
-        else if (name === 'Z') {
-            pathData.push(Z);
+        else {
+            if (prev.x2 === undefined &&
+                prev.y2 === undefined &&
+                x1 === undefined &&
+                y1 === undefined) {
+                pathData.push(L, x, y);
+            }
+            else if (prev.x2 !== undefined &&
+                prev.y2 !== undefined &&
+                x1 !== undefined &&
+                y1 !== undefined) {
+                pathData.push(C, prev.x2 || 0, prev.y2 || 0, x1, y1, x, y);
+            }
+            else if (prev.x2 !== undefined && prev.y2 !== undefined) {
+                pathData.push(Q, prev.x2 || 0, prev.y2 || 0, x, y);
+            }
+            else if (x1 !== undefined && y1 !== undefined) {
+                pathData.push(Q, x1, y1, x, y);
+            }
         }
     });
     return pathData;
@@ -14834,6 +14848,8 @@ let SVGPathEditor = class SVGPathEditor extends InnerEditor {
         this.points = [];
         this.pointIdxMap = new Map();
         this.controlMap = new Map();
+        this.keyEvents = [];
+        this.downKey = [];
         this.pointsBox = new Box();
         this.controlsBox = new Box();
         this.strokeBox = new Box();
@@ -14849,6 +14865,29 @@ let SVGPathEditor = class SVGPathEditor extends InnerEditor {
             }),
         ];
     }
+    isCtrl() {
+        if (this.downKey.length !== 1)
+            return false;
+        return this.downKey.some((val) => [17, 91].includes(val));
+    }
+    addKeyEventListener() {
+        const handleKeyDownEvent = (e) => {
+            this.downKey.push(e.keyCode);
+        };
+        document.addEventListener('keydown', handleKeyDownEvent);
+        const handleKeyUpEvent = (e) => {
+            this.downKey = this.downKey.filter((val) => e.keyCode !== val);
+        };
+        document.addEventListener('keyup', handleKeyUpEvent);
+        this.keyEvents.push({ type: 'keydown', event: handleKeyDownEvent });
+        this.keyEvents.push({ type: 'keyup', event: handleKeyUpEvent });
+    }
+    removeKeyEventListener() {
+        this.keyEvents.forEach(({ type, event }) => {
+            document.removeEventListener(type, event);
+        });
+        this.keyEvents = [];
+    }
     onLoad() {
         var _a;
         this.points = this.innerTransform(pathData2Point(this.editTarget.getPath()));
@@ -14859,13 +14898,30 @@ let SVGPathEditor = class SVGPathEditor extends InnerEditor {
         this.editTarget.visible = false;
         this.editor.selector.targetStroker.visible = false;
         this.editBox.add(this.view);
+        this.addKeyEventListener();
     }
     onUpdate() { }
     onUnload() {
         this.closeInnerEditor();
+        this.removeKeyEventListener();
         this.editBox.remove(this.view);
     }
     handlePointTap(e) {
+        if (this.isCtrl()) {
+            const { innerId } = e.target;
+            const pointIdx = this.pointIdxMap.get(innerId);
+            const point = this.points[pointIdx.index];
+            this.points[pointIdx.leftIdx];
+            this.points[pointIdx.rightIdx];
+            if ((point.x1 !== undefined && point.y1 !== undefined) ||
+                (point.x2 !== undefined && point.y2 !== undefined)) {
+                point.x1 = undefined;
+                point.x2 = undefined;
+                point.y1 = undefined;
+                point.y2 = undefined;
+            }
+            this.drawInnerPath();
+        }
         this.handleSelectPoint(e.target);
         this.updateControl();
     }
@@ -14891,7 +14947,6 @@ let SVGPathEditor = class SVGPathEditor extends InnerEditor {
             }
             this.updateControl();
             this.drawInnerPath();
-            this.drawStroke();
         }
     }
     handlePointDrag(e) {
@@ -14920,7 +14975,6 @@ let SVGPathEditor = class SVGPathEditor extends InnerEditor {
                 point.y2 += moveY;
             this.updateControl();
             this.drawInnerPath();
-            this.drawStroke();
         }
     }
     handleSelectPoint(el) {
@@ -14984,6 +15038,7 @@ let SVGPathEditor = class SVGPathEditor extends InnerEditor {
         this.editTargetDuplicate.set({
             path: point2PathData(this.outerTransform(this.points)),
         });
+        this.drawStroke();
     }
     drawPoints() {
         this.pointIdxMap.clear();
@@ -14992,8 +15047,8 @@ let SVGPathEditor = class SVGPathEditor extends InnerEditor {
         let lastPoint;
         const points = this.points
             .map((pointObj, index) => {
-            const { x = 0, y = 0, name } = pointObj;
-            if (name === 'Z')
+            const { x = 0, y = 0, type } = pointObj;
+            if (type === 'end')
                 return null;
             const point = new Ellipse(Object.assign(Object.assign({ x,
                 y }, pointStyle), { cursor: 'move', offsetX: -pointRadius, offsetY: -pointRadius }));
