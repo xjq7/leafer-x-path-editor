@@ -26,7 +26,8 @@
   "scripts": {
     "start": "cross-env NODE_ENV=development rollup -c -w",
     "build": "cross-env PLATFORM=all rollup -c",
-    "test": "vitest"
+    "test": "vitest",
+    "release": "release-it"
   },
   "engines": {
     "node": ">= 18"
@@ -35,7 +36,6 @@
     "@leafer-in/editor": "^1.0.10",
     "@leafer-ui/core": "^1.0.10",
     "@leafer-ui/interface": "^1.0.10",
-    "leafer-ui": "^1.0.10",
     "@rollup/plugin-commonjs": "^25.0.4",
     "@rollup/plugin-html": "^1.0.3",
     "@rollup/plugin-multi-entry": "^6.0.0",
@@ -47,6 +47,8 @@
     "cross-env": "^7.0.3",
     "eslint": "^8.49.0",
     "jsdom": "^22.0.0",
+    "leafer-ui": "^1.0.10",
+    "release-it": "^17.10.0",
     "rollup": "^3.29.2",
     "rollup-plugin-copy": "^3.5.0",
     "rollup-plugin-dts": "^6.0.2",
