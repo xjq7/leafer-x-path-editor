@@ -44,6 +44,9 @@ export class SVGPathEditor extends InnerEditor {
   // 控制点 box
   private controlsBox = new Box();
 
+  // 控制点移动过程中的吸附状态盒子
+  private controlAbsorbBox = new Box();
+
   /** 顶点数据 */
   private points: IPoint[] = [];
 
@@ -53,8 +56,15 @@ export class SVGPathEditor extends InnerEditor {
   // 用于 记录每个左右控制点与顶点的 关联关系
   private controlMap: Map<number, IPoint> = new Map();
 
+  private controlAbsorbStatus: {
+    isMirrorAngle?: boolean;
+    isMirrorAngleLength?: boolean;
+  } = {};
   // 当前选中的 顶点
   private selectPoint?: Ellipse;
+
+  // 当前选中的 控制点
+  private selectControlPoint?: Ellipse;
 
   // 用来实时绘制编辑形状的副本
   private editTargetDuplicate!: Path;
@@ -70,13 +80,25 @@ export class SVGPathEditor extends InnerEditor {
     this.pointsBox = new Box();
     this.controlsBox = new Box();
     this.strokeBox = new Box();
+    this.controlAbsorbBox = new Box();
 
-    this.view.addMany(this.strokeBox, this.controlsBox, this.pointsBox);
+    this.view.addMany(
+      this.strokeBox,
+      this.controlsBox,
+      this.pointsBox,
+      this.controlAbsorbBox
+    );
 
     this.eventIds = [
       this.pointsBox.on_(DragEvent.DRAG, this.handlePointDrag.bind(this)),
       this.pointsBox.on_(PointerEvent.TAP, this.handlePointTap.bind(this)),
       this.controlsBox.on_(DragEvent.DRAG, this.handleControlDrag.bind(this)),
+      this.controlsBox.on_(DragEvent.END, this.handleControlDragEnd.bind(this)),
+      this.controlsBox.on_(
+        PointerEvent.DOWN,
+        this.handleControlDown.bind(this)
+      ),
+      this.controlsBox.on_(PointerEvent.UP, this.handleControlUp.bind(this)),
       this.editor.app.on_(PointerEvent.DOUBLE_TAP, (e: any) => {
         if (e.target === this.editTarget) return;
         this.editor.closeInnerEditor();
@@ -84,6 +106,7 @@ export class SVGPathEditor extends InnerEditor {
     ];
   }
 
+  // 是否是 按下 Command 或 Ctrl 状态
   private isCtrl() {
     if (this.downKey.length !== 1) return false;
     return this.downKey.some((val) => [17, 91].includes(val));
@@ -156,8 +179,6 @@ export class SVGPathEditor extends InnerEditor {
       const { innerId } = e.target;
       const pointIdx = this.pointIdxMap.get(innerId);
       const point = this.points[pointIdx.index];
-      const prev = this.points[pointIdx.leftIdx]
-      const next = this.points[pointIdx.rightIdx]
 
       if (
         (point.x1 !== undefined && point.y1 !== undefined) ||
@@ -168,13 +189,69 @@ export class SVGPathEditor extends InnerEditor {
         point.y1 = undefined;
         point.y2 = undefined;
       } else {
-        
+        const [x1, y1, x2, y2] = this.getDefaultControls(
+          this.points[pointIdx.leftIdx],
+          this.points[pointIdx.index],
+          this.points[pointIdx.rightIdx]
+        );
+
+        point.x1 = x1;
+        point.y1 = y1;
+        point.x2 = x2;
+        point.y2 = y2;
+        point.mode = 'mirror-angle-length';
       }
       this.drawInnerPath();
     }
 
     this.handleSelectPoint(e.target);
     this.updateControl();
+  }
+
+  /**
+   * 获取顶点默认控制点
+   *
+   * @param {IPoint} A 左邻点
+   * @param {IPoint} B 目标顶点
+   * @param {IPoint} C 右邻点
+   * @return {*}
+   * @memberof SVGPathEditor
+   */
+  getDefaultControls(A: IPoint, B: IPoint, C: IPoint) {
+    const L_AC = Math.sqrt(Math.pow(C.y - A.y, 2) + Math.pow(C.x - A.x, 2));
+
+    // 目标线段长度
+    const L_DES = 0.6 * L_AC;
+
+    // 方向向量
+    const dirX = C.x - A.x;
+    const dirY = C.y - A.y;
+
+    // 归一化方向向量
+    const len = Math.sqrt(dirX * dirX + dirY * dirY);
+    const unitX = dirX / len;
+    const unitY = dirY / len;
+
+    // 计算目标线段端点
+    const halfLen = L_DES / 2;
+    const D = {
+      x: B.x + halfLen * unitX,
+      y: B.y + halfLen * unitY,
+    };
+
+    const E = {
+      x: B.x - halfLen * unitX,
+      y: B.y - halfLen * unitY,
+    };
+
+    return [E.x, E.y, D.x, D.y];
+  }
+
+  private handleControlDown(e: any) {
+    this.selectControlPoint = e.target;
+  }
+  private handleControlUp(e: any) {
+    this.selectControlPoint = null;
   }
 
   /**
@@ -191,29 +268,260 @@ export class SVGPathEditor extends InnerEditor {
 
     const { innerId } = e.target;
 
-    const x = e.target.x + moveX;
-    const y = e.target.y + moveY;
+    const newX = e.target.x + moveX;
+    const newY = e.target.y + moveY;
 
     // 更新 point 位置
     e.target.set({
-      x,
-      y,
+      x: newX,
+      y: newY,
     });
 
     const pointObj = this.controlMap.get(innerId);
 
     if (pointObj) {
-      if (isLeft) {
-        pointObj.x1 = x;
-        pointObj.y1 = y;
-      } else if (isRight) {
-        pointObj.x2 = x;
-        pointObj.y2 = y;
+      // 自由拖动模式
+      if (this.isCtrl()) {
+        pointObj.mode = 'no-mirror';
       }
 
+      // 更新当前拖动点
+      if (isLeft) {
+        pointObj.x1 = newX;
+        pointObj.y1 = newY;
+      } else if (isRight) {
+        pointObj.x2 = newX;
+        pointObj.y2 = newY;
+      }
+
+      // 计算当前处于哪种模式
+      const { x, y, x1, y1, x2, y2, mode } = pointObj;
+
+      if (
+        x1 !== undefined &&
+        y1 !== undefined &&
+        x2 !== undefined &&
+        y2 !== undefined &&
+        mode !== 'mirror-angle-length'
+      ) {
+        if (mode !== 'mirror-angle') {
+          // 直线吸附
+          const distance1 = Math.sqrt(
+            Math.pow(x - x1, 2) + Math.pow(y - y1, 2)
+          );
+          const distance2 = Math.sqrt(
+            Math.pow(x - x2, 2) + Math.pow(y - y2, 2)
+          );
+          const length = distance1 + distance2;
+
+          // 动态调整误差阈值
+          const epsilon = (120 * Math.min(Math.max(length, 40), 800)) / 150; // 根据距离设置阈值
+          const crossProduct = Math.abs(
+            (x - x1) * (y2 - y1) - (y - y1) * (x2 - x1)
+          );
+
+          if (crossProduct <= epsilon) {
+            this.controlAbsorbStatus.isMirrorAngle = true;
+
+            let currentX, currentY, mirrorX, mirrorY;
+            if (isLeft) {
+              currentX = x2;
+              currentY = y2;
+              mirrorX = x1;
+              mirrorY = y1;
+            } else {
+              currentX = x1;
+              currentY = y1;
+              mirrorX = x2;
+              mirrorY = y2;
+            }
+
+            const { x: newX, y: newY } = this.getMirrorPoint(
+              currentX,
+              currentY,
+              x,
+              y,
+              mirrorX,
+              mirrorY
+            );
+            if (isLeft) {
+              pointObj.x1 = newX;
+              pointObj.y1 = newY;
+            } else {
+              pointObj.x2 = newX;
+              pointObj.y2 = newY;
+            }
+          } else {
+            this.controlAbsorbStatus.isMirrorAngle = false;
+          }
+        }
+
+        // 等长吸附
+        if (this.controlAbsorbStatus.isMirrorAngle || mode === 'mirror-angle') {
+          const distance1 = Math.sqrt(
+            Math.pow(x1 - x, 2) + Math.pow(y1 - y, 2)
+          );
+          const distance2 = Math.sqrt(
+            Math.pow(x2 - x, 2) + Math.pow(y2 - y, 2)
+          );
+
+          const threshold = pointRadius / 2;
+
+          if (Math.abs(distance1 - distance2) <= threshold) {
+            if (isLeft) {
+              pointObj.x1 = x - (x2 - x);
+              pointObj.y1 = y - (y2 - y);
+            } else {
+              pointObj.x2 = x - (x1 - x);
+              pointObj.y2 = y - (y1 - y);
+            }
+
+            this.controlAbsorbStatus.isMirrorAngleLength = true;
+          } else {
+            this.controlAbsorbStatus.isMirrorAngleLength = false;
+          }
+        } else {
+          if (this.controlAbsorbStatus.isMirrorAngleLength) {
+            this.controlAbsorbStatus.isMirrorAngleLength = false;
+          }
+        }
+      }
+
+      // 根据控制点模式 来计算另一个控制点 的位置
+      if (pointObj.mode === 'mirror-angle-length') {
+        if (isLeft) {
+          pointObj.x2 -= moveX;
+          pointObj.y2 -= moveY;
+        } else if (isRight) {
+          pointObj.x1 -= moveX;
+          pointObj.y1 -= moveY;
+        }
+      } else if (pointObj.mode === 'mirror-angle') {
+        let x1 = pointObj.x1,
+          y1 = pointObj.y1,
+          x2 = pointObj.x2,
+          y2 = pointObj.y2;
+        if (isRight) {
+          x1 = pointObj.x2;
+          y1 = pointObj.y2;
+          x2 = pointObj.x1;
+          y2 = pointObj.y1;
+        }
+
+        const { x, y } = pointObj;
+
+        const { x: newX, y: newY } = this.getMirrorPoint(x1, y1, x, y, x2, y2);
+
+        if (isLeft) {
+          pointObj.x2 = newX;
+          pointObj.y2 = newY;
+        } else {
+          pointObj.x1 = newX;
+          pointObj.y1 = newY;
+        }
+      }
+
+      let absorbBox: UI[] = [];
+
+      let desX;
+      let desY;
+
+      if (isLeft) {
+        desX = pointObj.x1;
+        desY = pointObj.y1;
+      } else {
+        desX = pointObj.x2;
+        desY = pointObj.y2;
+      }
+      if (this.controlAbsorbStatus.isMirrorAngle) {
+        const absorbPath = new Path({
+          path: `M ${x} ${y} L ${desX} ${desY}`,
+          stroke: 'red',
+          strokeWidth: 1,
+        });
+        absorbBox.push(absorbPath);
+      }
+
+      if (this.controlAbsorbStatus.isMirrorAngleLength) {
+        this.selectControlPoint.fill = 'red';
+        const absorbPoint = new Ellipse({
+          x: desX,
+          y: desY,
+          width: pointRadius,
+          height: pointRadius,
+          offsetX: -pointRadius / 2,
+          offsetY: -pointRadius / 2,
+          fill: 'red',
+        });
+        absorbPoint.fill = 'red';
+        absorbBox.push(absorbPoint);
+      }
+      this.controlAbsorbBox.set({
+        children: [...absorbBox],
+      });
       this.updateControl();
       this.drawInnerPath();
     }
+  }
+
+  getMirrorPoint(
+    currentX: number,
+    currentY: number,
+    centerX: number,
+    centerY: number,
+    mirrorX: number,
+    mirrorY: number
+  ) {
+    // 另一个控制点跟顶点的距离
+    const distance = Math.sqrt(
+      Math.pow(mirrorX - centerX, 2) + Math.pow(mirrorY - centerY, 2)
+    );
+
+    // 当前移动点的方向向量
+    const dirX = currentX - centerX;
+    const dirY = currentY - centerY;
+    const length = Math.sqrt(dirX * dirX + dirY * dirY);
+
+    // 归一化方向向量
+    const unitX = dirX / length;
+    const unitY = dirY / length;
+
+    // 计算另一个控制点的位置
+    const newX = centerX - unitX * distance;
+    const newY = centerY - unitY * distance;
+
+    return { x: newX, y: newY };
+  }
+
+  private handleControlDragEnd(e: any) {
+    const { innerId } = e.target;
+
+    const point = this.controlMap.get(innerId);
+
+    if (point) {
+      const { x1, y1, x2, y2 } = point;
+
+      if (
+        x1 !== undefined &&
+        y1 !== undefined &&
+        x2 !== undefined &&
+        y2 !== undefined
+      ) {
+        if (this.controlAbsorbStatus.isMirrorAngle) {
+          point.mode = 'mirror-angle';
+        }
+        if (
+          (this.controlAbsorbStatus.isMirrorAngle ||
+            point.mode === 'mirror-angle') &&
+          this.controlAbsorbStatus.isMirrorAngleLength
+        ) {
+          point.mode = 'mirror-angle-length';
+        }
+      }
+    }
+
+    this.controlAbsorbStatus = {};
+    this.controlAbsorbBox.set({ children: [] });
   }
 
   /**
@@ -449,7 +757,7 @@ export class SVGPathEditor extends InnerEditor {
         x: x1,
         y: y1,
         ...pointStyle,
-        cursor: 'move',
+        cursor: 'pointer',
         data: {
           isLeft: true,
         },
@@ -466,7 +774,7 @@ export class SVGPathEditor extends InnerEditor {
         x: x2,
         y: y2,
         ...pointStyle,
-        cursor: 'move',
+        cursor: 'pointer',
         data: {
           isRight: true,
         },

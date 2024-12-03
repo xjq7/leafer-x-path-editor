@@ -5,7 +5,7 @@ import './src/index';
 const leafer = new App({ view: window, editor: {} });
 
 const shape = new Path({
-  x: 100,
+  x: 300,
   y: 100,
   fill: '#32cd79',
   path: [

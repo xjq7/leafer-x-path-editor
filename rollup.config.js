@@ -60,7 +60,7 @@ if (isDev) {
     plugins: [
       ...plugins,
       html({
-        title: 'Leafer Plugin',
+        title: 'leafer-x-path-editor',
         meta: [
           { charset: 'utf-8' },
           {

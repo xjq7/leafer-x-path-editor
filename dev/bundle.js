@@ -14845,19 +14845,25 @@ let SVGPathEditor = class SVGPathEditor extends InnerEditor {
         this.strokeBox = new Box();
         this.pointsBox = new Box();
         this.controlsBox = new Box();
+        this.controlAbsorbBox = new Box();
         this.points = [];
         this.pointIdxMap = new Map();
         this.controlMap = new Map();
+        this.controlAbsorbStatus = {};
         this.keyEvents = [];
         this.downKey = [];
         this.pointsBox = new Box();
         this.controlsBox = new Box();
         this.strokeBox = new Box();
-        this.view.addMany(this.strokeBox, this.controlsBox, this.pointsBox);
+        this.controlAbsorbBox = new Box();
+        this.view.addMany(this.strokeBox, this.controlsBox, this.pointsBox, this.controlAbsorbBox);
         this.eventIds = [
             this.pointsBox.on_(DragEvent.DRAG, this.handlePointDrag.bind(this)),
             this.pointsBox.on_(PointerEvent.TAP, this.handlePointTap.bind(this)),
             this.controlsBox.on_(DragEvent.DRAG, this.handleControlDrag.bind(this)),
+            this.controlsBox.on_(DragEvent.END, this.handleControlDragEnd.bind(this)),
+            this.controlsBox.on_(PointerEvent.DOWN, this.handleControlDown.bind(this)),
+            this.controlsBox.on_(PointerEvent.UP, this.handleControlUp.bind(this)),
             this.editor.app.on_(PointerEvent.DOUBLE_TAP, (e) => {
                 if (e.target === this.editTarget)
                     return;
@@ -14911,8 +14917,6 @@ let SVGPathEditor = class SVGPathEditor extends InnerEditor {
             const { innerId } = e.target;
             const pointIdx = this.pointIdxMap.get(innerId);
             const point = this.points[pointIdx.index];
-            this.points[pointIdx.leftIdx];
-            this.points[pointIdx.rightIdx];
             if ((point.x1 !== undefined && point.y1 !== undefined) ||
                 (point.x2 !== undefined && point.y2 !== undefined)) {
                 point.x1 = undefined;
@@ -14920,34 +14924,234 @@ let SVGPathEditor = class SVGPathEditor extends InnerEditor {
                 point.y1 = undefined;
                 point.y2 = undefined;
             }
+            else {
+                const [x1, y1, x2, y2] = this.getDefaultControls(this.points[pointIdx.leftIdx], this.points[pointIdx.index], this.points[pointIdx.rightIdx]);
+                point.x1 = x1;
+                point.y1 = y1;
+                point.x2 = x2;
+                point.y2 = y2;
+                point.mode = 'mirror-angle-length';
+            }
             this.drawInnerPath();
         }
         this.handleSelectPoint(e.target);
         this.updateControl();
     }
+    getDefaultControls(A, B, C) {
+        const L_AC = Math.sqrt(Math.pow(C.y - A.y, 2) + Math.pow(C.x - A.x, 2));
+        const L_DES = 0.6 * L_AC;
+        const dirX = C.x - A.x;
+        const dirY = C.y - A.y;
+        const len = Math.sqrt(dirX * dirX + dirY * dirY);
+        const unitX = dirX / len;
+        const unitY = dirY / len;
+        const halfLen = L_DES / 2;
+        const D = {
+            x: B.x + halfLen * unitX,
+            y: B.y + halfLen * unitY,
+        };
+        const E = {
+            x: B.x - halfLen * unitX,
+            y: B.y - halfLen * unitY,
+        };
+        return [E.x, E.y, D.x, D.y];
+    }
+    handleControlDown(e) {
+        this.selectControlPoint = e.target;
+    }
+    handleControlUp(e) {
+        this.selectControlPoint = null;
+    }
     handleControlDrag(e) {
         const { isLeft, isRight } = e.target.data;
         const { moveX, moveY } = e;
         const { innerId } = e.target;
-        const x = e.target.x + moveX;
-        const y = e.target.y + moveY;
+        const newX = e.target.x + moveX;
+        const newY = e.target.y + moveY;
         e.target.set({
-            x,
-            y,
+            x: newX,
+            y: newY,
         });
         const pointObj = this.controlMap.get(innerId);
         if (pointObj) {
+            if (this.isCtrl()) {
+                pointObj.mode = 'no-mirror';
+            }
             if (isLeft) {
-                pointObj.x1 = x;
-                pointObj.y1 = y;
+                pointObj.x1 = newX;
+                pointObj.y1 = newY;
             }
             else if (isRight) {
-                pointObj.x2 = x;
-                pointObj.y2 = y;
+                pointObj.x2 = newX;
+                pointObj.y2 = newY;
             }
+            const { x, y, x1, y1, x2, y2, mode } = pointObj;
+            if (x1 !== undefined &&
+                y1 !== undefined &&
+                x2 !== undefined &&
+                y2 !== undefined &&
+                mode !== 'mirror-angle-length') {
+                if (mode !== 'mirror-angle') {
+                    const distance1 = Math.sqrt(Math.pow(x - x1, 2) + Math.pow(y - y1, 2));
+                    const distance2 = Math.sqrt(Math.pow(x - x2, 2) + Math.pow(y - y2, 2));
+                    const length = distance1 + distance2;
+                    const epsilon = (120 * Math.min(Math.max(length, 40), 800)) / 150;
+                    const crossProduct = Math.abs((x - x1) * (y2 - y1) - (y - y1) * (x2 - x1));
+                    if (crossProduct <= epsilon) {
+                        this.controlAbsorbStatus.isMirrorAngle = true;
+                        let currentX, currentY, mirrorX, mirrorY;
+                        if (isLeft) {
+                            currentX = x2;
+                            currentY = y2;
+                            mirrorX = x1;
+                            mirrorY = y1;
+                        }
+                        else {
+                            currentX = x1;
+                            currentY = y1;
+                            mirrorX = x2;
+                            mirrorY = y2;
+                        }
+                        const { x: newX, y: newY } = this.getMirrorPoint(currentX, currentY, x, y, mirrorX, mirrorY);
+                        if (isLeft) {
+                            pointObj.x1 = newX;
+                            pointObj.y1 = newY;
+                        }
+                        else {
+                            pointObj.x2 = newX;
+                            pointObj.y2 = newY;
+                        }
+                    }
+                    else {
+                        this.controlAbsorbStatus.isMirrorAngle = false;
+                    }
+                }
+                if (this.controlAbsorbStatus.isMirrorAngle || mode === 'mirror-angle') {
+                    const distance1 = Math.sqrt(Math.pow(x1 - x, 2) + Math.pow(y1 - y, 2));
+                    const distance2 = Math.sqrt(Math.pow(x2 - x, 2) + Math.pow(y2 - y, 2));
+                    const threshold = pointRadius / 2;
+                    if (Math.abs(distance1 - distance2) <= threshold) {
+                        if (isLeft) {
+                            pointObj.x1 = x - (x2 - x);
+                            pointObj.y1 = y - (y2 - y);
+                        }
+                        else {
+                            pointObj.x2 = x - (x1 - x);
+                            pointObj.y2 = y - (y1 - y);
+                        }
+                        this.controlAbsorbStatus.isMirrorAngleLength = true;
+                    }
+                    else {
+                        this.controlAbsorbStatus.isMirrorAngleLength = false;
+                    }
+                }
+                else {
+                    if (this.controlAbsorbStatus.isMirrorAngleLength) {
+                        this.controlAbsorbStatus.isMirrorAngleLength = false;
+                    }
+                }
+            }
+            if (pointObj.mode === 'mirror-angle-length') {
+                if (isLeft) {
+                    pointObj.x2 -= moveX;
+                    pointObj.y2 -= moveY;
+                }
+                else if (isRight) {
+                    pointObj.x1 -= moveX;
+                    pointObj.y1 -= moveY;
+                }
+            }
+            else if (pointObj.mode === 'mirror-angle') {
+                let x1 = pointObj.x1, y1 = pointObj.y1, x2 = pointObj.x2, y2 = pointObj.y2;
+                if (isRight) {
+                    x1 = pointObj.x2;
+                    y1 = pointObj.y2;
+                    x2 = pointObj.x1;
+                    y2 = pointObj.y1;
+                }
+                const { x, y } = pointObj;
+                const { x: newX, y: newY } = this.getMirrorPoint(x1, y1, x, y, x2, y2);
+                if (isLeft) {
+                    pointObj.x2 = newX;
+                    pointObj.y2 = newY;
+                }
+                else {
+                    pointObj.x1 = newX;
+                    pointObj.y1 = newY;
+                }
+            }
+            let absorbBox = [];
+            let desX;
+            let desY;
+            if (isLeft) {
+                desX = pointObj.x1;
+                desY = pointObj.y1;
+            }
+            else {
+                desX = pointObj.x2;
+                desY = pointObj.y2;
+            }
+            if (this.controlAbsorbStatus.isMirrorAngle) {
+                const absorbPath = new Path({
+                    path: `M ${x} ${y} L ${desX} ${desY}`,
+                    stroke: 'red',
+                    strokeWidth: 1,
+                });
+                absorbBox.push(absorbPath);
+            }
+            if (this.controlAbsorbStatus.isMirrorAngleLength) {
+                this.selectControlPoint.fill = 'red';
+                const absorbPoint = new Ellipse({
+                    x: desX,
+                    y: desY,
+                    width: pointRadius,
+                    height: pointRadius,
+                    offsetX: -pointRadius / 2,
+                    offsetY: -pointRadius / 2,
+                    fill: 'red',
+                });
+                absorbPoint.fill = 'red';
+                absorbBox.push(absorbPoint);
+            }
+            this.controlAbsorbBox.set({
+                children: [...absorbBox],
+            });
             this.updateControl();
             this.drawInnerPath();
         }
+    }
+    getMirrorPoint(currentX, currentY, centerX, centerY, mirrorX, mirrorY) {
+        const distance = Math.sqrt(Math.pow(mirrorX - centerX, 2) + Math.pow(mirrorY - centerY, 2));
+        const dirX = currentX - centerX;
+        const dirY = currentY - centerY;
+        const length = Math.sqrt(dirX * dirX + dirY * dirY);
+        const unitX = dirX / length;
+        const unitY = dirY / length;
+        const newX = centerX - unitX * distance;
+        const newY = centerY - unitY * distance;
+        return { x: newX, y: newY };
+    }
+    handleControlDragEnd(e) {
+        const { innerId } = e.target;
+        const point = this.controlMap.get(innerId);
+        if (point) {
+            const { x1, y1, x2, y2 } = point;
+            if (x1 !== undefined &&
+                y1 !== undefined &&
+                x2 !== undefined &&
+                y2 !== undefined) {
+                if (this.controlAbsorbStatus.isMirrorAngle) {
+                    point.mode = 'mirror-angle';
+                }
+                if ((this.controlAbsorbStatus.isMirrorAngle ||
+                    point.mode === 'mirror-angle') &&
+                    this.controlAbsorbStatus.isMirrorAngleLength) {
+                    point.mode = 'mirror-angle-length';
+                }
+            }
+        }
+        this.controlAbsorbStatus = {};
+        this.controlAbsorbBox.set({ children: [] });
     }
     handlePointDrag(e) {
         const { moveX, moveY } = e;
@@ -15087,13 +15291,13 @@ let SVGPathEditor = class SVGPathEditor extends InnerEditor {
         let leftControl;
         let rightControl;
         if (x1 !== undefined && y1 !== undefined) {
-            leftControl = new Ellipse(Object.assign(Object.assign({ x: x1, y: y1 }, pointStyle), { cursor: 'move', data: {
+            leftControl = new Ellipse(Object.assign(Object.assign({ x: x1, y: y1 }, pointStyle), { cursor: 'pointer', data: {
                     isLeft: true,
                 }, editable: true, offsetX: -pointRadius, offsetY: -pointRadius }));
             this.controlMap.set(leftControl.innerId, point);
         }
         if (x2 !== undefined && y2 !== undefined) {
-            rightControl = new Ellipse(Object.assign(Object.assign({ x: x2, y: y2 }, pointStyle), { cursor: 'move', data: {
+            rightControl = new Ellipse(Object.assign(Object.assign({ x: x2, y: y2 }, pointStyle), { cursor: 'pointer', data: {
                     isRight: true,
                 }, editable: true, offsetX: -pointRadius, offsetY: -pointRadius }));
             this.controlMap.set(rightControl.innerId, point);
@@ -15145,7 +15349,7 @@ Path.setEditInner('SVGPathEditor');
 
 const leafer = new App({ view: window, editor: {} });
 const shape = new Path({
-    x: 100,
+    x: 300,
     y: 100,
     fill: '#32cd79',
     path: [
