@@ -507,6 +507,18 @@ export class SVGPathEditor extends InnerEditor {
     }
   }
 
+  /**
+   * 保持 控制点 处于同一直线, 该方法用于获取 另一个控制点 应该在直线上的位置
+   *
+   * @param {number} currentX
+   * @param {number} currentY
+   * @param {number} centerX
+   * @param {number} centerY
+   * @param {number} mirrorX
+   * @param {number} mirrorY
+   * @return {*}
+   * @memberof SVGPathEditor
+   */
   getMirrorPoint(
     currentX: number,
     currentY: number,
