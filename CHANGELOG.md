@@ -1,5 +1,13 @@
 
 
+## [1.0.4](https://github.com/xjq7/leafer-x-path-editor/compare/1.0.3...1.0.4) (2024-12-03)
+
+
+### Features
+
+* 优化控制点 map 存储大小 ([a2902a9](https://github.com/xjq7/leafer-x-path-editor/commit/a2902a9e8984d2f3dcd265cc37b7ee09e4af2ede))
+* 注释 ([e19ae01](https://github.com/xjq7/leafer-x-path-editor/commit/e19ae01c44db3da35343ceb119739f8051e4c032))
+
 ## 1.0.3 (2024-12-03)
 
 
