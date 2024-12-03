@@ -14896,7 +14896,7 @@ let SVGPathEditor = class SVGPathEditor extends InnerEditor {
     }
     onLoad() {
         var _a;
-        this.points = this.innerTransform(pathData2Point(this.editTarget.getPath()));
+        this.points = this.innerTransformPoints(pathData2Point(this.editTarget.getPath()));
         this.editTargetDuplicate = this.editTarget.clone();
         (_a = this.editTarget.parent) === null || _a === void 0 ? void 0 : _a.add(this.editTargetDuplicate);
         this.drawPoints();
@@ -14906,7 +14906,29 @@ let SVGPathEditor = class SVGPathEditor extends InnerEditor {
         this.editBox.add(this.view);
         this.addKeyEventListener();
     }
-    onUpdate() { }
+    reDraw() {
+        if (!this.transform)
+            return;
+        const { worldTransform, boxBounds } = this.transform;
+        this.points = this.innerTransformPoints(this.outerTransformPoints(this.points, worldTransform, boxBounds));
+        this.drawPoints();
+        this.drawStroke();
+        this.updateControl();
+    }
+    onUpdate() {
+        const { boxBounds, worldTransform } = this.editTarget;
+        const { scaleX, scaleY } = worldTransform;
+        const { x, y } = boxBounds;
+        if (this.transform &&
+            (scaleX !== this.transform.worldTransform.scaleX ||
+                scaleY !== this.transform.worldTransform.scaleY)) {
+            this.reDraw();
+        }
+        this.transform = {
+            worldTransform: { scaleX, scaleY },
+            boxBounds: { x, y },
+        };
+    }
     onUnload() {
         this.closeInnerEditor();
         this.removeKeyEventListener();
@@ -14959,7 +14981,7 @@ let SVGPathEditor = class SVGPathEditor extends InnerEditor {
     handleControlDown(e) {
         this.selectControlPoint = e.target;
     }
-    handleControlUp(e) {
+    handleControlUp() {
         this.selectControlPoint = null;
     }
     handleControlDrag(e) {
@@ -15187,8 +15209,9 @@ let SVGPathEditor = class SVGPathEditor extends InnerEditor {
         this.selectPoint = el;
         this.selectPoint.set(Object.assign({}, selectPointStyle));
     }
-    innerTransform(points) {
-        const { worldTransform, boxBounds } = this.editTarget;
+    innerTransformPoints(points, worldTransform, boxBounds) {
+        worldTransform = worldTransform || this.editTarget.worldTransform;
+        boxBounds = boxBounds || this.editTarget.boxBounds;
         const { scaleX, scaleY } = worldTransform;
         const { x, y } = boxBounds;
         return points.map((point) => {
@@ -15206,8 +15229,9 @@ let SVGPathEditor = class SVGPathEditor extends InnerEditor {
             return newPoint;
         });
     }
-    outerTransform(points) {
-        const { worldTransform, boxBounds } = this.editTarget;
+    outerTransformPoints(points, worldTransform, boxBounds) {
+        worldTransform = worldTransform || this.editTarget.worldTransform;
+        boxBounds = boxBounds || this.editTarget.boxBounds;
         const { scaleX, scaleY } = worldTransform;
         const { x, y } = boxBounds;
         return points.map((point) => {
@@ -15228,7 +15252,7 @@ let SVGPathEditor = class SVGPathEditor extends InnerEditor {
     closeInnerEditor() {
         var _a;
         (_a = this.editTarget.parent) === null || _a === void 0 ? void 0 : _a.remove(this.editTargetDuplicate);
-        this.editTarget.path = point2PathData(this.outerTransform(this.points));
+        this.editTarget.path = point2PathData(this.outerTransformPoints(this.points));
         this.editTarget.visible = true;
         this.editor.selector.targetStroker.visible = true;
         this.editor.off_(this.eventIds);
@@ -15240,22 +15264,28 @@ let SVGPathEditor = class SVGPathEditor extends InnerEditor {
     }
     drawInnerPath() {
         this.editTargetDuplicate.set({
-            path: point2PathData(this.outerTransform(this.points)),
+            path: point2PathData(this.outerTransformPoints(this.points)),
         });
         this.drawStroke();
     }
     drawPoints() {
-        this.pointIdxMap.clear();
         let firstPoint;
         let lastIdx;
         let lastPoint;
+        const newPointIdxMap = new Map(this.pointIdxMap);
         const points = this.points
             .map((pointObj, index) => {
+            var _a;
             const { x = 0, y = 0, type } = pointObj;
             if (type === 'end')
                 return null;
-            const point = new Ellipse(Object.assign(Object.assign({ x,
-                y }, pointStyle), { cursor: 'move', offsetX: -pointRadius, offsetY: -pointRadius }));
+            const { innerId } = this.selectPoint || {};
+            const selectIdx = (_a = this.pointIdxMap.get(innerId)) === null || _a === void 0 ? void 0 : _a.index;
+            console.log(this.selectPoint, selectIdx);
+            const pointStyles = selectIdx === index
+                ? Object.assign(Object.assign({}, pointStyle), selectPointStyle) : Object.assign(Object.assign({}, pointStyle), unSelectPointStyle);
+            const point = new Ellipse(Object.assign({ x,
+                y, cursor: 'move', offsetX: -pointRadius, offsetY: -pointRadius }, pointStyles));
             const currentPoint = {
                 index,
                 leftIdx: lastIdx,
@@ -15263,7 +15293,7 @@ let SVGPathEditor = class SVGPathEditor extends InnerEditor {
             };
             if (!firstPoint)
                 firstPoint = currentPoint;
-            this.pointIdxMap.set(point.innerId, currentPoint);
+            newPointIdxMap.set(point.innerId, currentPoint);
             if (lastPoint) {
                 lastPoint.rightIdx = index;
             }
@@ -15274,6 +15304,7 @@ let SVGPathEditor = class SVGPathEditor extends InnerEditor {
             .filter(Boolean);
         firstPoint.leftIdx = lastIdx;
         lastPoint.rightIdx = firstPoint.index;
+        this.pointIdxMap = newPointIdxMap;
         this.pointsBox.set({ children: points });
     }
     drawStroke() {
@@ -15325,8 +15356,9 @@ let SVGPathEditor = class SVGPathEditor extends InnerEditor {
     }
     updateControl() {
         const { innerId } = this.selectPoint || {};
-        if (!innerId)
+        if (!innerId) {
             return;
+        }
         const pointObj = this.pointIdxMap.get(innerId);
         if (pointObj === undefined)
             return;

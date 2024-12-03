@@ -7,6 +7,8 @@ import {
   UI,
 } from '@leafer-ui/core';
 import { InnerEditor, registerInnerEditor } from '@leafer-in/editor';
+import { IBoundsData, IMatrixWithScaleData } from '@leafer-ui/interface';
+
 import { pathData2Point, point2PathData } from './utils';
 import { AnyObject, IPoint, PointIdx } from './type';
 
@@ -56,6 +58,7 @@ export class SVGPathEditor extends InnerEditor {
   // 用于 记录每个左右控制点与顶点的 关联关系
   private controlMap: Map<number, IPoint> = new Map();
 
+  // 当前交互的控制点状态
   private controlAbsorbStatus: {
     isMirrorAngle?: boolean;
     isMirrorAngleLength?: boolean;
@@ -74,6 +77,12 @@ export class SVGPathEditor extends InnerEditor {
 
   // 当前按下的键
   private downKey: number[] = [];
+
+  // 缓存世界相对变换属性
+  private transform: {
+    worldTransform: { scaleX: number; scaleY: number };
+    boxBounds: { x: number; y: number };
+  };
 
   constructor(props: any) {
     super(props);
@@ -138,13 +147,13 @@ export class SVGPathEditor extends InnerEditor {
 
   public onLoad(): void {
     // 统一转换成结构化数据, 并做了相对位置的处理
-    this.points = this.innerTransform(
+    this.points = this.innerTransformPoints(
       pathData2Point(this.editTarget.getPath())
     );
-
     this.editTargetDuplicate = this.editTarget.clone() as Path;
 
     this.editTarget.parent?.add(this.editTargetDuplicate);
+
     this.drawPoints();
     this.drawStroke();
 
@@ -158,7 +167,40 @@ export class SVGPathEditor extends InnerEditor {
     this.addKeyEventListener();
   }
 
-  public onUpdate(): void {}
+  //  画布发生变更时可调用来重新生成所有元素
+  private reDraw() {
+    if (!this.transform) return;
+    const { worldTransform, boxBounds } = this.transform;
+
+    this.points = this.innerTransformPoints(
+      this.outerTransformPoints(
+        this.points,
+        worldTransform as IMatrixWithScaleData,
+        boxBounds as IBoundsData
+      )
+    );
+    this.drawPoints();
+    this.drawStroke();
+    this.updateControl();
+  }
+
+  // 处理画布变更的影响
+  public onUpdate(): void {
+    const { boxBounds, worldTransform } = this.editTarget;
+    const { scaleX, scaleY } = worldTransform;
+    const { x, y } = boxBounds;
+    if (
+      this.transform &&
+      (scaleX !== this.transform.worldTransform.scaleX ||
+        scaleY !== this.transform.worldTransform.scaleY)
+    ) {
+      this.reDraw();
+    }
+    this.transform = {
+      worldTransform: { scaleX, scaleY },
+      boxBounds: { x, y },
+    };
+  }
 
   public onUnload(): void {
     this.closeInnerEditor();
@@ -250,7 +292,7 @@ export class SVGPathEditor extends InnerEditor {
   private handleControlDown(e: any) {
     this.selectControlPoint = e.target;
   }
-  private handleControlUp(e: any) {
+  private handleControlUp() {
     this.selectControlPoint = null;
   }
 
@@ -582,8 +624,14 @@ export class SVGPathEditor extends InnerEditor {
    * @return {*}
    * @memberof SVGPathEditor
    */
-  innerTransform(points: IPoint[]) {
-    const { worldTransform, boxBounds } = this.editTarget;
+  innerTransformPoints(
+    points: IPoint[],
+    worldTransform?: IMatrixWithScaleData,
+    boxBounds?: IBoundsData
+  ) {
+    worldTransform = worldTransform || this.editTarget.worldTransform;
+    boxBounds = boxBounds || this.editTarget.boxBounds;
+
     const { scaleX, scaleY } = worldTransform;
     const { x, y } = boxBounds;
     return points.map((point) => {
@@ -612,8 +660,14 @@ export class SVGPathEditor extends InnerEditor {
    * @return {*}
    * @memberof SVGPathEditor
    */
-  private outerTransform(points: IPoint[]) {
-    const { worldTransform, boxBounds } = this.editTarget;
+  private outerTransformPoints(
+    points: IPoint[],
+    worldTransform?: IMatrixWithScaleData,
+    boxBounds?: IBoundsData
+  ) {
+    worldTransform = worldTransform || this.editTarget.worldTransform;
+    boxBounds = boxBounds || this.editTarget.boxBounds;
+
     const { scaleX, scaleY } = worldTransform;
     const { x, y } = boxBounds;
     return points.map((point) => {
@@ -642,7 +696,9 @@ export class SVGPathEditor extends InnerEditor {
    */
   private closeInnerEditor() {
     this.editTarget.parent?.remove(this.editTargetDuplicate);
-    this.editTarget.path = point2PathData(this.outerTransform(this.points));
+    this.editTarget.path = point2PathData(
+      this.outerTransformPoints(this.points)
+    );
     this.editTarget.visible = true;
     this.editor.selector.targetStroker.visible = true;
     this.editor.off_(this.eventIds);
@@ -662,7 +718,7 @@ export class SVGPathEditor extends InnerEditor {
    */
   private drawInnerPath() {
     this.editTargetDuplicate.set({
-      path: point2PathData(this.outerTransform(this.points)),
+      path: point2PathData(this.outerTransformPoints(this.points)),
     });
     this.drawStroke();
   }
@@ -674,12 +730,14 @@ export class SVGPathEditor extends InnerEditor {
    * @memberof SVGPathEditor
    */
   private drawPoints() {
-    this.pointIdxMap.clear();
+    // this.pointIdxMap.clear();
 
     let firstIdx: number;
     let firstPoint: PointIdx;
     let lastIdx: number;
     let lastPoint: PointIdx;
+
+    const newPointIdxMap = new Map(this.pointIdxMap);
 
     // 这里绘制顶点时, 同时记录了顶点与相邻点的关系, 用 leftIdx 跟 rightIdx 来记录
     const points = this.points
@@ -688,14 +746,22 @@ export class SVGPathEditor extends InnerEditor {
         if (type === 'end') return null;
 
         if (!firstIdx) firstIdx = index;
+        const { innerId } = this.selectPoint || {};
+        const selectIdx = this.pointIdxMap.get(innerId)?.index;
+        console.log(this.selectPoint, selectIdx);
+
+        const pointStyles =
+          selectIdx === index
+            ? { ...pointStyle, ...selectPointStyle }
+            : { ...pointStyle, ...unSelectPointStyle };
 
         const point = new Ellipse({
           x,
           y,
-          ...pointStyle,
           cursor: 'move',
           offsetX: -pointRadius,
           offsetY: -pointRadius,
+          ...pointStyles,
         });
 
         const currentPoint = {
@@ -705,7 +771,7 @@ export class SVGPathEditor extends InnerEditor {
         };
 
         if (!firstPoint) firstPoint = currentPoint;
-        this.pointIdxMap.set(point.innerId, currentPoint);
+        newPointIdxMap.set(point.innerId, currentPoint);
 
         if (lastPoint) {
           lastPoint.rightIdx = index;
@@ -719,6 +785,8 @@ export class SVGPathEditor extends InnerEditor {
 
     firstPoint.leftIdx = lastIdx;
     lastPoint.rightIdx = firstPoint.index;
+
+    this.pointIdxMap = newPointIdxMap;
 
     this.pointsBox.set({ children: points as Ellipse[] });
   }
@@ -815,11 +883,14 @@ export class SVGPathEditor extends InnerEditor {
    */
   updateControl() {
     const { innerId } = this.selectPoint || {};
-    if (!innerId) return;
+    if (!innerId) {
+      return;
+    }
 
     const pointObj = this.pointIdxMap.get(innerId);
     if (pointObj === undefined) return;
 
+    // this.controlMap.clear();
     const prevPointControl = this.createControl(this.points[pointObj.index]);
     const currentPointControl = this.createControl(
       this.points[pointObj.leftIdx]
