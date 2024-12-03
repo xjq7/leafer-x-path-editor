@@ -900,7 +900,15 @@ export class SVGPathEditor extends InnerEditor {
     const pointObj = this.pointIdxMap.get(innerId);
     if (pointObj === undefined) return;
 
-    // this.controlMap.clear();
+    // 这里需要清除选中点外其他的 控制点 map
+    if (this.selectControlPoint) {
+      const point = this.controlMap.get(this.selectControlPoint.innerId);
+      this.controlMap.clear();
+      this.controlMap.set(this.selectControlPoint.innerId, point);
+    } else {
+      this.controlMap.clear();
+    }
+
     const prevPointControl = this.createControl(this.points[pointObj.index]);
     const currentPointControl = this.createControl(
       this.points[pointObj.leftIdx]
