@@ -170,6 +170,7 @@ export class SVGPathEditor extends InnerEditor {
   //  画布发生变更时可调用来重新生成所有元素
   private reDraw() {
     if (!this.transform) return;
+
     const { worldTransform, boxBounds } = this.transform;
 
     this.points = this.innerTransformPoints(
@@ -730,8 +731,6 @@ export class SVGPathEditor extends InnerEditor {
    * @memberof SVGPathEditor
    */
   private drawPoints() {
-    // this.pointIdxMap.clear();
-
     let firstIdx: number;
     let firstPoint: PointIdx;
     let lastIdx: number;
@@ -748,7 +747,6 @@ export class SVGPathEditor extends InnerEditor {
         if (!firstIdx) firstIdx = index;
         const { innerId } = this.selectPoint || {};
         const selectIdx = this.pointIdxMap.get(innerId)?.index;
-        console.log(this.selectPoint, selectIdx);
 
         const pointStyles =
           selectIdx === index

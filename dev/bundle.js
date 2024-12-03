@@ -15281,7 +15281,6 @@ let SVGPathEditor = class SVGPathEditor extends InnerEditor {
                 return null;
             const { innerId } = this.selectPoint || {};
             const selectIdx = (_a = this.pointIdxMap.get(innerId)) === null || _a === void 0 ? void 0 : _a.index;
-            console.log(this.selectPoint, selectIdx);
             const pointStyles = selectIdx === index
                 ? Object.assign(Object.assign({}, pointStyle), selectPointStyle) : Object.assign(Object.assign({}, pointStyle), unSelectPointStyle);
             const point = new Ellipse(Object.assign({ x,
