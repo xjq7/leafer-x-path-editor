@@ -35,6 +35,15 @@ jobs:
         with:
           node-version: 18.20.4
 
+      - name: Install Packages
+        run: npm i
+
+      - name: Build pkg
+        run: npm run build
+
+      - name: Build
+        run: npm run build-example
+
       # 推到服务器
       - name: Deploy to Server
         uses: burnett01/rsync-deployments@5.2.1

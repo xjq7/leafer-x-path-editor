@@ -23,8 +23,9 @@
   "homepage": "https://github.com/xjq7/leafer-x-path-editor",
   "bugs": "https://github.com/xjq7/leafer-x-path-editor/issues",
   "scripts": {
-    "start": "cross-env NODE_ENV=development rollup -c -w",
+    "start": "cross-env NODE_ENV=development rollup -c rollup.example.config.js",
     "build": "cross-env PLATFORM=all rollup -c",
+    "build-example": "rollup -c rollup.example.config.js",
     "test": "vitest",
     "release": "release-it"
   },
