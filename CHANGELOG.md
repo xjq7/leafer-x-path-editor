@@ -1,5 +1,12 @@
 
 
+## [1.0.5](https://github.com/xjq7/leafer-x-path-editor/compare/1.0.4...1.0.5) (2024-12-05)
+
+
+### Features
+
+* 增加数据变更事件 ([0392c1d](https://github.com/xjq7/leafer-x-path-editor/commit/0392c1df7c94c056e84b15344ca18cad0aa9bcba))
+
 ## [1.0.4](https://github.com/xjq7/leafer-x-path-editor/compare/1.0.3...1.0.4) (2024-12-03)
 
 
