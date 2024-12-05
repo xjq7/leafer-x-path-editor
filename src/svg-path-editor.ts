@@ -11,25 +11,13 @@ import { IBoundsData, IMatrixWithScaleData } from '@leafer-ui/interface';
 
 import { pathData2Point, point2PathData } from './utils';
 import { AnyObject, IPoint, PointIdx } from './type';
-
-const pointRadius = 6;
-
-const selectPointStyle = {
-  stroke: 'white',
-  fill: '#5f84f9',
-};
-
-const unSelectPointStyle = {
-  stroke: '#5f84f9',
-  fill: 'white',
-};
-
-const pointStyle = {
-  width: pointRadius * 2,
-  height: pointRadius * 2,
-  strokeWidth: 2,
-  ...unSelectPointStyle,
-};
+import {
+  pointRadius,
+  selectPointStyle,
+  unSelectPointStyle,
+  pointStyle,
+} from './constants';
+import { PathEditorEvent } from './event';
 
 @registerInnerEditor()
 export class SVGPathEditor extends InnerEditor {
@@ -157,8 +145,15 @@ export class SVGPathEditor extends InnerEditor {
     this.drawPoints();
     this.drawStroke();
 
+    const oldValue = this.editTarget.clone();
     // 隐藏 编辑元素
     this.editTarget.visible = false;
+    this.editor.emitEvent(
+      new PathEditorEvent(PathEditorEvent.CHANGE, {
+        value: this.editTarget,
+        oldValue,
+      })
+    );
     // 去除 editor 的描边
     this.editor.selector.targetStroker.visible = false;
 
@@ -709,10 +704,20 @@ export class SVGPathEditor extends InnerEditor {
    */
   private closeInnerEditor() {
     this.editTarget.parent?.remove(this.editTargetDuplicate);
+    const oldValue = this.editTarget.clone();
+
     this.editTarget.path = point2PathData(
       this.outerTransformPoints(this.points)
     );
-    this.editTarget.visible = true;
+    this.editTarget.visible = false;
+
+    this.editor.emitEvent(
+      new PathEditorEvent(PathEditorEvent.CHANGE, {
+        value: this.editTarget,
+        oldValue,
+      })
+    );
+
     this.editor.selector.targetStroker.visible = true;
     this.editor.off_(this.eventIds);
     this.eventIds = [];

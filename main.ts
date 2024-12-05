@@ -1,8 +1,12 @@
 import { App, Path } from 'leafer-ui';
-
+import { PathEditorEvent } from './src/event';
 import './src/index';
 
 const leafer = new App({ view: window, editor: {} });
+
+leafer.editor.on(PathEditorEvent.CHANGE, (e) => {
+  console.log(e);
+});
 
 const shape = new Path({
   x: 300,
