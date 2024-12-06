@@ -1,5 +1,12 @@
 
 
+## [1.0.6](https://github.com/xjq7/leafer-x-path-editor/compare/1.0.5...1.0.6) (2024-12-06)
+
+
+### Bug Fixes
+
+* 结束后 组件设置 visible 为 true ([52b0ed4](https://github.com/xjq7/leafer-x-path-editor/commit/52b0ed474e4e0af00b7a60edc71ce9f33d068a90))
+
 ## [1.0.5](https://github.com/xjq7/leafer-x-path-editor/compare/1.0.4...1.0.5) (2024-12-05)
 
 
