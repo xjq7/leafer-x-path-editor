@@ -709,7 +709,7 @@ export class SVGPathEditor extends InnerEditor {
     this.editTarget.path = point2PathData(
       this.outerTransformPoints(this.points)
     );
-    this.editTarget.visible = false;
+    this.editTarget.visible = true;
 
     this.editor.emitEvent(
       new PathEditorEvent(PathEditorEvent.CHANGE, {
