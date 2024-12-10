@@ -1,5 +1,12 @@
 
 
+## [1.0.7](https://github.com/xjq7/leafer-x-path-editor/compare/1.0.6...1.0.7) (2024-12-10)
+
+
+### Bug Fixes
+
+* 退出编辑时改为先 重置 visible 再 更新 path ([915d5f0](https://github.com/xjq7/leafer-x-path-editor/commit/915d5f02fe7c4e5c7763479e51f18adf54cde84d))
+
 ## [1.0.6](https://github.com/xjq7/leafer-x-path-editor/compare/1.0.5...1.0.6) (2024-12-06)
 
 
