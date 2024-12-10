@@ -183,6 +183,7 @@ export class SVGPathEditor extends InnerEditor {
   // 处理画布变更的影响
   public onUpdate(): void {
     const { boxBounds, worldTransform } = this.editTarget;
+
     const { scaleX, scaleY } = worldTransform;
     const { x, y } = boxBounds;
     if (
@@ -706,10 +707,10 @@ export class SVGPathEditor extends InnerEditor {
     this.editTarget.parent?.remove(this.editTargetDuplicate);
     const oldValue = this.editTarget.clone();
 
+    this.editTarget.visible = true;
     this.editTarget.path = point2PathData(
       this.outerTransformPoints(this.points)
     );
-    this.editTarget.visible = true;
 
     this.editor.emitEvent(
       new PathEditorEvent(PathEditorEvent.CHANGE, {
