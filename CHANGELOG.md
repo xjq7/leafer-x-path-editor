@@ -1,5 +1,12 @@
 
 
+## [1.0.9](https://github.com/xjq7/leafer-x-path-editor/compare/1.0.8...1.0.9) (2024-12-11)
+
+
+### Bug Fixes
+
+* 画布缩放后 点位移动 bug 修复 ([0b46fd5](https://github.com/xjq7/leafer-x-path-editor/commit/0b46fd54c92ffe4f64e15457c900d1d548e8b5a1))
+
 ## [1.0.8](https://github.com/xjq7/leafer-x-path-editor/compare/1.0.7...1.0.8) (2024-12-11)
 
 
