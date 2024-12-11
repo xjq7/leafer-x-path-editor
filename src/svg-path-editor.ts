@@ -5,9 +5,14 @@ import {
   Ellipse,
   PointerEvent,
   UI,
+  Matrix,
 } from '@leafer-ui/core';
 import { InnerEditor, registerInnerEditor } from '@leafer-in/editor';
-import { IBoundsData, IMatrixWithScaleData } from '@leafer-ui/interface';
+import {
+  IBoundsData,
+  IMatrix,
+  IMatrixWithScaleData,
+} from '@leafer-ui/interface';
 
 import { pathData2Point, point2PathData } from './utils';
 import { AnyObject, IPoint, PointIdx } from './type';
@@ -72,6 +77,9 @@ export class SVGPathEditor extends InnerEditor {
     boxBounds: { x: number; y: number };
   };
 
+  // 旋转矩阵
+  private matrix: IMatrix;
+
   constructor(props: any) {
     super(props);
     this.pointsBox = new Box();
@@ -134,6 +142,8 @@ export class SVGPathEditor extends InnerEditor {
   }
 
   public onLoad(): void {
+    this.matrix = new Matrix(this.editTarget.worldTransform);
+
     // 统一转换成结构化数据, 并做了相对位置的处理
     this.points = this.innerTransformPoints(
       pathData2Point(this.editTarget.getPath())
@@ -307,8 +317,11 @@ export class SVGPathEditor extends InnerEditor {
 
     const { innerId } = e.target;
 
-    const newX = e.target.x + moveX;
-    const newY = e.target.y + moveY;
+    const { x: transformMoveX, y: transformMoveY } =
+      this.getTransformMovePosition(moveX, moveY);
+
+    const newX = e.target.x + transformMoveX;
+    const newY = e.target.y + transformMoveY;
 
     // 更新 point 位置
     e.target.set({
@@ -429,11 +442,11 @@ export class SVGPathEditor extends InnerEditor {
       // 根据控制点模式 来计算另一个控制点 的位置
       if (pointObj.mode === 'mirror-angle-length') {
         if (isLeft) {
-          pointObj.x2 -= moveX;
-          pointObj.y2 -= moveY;
+          pointObj.x2 -= transformMoveX;
+          pointObj.y2 -= transformMoveY;
         } else if (isRight) {
-          pointObj.x1 -= moveX;
-          pointObj.y1 -= moveY;
+          pointObj.x1 -= transformMoveX;
+          pointObj.y1 -= transformMoveY;
         }
       } else if (pointObj.mode === 'mirror-angle') {
         let x1 = pointObj.x1,
@@ -587,8 +600,11 @@ export class SVGPathEditor extends InnerEditor {
 
     const { innerId } = e.target;
 
-    const x = e.target.x + moveX;
-    const y = e.target.y + moveY;
+    const { x: transformMoveX, y: transformMoveY } =
+      this.getTransformMovePosition(moveX, moveY);
+
+    const x = e.target.x + transformMoveX;
+    const y = e.target.y + transformMoveY;
 
     // 更新 point 位置
     e.target.set({
@@ -608,10 +624,10 @@ export class SVGPathEditor extends InnerEditor {
       point.x = x;
       point.y = y;
 
-      if (point.x1 !== undefined) point.x1 += moveX;
-      if (point.y1 !== undefined) point.y1 += moveY;
-      if (point.x2 !== undefined) point.x2 += moveX;
-      if (point.y2 !== undefined) point.y2 += moveY;
+      if (point.x1 !== undefined) point.x1 += transformMoveX;
+      if (point.y1 !== undefined) point.y1 += transformMoveY;
+      if (point.x2 !== undefined) point.x2 += transformMoveX;
+      if (point.y2 !== undefined) point.y2 += transformMoveY;
 
       // 更新控制点位置
       this.updateControl();
@@ -695,6 +711,24 @@ export class SVGPathEditor extends InnerEditor {
       });
       return newPoint;
     }) as IPoint[];
+  }
+
+  /**
+   * 对移动位置做矩阵变换, 因为 Path 旋转后, 位置移动也跟着旋转了
+   *
+   * @private
+   * @param {number} moveX
+   * @param {number} moveY
+   * @return {*}
+   * @memberof SVGPathEditor
+   */
+  private getTransformMovePosition(moveX: number, moveY: number) {
+    const { a, b, c, d } = this.matrix;
+
+    return {
+      x: moveX * a + moveY * b,
+      y: moveX * c + moveY * d,
+    };
   }
 
   /**
