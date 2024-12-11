@@ -1,5 +1,12 @@
 
 
+## [1.0.8](https://github.com/xjq7/leafer-x-path-editor/compare/1.0.7...1.0.8) (2024-12-11)
+
+
+### Bug Fixes
+
+* Path 旋转后拖动顶点、控制点 bug 修复, ([7f1cc3a](https://github.com/xjq7/leafer-x-path-editor/commit/7f1cc3addbdaabdb60c0e8c2c783e652f5294cad))
+
 ## [1.0.7](https://github.com/xjq7/leafer-x-path-editor/compare/1.0.6...1.0.7) (2024-12-10)
 
 
