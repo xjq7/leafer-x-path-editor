@@ -5,14 +5,9 @@ import {
   Ellipse,
   PointerEvent,
   UI,
-  Matrix,
 } from '@leafer-ui/core';
 import { InnerEditor, registerInnerEditor } from '@leafer-in/editor';
-import {
-  IBoundsData,
-  IMatrix,
-  IMatrixWithScaleData,
-} from '@leafer-ui/interface';
+import { IBoundsData, IMatrixWithScaleData } from '@leafer-ui/interface';
 
 import { pathData2Point, point2PathData } from './utils';
 import { AnyObject, IPoint, PointIdx } from './type';
@@ -73,12 +68,9 @@ export class SVGPathEditor extends InnerEditor {
 
   // 缓存世界相对变换属性
   private transform: {
-    worldTransform: { scaleX: number; scaleY: number };
-    boxBounds: { x: number; y: number };
+    worldTransform: IMatrixWithScaleData;
+    boxBounds: IBoundsData;
   };
-
-  // 旋转矩阵
-  private matrix: IMatrix;
 
   constructor(props: any) {
     super(props);
@@ -142,8 +134,6 @@ export class SVGPathEditor extends InnerEditor {
   }
 
   public onLoad(): void {
-    this.matrix = new Matrix(this.editTarget.worldTransform);
-
     // 统一转换成结构化数据, 并做了相对位置的处理
     this.points = this.innerTransformPoints(
       pathData2Point(this.editTarget.getPath())
@@ -179,11 +169,7 @@ export class SVGPathEditor extends InnerEditor {
     const { worldTransform, boxBounds } = this.transform;
 
     this.points = this.innerTransformPoints(
-      this.outerTransformPoints(
-        this.points,
-        worldTransform as IMatrixWithScaleData,
-        boxBounds as IBoundsData
-      )
+      this.outerTransformPoints(this.points, worldTransform, boxBounds)
     );
     this.drawPoints();
     this.drawStroke();
@@ -193,9 +179,7 @@ export class SVGPathEditor extends InnerEditor {
   // 处理画布变更的影响
   public onUpdate(): void {
     const { boxBounds, worldTransform } = this.editTarget;
-
     const { scaleX, scaleY } = worldTransform;
-    const { x, y } = boxBounds;
     if (
       this.transform &&
       (scaleX !== this.transform.worldTransform.scaleX ||
@@ -204,8 +188,8 @@ export class SVGPathEditor extends InnerEditor {
       this.reDraw();
     }
     this.transform = {
-      worldTransform: { scaleX, scaleY },
-      boxBounds: { x, y },
+      worldTransform: { ...worldTransform },
+      boxBounds: { ...boxBounds },
     };
   }
 
@@ -723,8 +707,10 @@ export class SVGPathEditor extends InnerEditor {
    * @memberof SVGPathEditor
    */
   private getTransformMovePosition(moveX: number, moveY: number) {
-    const { a, b, c, d } = this.matrix;
-
+    const { worldTransform } = this.transform;
+    const { a, b, c, d, scaleX, scaleY } = worldTransform;
+    moveX /= scaleX;
+    moveY /= scaleY;
     return {
       x: moveX * a + moveY * b,
       y: moveX * c + moveY * d,
