@@ -1,43 +1,19 @@
-import { App, Path } from 'leafer-ui';
-import { PathEditorEvent } from './src/event';
+import { App, Path, PropertyEvent } from 'leafer-ui';
 import './src/index';
 
 const leafer = new App({ view: window, editor: {} });
-
-leafer.editor.on(PathEditorEvent.CHANGE, (e) => {
-  console.log(e);
-});
 
 const shape = new Path({
   x: 300,
   y: 100,
   fill: '#32cd79',
-  path: [
-    { name: 'M', x: 200, y: 200 },
-    { name: 'L', x: 50, y: 330 },
-    { name: 'L', x: 200, y: 100 },
-    {
-      name: 'C',
-      x1: 350,
-      y1: 300,
-      x2: 420,
-      y2: 420,
-      x: 300,
-      y: 380,
-    },
-    {
-      name: 'C',
-      x: 200,
-      y: 550,
-      x1: 300,
-      y1: 400,
-      x2: 200,
-      y2: 300,
-    },
-    { name: 'L', x: 410, y: 670 },
-    { name: 'Z' },
-  ],
+  path: 'M200 100C200 155.228 155.228 200 100 200C44.7715 200 0 155.228 0 100C0 44.7715 44.7715 0 100 0C155.228 0 200 44.7715 200 100Z',
+
   editable: true,
+});
+
+shape.on(PropertyEvent.CHANGE, (e) => {
+  console.log(e.attrName, e.newValue);
 });
 
 leafer.tree.add(shape);
