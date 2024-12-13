@@ -258,8 +258,14 @@ export class SVGPathEditor extends InnerEditor {
         if (crossProduct === 0) {
           mode = 'mirror-angle';
 
-          const distance1 = calculateEuclideanDistance(x, y, x1, y1);
-          const distance2 = calculateEuclideanDistance(x, y, x2, y2);
+          const distance1 = toFixed(
+            calculateEuclideanDistance(x, y, x1, y1),
+            1
+          );
+          const distance2 = toFixed(
+            calculateEuclideanDistance(x, y, x2, y2),
+            1
+          );
 
           if (distance1 === distance2) {
             mode = 'mirror-angle-length';
@@ -284,12 +290,12 @@ export class SVGPathEditor extends InnerEditor {
     const { scaleX, scaleY } = transform;
     // 根据缩放系数动态调整点的大小
     if (scaleX === scaleY) {
-      const radius = Math.min(Math.max(6 * scaleX, 4), 7);
+      const radius = clamp(6 * scaleX, 5, 7);
       this.pointRadius = radius;
 
       this.pointStyle.width = radius * 2;
       this.pointStyle.height = radius * 2;
-      this.pointStyle.strokeWidth = Math.min(Math.max(1.4 * scaleX, 0.8), 2);
+      this.pointStyle.strokeWidth = clamp(1.4 * scaleX, 1, 2);
     }
   }
 
