@@ -10,6 +10,39 @@
 
 ## 使用
 
+### 安装
+
+```sh
+npm install leafer-x-path-editor
+# or yarn
+yarn add leafer-x-path-editor
+# or pnpm
+pnpm install leafer-x-path-editor
+```
+
+### 示例
+
+```ts
+import { App, Path } from 'leafer-ui';
+// 引入 leafer-x-path-editor
+import 'leafer-x-path-editor';
+
+const leafer = new App({ view: window, editor: {} });
+
+// 双击 Path 即可进入内部编辑模式
+const shape = new Path({
+  x: 300,
+  y: 100,
+  fill: '#32cd79',
+  path: 'M200 100C200 155.228 155.228 200 100 200C44.7715 200 0 155.228 0 100C0 44.7715 44.7715 0 100 0C155.228 0 200 44.7715 200 100Z',
+  editable: true,
+});
+
+leafer.tree.add(shape);
+```
+
+### 使用说明
+
 进入编辑模式自动初始化所有顶点
 
 点击任意顶点将激活他与相邻两点的控制点, 每个顶点最多有两个控制点
