@@ -76,12 +76,12 @@ export class SVGPathEditor extends InnerEditor {
   // 点的选中样式
   private selectPointStyle = {
     stroke: 'white',
-    fill: '#5f84f9',
+    fill: '#2193FF',
   };
 
   // 点的非选中样式
   private unSelectPointStyle = {
-    stroke: '#5f84f9',
+    stroke: '#2193FF',
     fill: 'white',
   };
 
@@ -158,6 +158,8 @@ export class SVGPathEditor extends InnerEditor {
   }
 
   public onLoad(): void {
+    // 初始化 point 样式
+    this.calculatePointStyle(this.editTarget.worldTransform);
     // 统一转换成结构化数据, 并做了相对位置的处理
     this.points = this.innerTransformPoints(
       pathData2Point(this.editTarget.getPath())
@@ -208,14 +210,7 @@ export class SVGPathEditor extends InnerEditor {
     const { scaleX, scaleY } = worldTransform;
 
     // 根据缩放系数动态调整点的大小
-    if (scaleX === scaleY) {
-      const radius = Math.min(Math.max(6 * scaleX, 4), 7);
-      this.pointRadius = radius;
-
-      this.pointStyle.width = radius * 2;
-      this.pointStyle.height = radius * 2;
-      this.pointStyle.strokeWidth = Math.min(Math.max(1.4 * scaleX, 0.8), 2);
-    }
+    this.calculatePointStyle(worldTransform);
 
     // 对比上一次的 transform, 不同时则重绘所有元素
     if (
@@ -276,6 +271,26 @@ export class SVGPathEditor extends InnerEditor {
 
       return point;
     });
+  }
+
+  /**
+   *
+   *
+   * @private
+   * @param {IMatrixWithScaleData} transform
+   * @memberof SVGPathEditor
+   */
+  private calculatePointStyle(transform: IMatrixWithScaleData) {
+    const { scaleX, scaleY } = transform;
+    // 根据缩放系数动态调整点的大小
+    if (scaleX === scaleY) {
+      const radius = Math.min(Math.max(6 * scaleX, 4), 7);
+      this.pointRadius = radius;
+
+      this.pointStyle.width = radius * 2;
+      this.pointStyle.height = radius * 2;
+      this.pointStyle.strokeWidth = Math.min(Math.max(1.4 * scaleX, 0.8), 2);
+    }
   }
 
   /**
@@ -697,7 +712,7 @@ export class SVGPathEditor extends InnerEditor {
   handleSelectPoint(el: Ellipse) {
     this.selectPoint?.set({ ...this.unSelectPointStyle });
     this.selectPoint = el;
-    this.selectPoint.set({ ...this.selectPointStyle });
+    this.selectPoint?.set({ ...this.selectPointStyle });
   }
 
   /**
@@ -851,6 +866,9 @@ export class SVGPathEditor extends InnerEditor {
 
     const newPointIdxMap = new Map(this.pointIdxMap);
 
+    const selectIdxObj = this.pointIdxMap.get(this.selectPoint?.innerId);
+    const selectIdx = selectIdxObj?.index;
+
     // 这里绘制顶点时, 同时记录了顶点与相邻点的关系, 用 leftIdx 跟 rightIdx 来记录
     const points = this.points
       .map((pointObj, index) => {
@@ -858,8 +876,6 @@ export class SVGPathEditor extends InnerEditor {
         if (type === 'end') return null;
 
         if (!firstIdx) firstIdx = index;
-        const { innerId } = this.selectPoint || {};
-        const selectIdx = this.pointIdxMap.get(innerId)?.index;
 
         const pointStyles =
           selectIdx === index
@@ -874,6 +890,9 @@ export class SVGPathEditor extends InnerEditor {
           offsetY: -this.pointRadius,
           ...pointStyles,
         });
+        if (selectIdx === index) {
+          this.selectPoint = point;
+        }
 
         const currentPoint = {
           index,
