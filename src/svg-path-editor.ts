@@ -9,14 +9,15 @@ import {
 import { InnerEditor, registerInnerEditor } from '@leafer-in/editor';
 import { IBoundsData, IMatrixWithScaleData } from '@leafer-ui/interface';
 
-import { pathData2Point, point2PathData } from './utils';
-import { AnyObject, IPoint, PointIdx } from './type';
 import {
-  pointRadius,
-  selectPointStyle,
-  unSelectPointStyle,
-  pointStyle,
-} from './constants';
+  clamp,
+  calculateCrossProduct,
+  calculateEuclideanDistance,
+  pathData2Point,
+  point2PathData,
+  toFixed,
+} from './utils';
+import { AnyObject, IPoint, MirrorMode, PointIdx } from './type';
 import { PathEditorEvent } from './event';
 
 @registerInnerEditor()
@@ -66,10 +67,33 @@ export class SVGPathEditor extends InnerEditor {
   // 当前按下的键
   private downKey: number[] = [];
 
-  // 缓存世界相对变换属性
-  private transform: {
+  // 缓存上次的世界相对变换属性
+  private prevTransform: {
     worldTransform: IMatrixWithScaleData;
     boxBounds: IBoundsData;
+  };
+
+  // 点的选中样式
+  private selectPointStyle = {
+    stroke: 'white',
+    fill: '#5f84f9',
+  };
+
+  // 点的非选中样式
+  private unSelectPointStyle = {
+    stroke: '#5f84f9',
+    fill: 'white',
+  };
+
+  // 默认点的半径
+  private pointRadius = 6;
+
+  // 选中点样式
+  private pointStyle: AnyObject = {
+    width: this.pointRadius * 2,
+    height: this.pointRadius * 2,
+    strokeWidth: 2,
+    ...this.unSelectPointStyle,
   };
 
   constructor(props: any) {
@@ -138,6 +162,8 @@ export class SVGPathEditor extends InnerEditor {
     this.points = this.innerTransformPoints(
       pathData2Point(this.editTarget.getPath())
     );
+    this.points = this.calculateMirrorMode(this.points);
+
     this.editTargetDuplicate = this.editTarget.clone() as Path;
 
     this.editTarget.parent?.add(this.editTargetDuplicate);
@@ -164,9 +190,9 @@ export class SVGPathEditor extends InnerEditor {
 
   //  画布发生变更时可调用来重新生成所有元素
   private reDraw() {
-    if (!this.transform) return;
+    if (!this.prevTransform) return;
 
-    const { worldTransform, boxBounds } = this.transform;
+    const { worldTransform, boxBounds } = this.prevTransform;
 
     this.points = this.innerTransformPoints(
       this.outerTransformPoints(this.points, worldTransform, boxBounds)
@@ -180,14 +206,27 @@ export class SVGPathEditor extends InnerEditor {
   public onUpdate(): void {
     const { boxBounds, worldTransform } = this.editTarget;
     const { scaleX, scaleY } = worldTransform;
+
+    // 根据缩放系数动态调整点的大小
+    if (scaleX === scaleY) {
+      const radius = Math.min(Math.max(6 * scaleX, 4), 7);
+      this.pointRadius = radius;
+
+      this.pointStyle.width = radius * 2;
+      this.pointStyle.height = radius * 2;
+      this.pointStyle.strokeWidth = Math.min(Math.max(1.4 * scaleX, 0.8), 2);
+    }
+
+    // 对比上一次的 transform, 不同时则重绘所有元素
     if (
-      this.transform &&
-      (scaleX !== this.transform.worldTransform.scaleX ||
-        scaleY !== this.transform.worldTransform.scaleY)
+      this.prevTransform &&
+      (scaleX !== this.prevTransform.worldTransform.scaleX ||
+        scaleY !== this.prevTransform.worldTransform.scaleY)
     ) {
       this.reDraw();
     }
-    this.transform = {
+
+    this.prevTransform = {
       worldTransform: { ...worldTransform },
       boxBounds: { ...boxBounds },
     };
@@ -198,6 +237,45 @@ export class SVGPathEditor extends InnerEditor {
     this.removeKeyEventListener();
     // 4. 卸载控制点
     this.editBox.remove(this.view);
+  }
+
+  /**
+   * 计算初始数据的控制点模式
+   *
+   * @private
+   * @param {IPoint[]} points
+   * @return {*}
+   * @memberof SVGPathEditor
+   */
+  private calculateMirrorMode(points: IPoint[]) {
+    return points.map((point) => {
+      const { x, y, x1, y1, x2, y2 } = point;
+
+      if (
+        x1 !== undefined &&
+        y1 !== undefined &&
+        x2 != undefined &&
+        y2 !== undefined
+      ) {
+        let mode: MirrorMode = 'no-mirror';
+        const crossProduct = calculateCrossProduct(x, y, x1, y1, x2, y2);
+
+        if (crossProduct === 0) {
+          mode = 'mirror-angle';
+
+          const distance1 = calculateEuclideanDistance(x, y, x1, y1);
+          const distance2 = calculateEuclideanDistance(x, y, x2, y2);
+
+          if (distance1 === distance2) {
+            mode = 'mirror-angle-length';
+          }
+        }
+
+        return { ...point, mode };
+      }
+
+      return point;
+    });
   }
 
   /**
@@ -251,7 +329,7 @@ export class SVGPathEditor extends InnerEditor {
    * @memberof SVGPathEditor
    */
   getDefaultControls(A: IPoint, B: IPoint, C: IPoint) {
-    const L_AC = Math.sqrt(Math.pow(C.y - A.y, 2) + Math.pow(C.x - A.x, 2));
+    const L_AC = calculateEuclideanDistance(C.x, C.y, A.x, A.y);
 
     // 目标线段长度
     const L_DES = 0.6 * L_AC;
@@ -299,13 +377,13 @@ export class SVGPathEditor extends InnerEditor {
 
     const { moveX, moveY } = e;
 
-    const { innerId } = e.target;
+    const { innerId, x: targetX, y: targetY } = e.target;
 
     const { x: transformMoveX, y: transformMoveY } =
       this.getTransformMovePosition(moveX, moveY);
 
-    const newX = e.target.x + transformMoveX;
-    const newY = e.target.y + transformMoveY;
+    const newX = targetX + transformMoveX;
+    const newY = targetY + transformMoveY;
 
     // 更新 point 位置
     e.target.set({
@@ -342,19 +420,13 @@ export class SVGPathEditor extends InnerEditor {
       ) {
         if (mode !== 'mirror-angle') {
           // 直线吸附
-          const distance1 = Math.sqrt(
-            Math.pow(x - x1, 2) + Math.pow(y - y1, 2)
-          );
-          const distance2 = Math.sqrt(
-            Math.pow(x - x2, 2) + Math.pow(y - y2, 2)
-          );
+          const distance1 = calculateEuclideanDistance(x, y, x1, y1);
+          const distance2 = calculateEuclideanDistance(x, y, x2, y2);
           const length = distance1 + distance2;
 
           // 动态调整误差阈值
-          const epsilon = (120 * Math.min(Math.max(length, 40), 800)) / 150; // 根据距离设置阈值
-          const crossProduct = Math.abs(
-            (x - x1) * (y2 - y1) - (y - y1) * (x2 - x1)
-          );
+          const epsilon = (120 * clamp(length, 40, 800)) / 150; // 根据距离设置阈值
+          const crossProduct = calculateCrossProduct(x, y, x1, y1, x2, y2);
 
           if (crossProduct <= epsilon) {
             this.controlAbsorbStatus.isMirrorAngle = true;
@@ -394,14 +466,10 @@ export class SVGPathEditor extends InnerEditor {
 
         // 等长吸附
         if (this.controlAbsorbStatus.isMirrorAngle || mode === 'mirror-angle') {
-          const distance1 = Math.sqrt(
-            Math.pow(x1 - x, 2) + Math.pow(y1 - y, 2)
-          );
-          const distance2 = Math.sqrt(
-            Math.pow(x2 - x, 2) + Math.pow(y2 - y, 2)
-          );
+          const distance1 = calculateEuclideanDistance(x, y, x1, y1);
+          const distance2 = calculateEuclideanDistance(x, y, x2, y2);
 
-          const threshold = pointRadius / 2;
+          const threshold = this.pointRadius / 2;
 
           if (Math.abs(distance1 - distance2) <= threshold) {
             if (isLeft) {
@@ -451,6 +519,7 @@ export class SVGPathEditor extends InnerEditor {
         if (isLeft) {
           pointObj.x2 = newX;
           pointObj.y2 = newY;
+          x;
         } else {
           pointObj.x1 = newX;
           pointObj.y1 = newY;
@@ -483,10 +552,10 @@ export class SVGPathEditor extends InnerEditor {
         const absorbPoint = new Ellipse({
           x: desX,
           y: desY,
-          width: pointRadius,
-          height: pointRadius,
-          offsetX: -pointRadius / 2,
-          offsetY: -pointRadius / 2,
+          width: this.pointRadius,
+          height: this.pointRadius,
+          offsetX: -this.pointRadius / 2,
+          offsetY: -this.pointRadius / 2,
           fill: 'red',
         });
         absorbPoint.fill = 'red';
@@ -521,8 +590,11 @@ export class SVGPathEditor extends InnerEditor {
     mirrorY: number
   ) {
     // 另一个控制点跟顶点的距离
-    const distance = Math.sqrt(
-      Math.pow(mirrorX - centerX, 2) + Math.pow(mirrorY - centerY, 2)
+    const distance = calculateEuclideanDistance(
+      mirrorX,
+      mirrorY,
+      centerX,
+      centerY
     );
 
     // 当前移动点的方向向量
@@ -584,11 +656,13 @@ export class SVGPathEditor extends InnerEditor {
 
     const { innerId } = e.target;
 
+    let { x: targetX, y: targetY } = e.target;
+
     const { x: transformMoveX, y: transformMoveY } =
       this.getTransformMovePosition(moveX, moveY);
 
-    const x = e.target.x + transformMoveX;
-    const y = e.target.y + transformMoveY;
+    const x = targetX + transformMoveX;
+    const y = targetY + transformMoveY;
 
     // 更新 point 位置
     e.target.set({
@@ -621,9 +695,9 @@ export class SVGPathEditor extends InnerEditor {
   }
 
   handleSelectPoint(el: Ellipse) {
-    this.selectPoint?.set({ ...unSelectPointStyle });
+    this.selectPoint?.set({ ...this.unSelectPointStyle });
     this.selectPoint = el;
-    this.selectPoint.set({ ...selectPointStyle });
+    this.selectPoint.set({ ...this.selectPointStyle });
   }
 
   /**
@@ -684,13 +758,13 @@ export class SVGPathEditor extends InnerEditor {
 
       ['x', 'x1', 'x2'].forEach((key) => {
         if (newPoint[key] !== undefined) {
-          newPoint[key] = newPoint[key] / scaleX + x;
+          newPoint[key] = toFixed(newPoint[key] / scaleX + x);
         }
       });
 
       ['y', 'y1', 'y2'].forEach((key) => {
         if (newPoint[key] !== undefined) {
-          newPoint[key] = newPoint[key] / scaleY + y;
+          newPoint[key] = toFixed(newPoint[key] / scaleY + y);
         }
       });
       return newPoint;
@@ -707,7 +781,7 @@ export class SVGPathEditor extends InnerEditor {
    * @memberof SVGPathEditor
    */
   private getTransformMovePosition(moveX: number, moveY: number) {
-    const { worldTransform } = this.transform;
+    const { worldTransform } = this.prevTransform;
     const { a, b, c, d, scaleX, scaleY } = worldTransform;
     moveX /= scaleX;
     moveY /= scaleY;
@@ -725,6 +799,7 @@ export class SVGPathEditor extends InnerEditor {
    */
   private closeInnerEditor() {
     this.editTarget.parent?.remove(this.editTargetDuplicate);
+
     const oldValue = this.editTarget.clone();
 
     this.editTarget.visible = true;
@@ -788,15 +863,15 @@ export class SVGPathEditor extends InnerEditor {
 
         const pointStyles =
           selectIdx === index
-            ? { ...pointStyle, ...selectPointStyle }
-            : { ...pointStyle, ...unSelectPointStyle };
+            ? { ...this.pointStyle, ...this.selectPointStyle }
+            : { ...this.pointStyle, ...this.unSelectPointStyle };
 
         const point = new Ellipse({
           x,
           y,
           cursor: 'move',
-          offsetX: -pointRadius,
-          offsetY: -pointRadius,
+          offsetX: -this.pointRadius,
+          offsetY: -this.pointRadius,
           ...pointStyles,
         });
 
@@ -860,14 +935,14 @@ export class SVGPathEditor extends InnerEditor {
       leftControl = new Ellipse({
         x: x1,
         y: y1,
-        ...pointStyle,
+        ...this.pointStyle,
         cursor: 'pointer',
         data: {
           isLeft: true,
         },
         editable: true,
-        offsetX: -pointRadius,
-        offsetY: -pointRadius,
+        offsetX: -this.pointRadius,
+        offsetY: -this.pointRadius,
       });
 
       this.controlMap.set(leftControl.innerId, point);
@@ -877,14 +952,14 @@ export class SVGPathEditor extends InnerEditor {
       rightControl = new Ellipse({
         x: x2,
         y: y2,
-        ...pointStyle,
+        ...this.pointStyle,
         cursor: 'pointer',
         data: {
           isRight: true,
         },
         editable: true,
-        offsetX: -pointRadius,
-        offsetY: -pointRadius,
+        offsetX: -this.pointRadius,
+        offsetY: -this.pointRadius,
       });
       this.controlMap.set(rightControl.innerId, point);
     }

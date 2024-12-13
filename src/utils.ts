@@ -149,3 +149,70 @@ export function point2PathData(points: IPoint[]) {
 
   return pathData;
 }
+
+/**
+ * 浮点数保留一位小数, 整数不变
+ *
+ * @export
+ * @param {number} val
+ * @param {number} [precision=1]
+ * @return {*}
+ */
+export function toFixed(val: number, precision: number = 1) {
+  if (Number.isInteger(val)) return val;
+  return Number(val.toFixed(precision));
+}
+
+/**
+ * 欧几里得距离计算
+ *
+ * @export
+ * @param {number} x
+ * @param {number} y
+ * @param {number} x1
+ * @param {number} y1
+ * @return {*}
+ */
+export function calculateEuclideanDistance(
+  x: number,
+  y: number,
+  x1: number,
+  y1: number
+) {
+  return Math.sqrt(Math.pow(x1 - x, 2) + Math.pow(y1 - y, 2));
+}
+
+/**
+ * 二维空间的叉积计算
+ *
+ * @export
+ * @param {number} x
+ * @param {number} y
+ * @param {number} x1
+ * @param {number} y1
+ * @param {number} x2
+ * @param {number} y2
+ * @return {*}
+ */
+export function calculateCrossProduct(
+  x: number,
+  y: number,
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number
+) {
+  return Math.abs((x - x1) * (y2 - y1) - (y - y1) * (x2 - x1));
+}
+
+/**
+ * 夹取
+ *
+ * @param {number} value
+ * @param {number} min
+ * @param {number} max
+ * @return {*}
+ */
+export function clamp(value: number, min: number, max: number) {
+  return Math.max(min, Math.min(max, value));
+}

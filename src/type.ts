@@ -1,5 +1,5 @@
 type PointType = 'start' | 'end';
-type MirrorMode = 'no-mirror' | 'mirror-angle' | 'mirror-angle-length';
+export type MirrorMode = 'no-mirror' | 'mirror-angle' | 'mirror-angle-length';
 
 export interface IPoint {
   /** 当前顶点 */
