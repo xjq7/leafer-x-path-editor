@@ -1,5 +1,12 @@
 
 
+## [1.0.10](https://github.com/xjq7/leafer-x-path-editor/compare/1.0.9...1.0.10) (2024-12-13)
+
+
+### Bug Fixes
+
+* 初始化时计算好控制点模式; 顶点、控制点大小随着缩放系数变化 ([2343819](https://github.com/xjq7/leafer-x-path-editor/commit/23438194afbbc9f0a573432b2fbf82ade1e3fbfc))
+
 ## [1.0.9](https://github.com/xjq7/leafer-x-path-editor/compare/1.0.8...1.0.9) (2024-12-11)
 
 
