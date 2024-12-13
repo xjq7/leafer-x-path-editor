@@ -1,5 +1,13 @@
 
 
+## [1.0.11](https://github.com/xjq7/leafer-x-path-editor/compare/1.0.10...1.0.11) (2024-12-13)
+
+
+### Bug Fixes
+
+* 控制点等长模式判断修复; 点大小微调 ([854ba35](https://github.com/xjq7/leafer-x-path-editor/commit/854ba35766c6b2987a7a88111c5995b3f726e356))
+* selectPoint 计算逻辑调整 ([357dc3e](https://github.com/xjq7/leafer-x-path-editor/commit/357dc3e69878240590622c26ec56fd1c84fbdc0a))
+
 ## [1.0.10](https://github.com/xjq7/leafer-x-path-editor/compare/1.0.9...1.0.10) (2024-12-13)
 
 
