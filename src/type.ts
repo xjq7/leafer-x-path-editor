@@ -18,7 +18,7 @@ export interface IPoint {
   // 模式
   mode?: MirrorMode;
   // 顶点类型
-  type: PointType;
+  type?: PointType;
 }
 
 export type AnyObject = Record<string, any>;

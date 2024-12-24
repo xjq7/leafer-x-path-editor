@@ -95,6 +95,25 @@ export function pathData2Point(path: IPathCommandData) {
     pointData.push(point);
   }
 
+  const head = pointData[0];
+  const tail = pointData[pointData.length - 1];
+  if (tail.type !== 'end') {
+    // 如果起点和终点重合, 则删除一个重复点, 并将他的控制点赋值给前后两个点
+    if (head.x === tail.x && head.y === tail.y) {
+      pointData.pop();
+
+      if (tail.x2 !== undefined && tail.x2 !== undefined) {
+        pointData[pointData.length - 1].x2 = tail.x2;
+        pointData[pointData.length - 1].y2 = tail.y2;
+      }
+
+      if (tail.x1 !== undefined && tail.y1 !== undefined) {
+        pointData[0].x1 = tail.x1;
+        pointData[0].y1 = tail.y1;
+      }
+    }
+  }
+
   return pointData;
 }
 
@@ -108,22 +127,23 @@ export function pathData2Point(path: IPathCommandData) {
 export function point2PathData(points: IPoint[]) {
   const pathData: IPathCommandData = [];
 
-  const getPrev = (index: number) => {
-    if (index === 0) {
-      return points[points.length - 1];
+  const getNext = (index: number) => {
+    if (index === points.length - 1) {
+      return points[0];
     }
-    return points[index - 1];
+    return points[index + 1];
   };
 
-  points.forEach((point, index) => {
-    const { type, x, y, x1, y1 } = point;
+  pathData.push(M, points[0].x, points[0].y);
 
-    const prev = getPrev(index);
+  for (let i = 0; i < points.length; i++) {
+    const prev = points[i];
+    const next = getNext(i);
+
+    const { type, x, y, x1, y1 } = next;
 
     if (type === 'end') {
-      pathData.push(Z);
-    } else if (type === 'start') {
-      pathData.push(M, x, y);
+      continue;
     } else {
       if (
         prev.x2 === undefined &&
@@ -145,7 +165,11 @@ export function point2PathData(points: IPoint[]) {
         pathData.push(Q, x1, y1, x, y);
       }
     }
-  });
+  }
+
+  if (points[points.length - 1].type === 'end') {
+    pathData.push(Z);
+  }
 
   return pathData;
 }

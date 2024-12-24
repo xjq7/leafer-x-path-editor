@@ -19,6 +19,7 @@ import {
 } from './utils';
 import { AnyObject, IPoint, MirrorMode, PointIdx } from './type';
 import { PathEditorEvent } from './event';
+import '@leafer-in/state';
 
 @registerInnerEditor()
 export class SVGPathEditor extends InnerEditor {
@@ -38,6 +39,9 @@ export class SVGPathEditor extends InnerEditor {
   // 控制点移动过程中的吸附状态盒子
   private controlAbsorbBox = new Box();
 
+  // 两点间边的 Line 容器
+  private controlLineBox = new Box();
+
   /** 顶点数据 */
   private points: IPoint[] = [];
 
@@ -53,7 +57,10 @@ export class SVGPathEditor extends InnerEditor {
     isMirrorAngleLength?: boolean;
   } = {};
   // 当前选中的 顶点
-  private selectPoint?: Ellipse;
+  private selectPointIdx?: number;
+
+  // 当前 hover 的控制线
+  private hoverControlLine?: Path;
 
   // 当前选中的 控制点
   private selectControlPoint?: Ellipse;
@@ -67,8 +74,8 @@ export class SVGPathEditor extends InnerEditor {
   // 当前按下的键
   private downKey: number[] = [];
 
-  // 缓存上次的世界相对变换属性
-  private prevTransform: {
+  // 世界相对变换属性
+  private transform: {
     worldTransform: IMatrixWithScaleData;
     boxBounds: IBoundsData;
   };
@@ -102,9 +109,11 @@ export class SVGPathEditor extends InnerEditor {
     this.controlsBox = new Box();
     this.strokeBox = new Box();
     this.controlAbsorbBox = new Box();
+    this.controlLineBox = new Box();
 
     this.view.addMany(
       this.strokeBox,
+      this.controlLineBox,
       this.controlsBox,
       this.pointsBox,
       this.controlAbsorbBox
@@ -112,6 +121,7 @@ export class SVGPathEditor extends InnerEditor {
 
     this.eventIds = [
       this.pointsBox.on_(DragEvent.DRAG, this.handlePointDrag.bind(this)),
+      this.pointsBox.on_(PointerEvent.DOWN, this.handlePointDown.bind(this)),
       this.pointsBox.on_(PointerEvent.TAP, this.handlePointTap.bind(this)),
       this.controlsBox.on_(DragEvent.DRAG, this.handleControlDrag.bind(this)),
       this.controlsBox.on_(DragEvent.END, this.handleControlDragEnd.bind(this)),
@@ -124,6 +134,19 @@ export class SVGPathEditor extends InnerEditor {
         if (e.target === this.editTarget) return;
         this.editor.closeInnerEditor();
       }),
+      this.controlLineBox.on_(
+        PointerEvent.ENTER,
+        this.handleControlLineEnter.bind(this)
+      ),
+      this.controlLineBox.on_(
+        PointerEvent.LEAVE,
+        this.handleControlLineLeave.bind(this)
+      ),
+      this.controlLineBox.on_(PointerEvent.TAP, (e: any) => {
+        if (e.target.data.isAnchor) {
+          this.addPointAfter(e.target.data.index, e.target.x, e.target.y);
+        }
+      }),
     ];
   }
 
@@ -133,9 +156,18 @@ export class SVGPathEditor extends InnerEditor {
     return this.downKey.some((val) => [17, 91].includes(val));
   }
 
+  // 是否按下了 删除键
+  private isDel() {
+    if (this.downKey.length !== 1) return false;
+    return this.downKey.some((val) => [8].includes(val));
+  }
+
   private addKeyEventListener() {
     const handleKeyDownEvent = (e: any) => {
       this.downKey.push(e.keyCode);
+      if (this.isDel()) {
+        this.handleDeletePoint();
+      }
     };
 
     document.addEventListener('keydown', handleKeyDownEvent);
@@ -167,11 +199,10 @@ export class SVGPathEditor extends InnerEditor {
     this.points = this.calculateMirrorMode(this.points);
 
     this.editTargetDuplicate = this.editTarget.clone() as Path;
-
     this.editTarget.parent?.add(this.editTargetDuplicate);
 
     this.drawPoints();
-    this.drawStroke();
+    this.drawInnerPath();
 
     const oldValue = this.editTarget.clone();
     // 隐藏 编辑元素
@@ -192,15 +223,15 @@ export class SVGPathEditor extends InnerEditor {
 
   //  画布发生变更时可调用来重新生成所有元素
   private reDraw() {
-    if (!this.prevTransform) return;
+    if (!this.transform) return;
 
-    const { worldTransform, boxBounds } = this.prevTransform;
+    const { worldTransform, boxBounds } = this.transform;
 
     this.points = this.innerTransformPoints(
       this.outerTransformPoints(this.points, worldTransform, boxBounds)
     );
     this.drawPoints();
-    this.drawStroke();
+    this.drawInnerPath();
     this.updateControl();
   }
 
@@ -214,14 +245,14 @@ export class SVGPathEditor extends InnerEditor {
 
     // 对比上一次的 transform, 不同时则重绘所有元素
     if (
-      this.prevTransform &&
-      (scaleX !== this.prevTransform.worldTransform.scaleX ||
-        scaleY !== this.prevTransform.worldTransform.scaleY)
+      this.transform &&
+      (scaleX !== this.transform.worldTransform.scaleX ||
+        scaleY !== this.transform.worldTransform.scaleY)
     ) {
       this.reDraw();
     }
 
-    this.prevTransform = {
+    this.transform = {
       worldTransform: { ...worldTransform },
       boxBounds: { ...boxBounds },
     };
@@ -232,6 +263,142 @@ export class SVGPathEditor extends InnerEditor {
     this.removeKeyEventListener();
     // 4. 卸载控制点
     this.editBox.remove(this.view);
+  }
+
+  /**
+   * 删除选中顶点
+   *
+   * @memberof SVGPathEditor
+   */
+  handleDeletePoint() {
+    if (this.selectPointIdx === undefined) return;
+    this.points.splice(this.selectPointIdx, 1);
+    this.selectPointIdx = undefined;
+    this.reDraw();
+  }
+
+  /**
+   * 处理控制线的 hover 事件
+   *
+   * @param {*} e
+   * @memberof SVGPathEditor
+   */
+  handleControlLineEnter(e: any) {
+    e.target.state = 'hover';
+    this.hoverControlLine = e.target;
+
+    const { isStraight, start, end } = e.target.data;
+    if (isStraight) {
+      const centerX = (start.x + end.x) / 2;
+      const centerY = (start.y + end.y) / 2;
+      const anchorPoint = new Ellipse({
+        x: centerX,
+        y: centerY,
+        width: this.pointRadius,
+        height: this.pointRadius,
+        offsetX: -this.pointRadius,
+        offsetY: -this.pointRadius,
+        cursor: 'pointer',
+        data: {
+          isAnchor: true,
+          index: e.target.data.index,
+        },
+        ...this.pointStyle,
+      });
+
+      this.controlLineBox.add(anchorPoint);
+      e.target.data.anchorPoint = anchorPoint;
+    }
+  }
+
+  /**
+   * 处理控制线的 取消hover 事件
+   *
+   * @param {*} e
+   * @memberof SVGPathEditor
+   */
+  handleControlLineLeave(e: any) {
+    if (this.hoverControlLine) {
+      this.hoverControlLine.state = undefined;
+    }
+
+    if (e.target.data.anchorPoint) {
+      this.controlLineBox.remove(e.target.data.anchorPoint);
+    } else if (e.target.data.isAnchor) {
+      this.controlLineBox.remove(e.target);
+    }
+  }
+
+  /**
+   * 控制线更新
+   *
+   * @memberof SVGPathEditor
+   */
+  updateControlLines() {
+    const controlLines: Path[] = [];
+    for (let i = 0; i < this.points.length; i++) {
+      const currentPoint = this.points[i];
+      const prevPoint =
+        i === 0 ? this.points[this.points.length - 1] : this.points[i - 1];
+      const { x, y, x1, y1 } = currentPoint;
+      const { x: prevX, y: prevY, x2: prevX2, y2: prevY2 } = prevPoint;
+
+      let path = ``;
+      if (
+        x1 !== undefined &&
+        y1 !== undefined &&
+        prevX2 !== undefined &&
+        prevY2 !== undefined
+      ) {
+        path = `M ${prevX} ${prevY} C ${prevX2} ${prevY2} ${x1} ${y1} ${x} ${y}`;
+      } else if (prevX2 !== undefined && prevY2 !== undefined) {
+        path = `M ${prevX} ${prevY} Q ${prevX2} ${prevY2} ${x} ${y}`;
+      } else if (x1 !== undefined && y1 !== undefined) {
+        path = `M ${prevX} ${prevY} Q ${x1} ${y1} ${x} ${y}`;
+      } else {
+        path = `M ${prevX} ${prevY} L ${x} ${y}`;
+      }
+
+      const controlLine = new Path({
+        path,
+        stroke: 'transparent',
+        strokeWidth: 2,
+        states: {
+          hover: {
+            stroke: 'red',
+          },
+        },
+      });
+
+      if (path.indexOf('L') > -1) {
+        controlLine.data.isStraight = true; // 直线
+        controlLine.data.start = { x: prevX, y: prevY };
+        controlLine.data.end = { x, y };
+        controlLine.data.index = i;
+      }
+
+      controlLines.push(controlLine);
+    }
+    this.controlLineBox.set({ children: controlLines });
+  }
+
+  /**
+   * 在指定位置后添加顶点
+   *
+   * @param {number} index
+   * @param {number} x
+   * @param {number} y
+   * @memberof SVGPathEditor
+   */
+  addPointAfter(index: number, x: number, y: number) {
+    const newPoint: IPoint = { x, y };
+    this.points.splice(index, 0, newPoint);
+    if (index < this.selectPointIdx) {
+      this.selectPointIdx++;
+    }
+    this.handleSelectPoint();
+    this.selectPointIdx = index;
+    this.reDraw();
   }
 
   /**
@@ -280,7 +447,7 @@ export class SVGPathEditor extends InnerEditor {
   }
 
   /**
-   *
+   * 重新计算顶点样式
    *
    * @private
    * @param {IMatrixWithScaleData} transform
@@ -336,8 +503,8 @@ export class SVGPathEditor extends InnerEditor {
       this.drawInnerPath();
     }
 
-    this.handleSelectPoint(e.target);
     this.updateControl();
+    this.updateControlLines();
   }
 
   /**
@@ -586,6 +753,7 @@ export class SVGPathEditor extends InnerEditor {
         children: [...absorbBox],
       });
       this.updateControl();
+      this.updateControlLines();
       this.drawInnerPath();
     }
   }
@@ -634,6 +802,13 @@ export class SVGPathEditor extends InnerEditor {
     return { x: newX, y: newY };
   }
 
+  /**
+   * 控制点移动后重新计算控制点模式
+   *
+   * @private
+   * @param {*} e
+   * @memberof SVGPathEditor
+   */
   private handleControlDragEnd(e: any) {
     const { innerId } = e.target;
 
@@ -666,6 +841,18 @@ export class SVGPathEditor extends InnerEditor {
   }
 
   /**
+   * 处理顶点按下事件, 选中当前顶点
+   *
+   * @param {*} e
+   * @memberof SVGPathEditor
+   */
+  handlePointDown(e: any) {
+    const { innerId } = e.target;
+    const pointIdx = this.pointIdxMap.get(innerId);
+    this.handleSelectPoint(pointIdx.index);
+  }
+
+  /**
    * 处理控制点的拖动
    *
    * @private
@@ -691,8 +878,6 @@ export class SVGPathEditor extends InnerEditor {
       y,
     });
 
-    this.handleSelectPoint(e.target);
-
     const pointObj = this.pointIdxMap.get(innerId);
     // 更新 pointData 数据
     if (pointObj) {
@@ -712,13 +897,27 @@ export class SVGPathEditor extends InnerEditor {
       this.updateControl();
       // 更新 path
       this.drawInnerPath();
+      this.updateControlLines();
     }
   }
 
-  handleSelectPoint(el: Ellipse) {
-    this.selectPoint?.set({ ...this.unSelectPointStyle });
-    this.selectPoint = el;
-    this.selectPoint?.set({ ...this.selectPointStyle });
+  /**
+   * 选中某个控制点, 未传时为取消当前选中点
+   *
+   * @param {Ellipse} [el]
+   * @return {*}
+   * @memberof SVGPathEditor
+   */
+  handleSelectPoint(index?: number) {
+    const prevSelectPoint = this.pointsBox.children[this.selectPointIdx];
+
+    if (prevSelectPoint) {
+      prevSelectPoint.state = 'unSelect';
+    }
+    if (index === undefined) return;
+    this.selectPointIdx = index;
+    const selectPoint = this.pointsBox.children[index];
+    selectPoint.state = 'select';
   }
 
   /**
@@ -736,7 +935,11 @@ export class SVGPathEditor extends InnerEditor {
     worldTransform = worldTransform || this.editTarget.worldTransform;
     boxBounds = boxBounds || this.editTarget.boxBounds;
 
-    const { scaleX, scaleY } = worldTransform;
+    let { scaleX, scaleY } = worldTransform;
+
+    scaleX = Math.abs(scaleX);
+    scaleY = Math.abs(scaleY);
+
     const { x, y } = boxBounds;
     return points.map((point) => {
       const newPoint = { ...point } as AnyObject;
@@ -772,7 +975,10 @@ export class SVGPathEditor extends InnerEditor {
     worldTransform = worldTransform || this.editTarget.worldTransform;
     boxBounds = boxBounds || this.editTarget.boxBounds;
 
-    const { scaleX, scaleY } = worldTransform;
+    let { scaleX, scaleY } = worldTransform;
+    scaleX = Math.abs(scaleX);
+    scaleY = Math.abs(scaleY);
+
     const { x, y } = boxBounds;
     return points.map((point) => {
       const newPoint = { ...point } as AnyObject;
@@ -802,8 +1008,12 @@ export class SVGPathEditor extends InnerEditor {
    * @memberof SVGPathEditor
    */
   private getTransformMovePosition(moveX: number, moveY: number) {
-    const { worldTransform } = this.prevTransform;
-    const { a, b, c, d, scaleX, scaleY } = worldTransform;
+    const { worldTransform } = this.transform;
+    let { a, b, c, d, scaleX, scaleY } = worldTransform;
+
+    scaleX = Math.abs(scaleX);
+    scaleY = Math.abs(scaleY);
+
     moveX /= scaleX;
     moveY /= scaleY;
     return {
@@ -856,6 +1066,7 @@ export class SVGPathEditor extends InnerEditor {
       path: point2PathData(this.outerTransformPoints(this.points)),
     });
     this.drawStroke();
+    this.updateControlLines();
   }
 
   /**
@@ -872,8 +1083,7 @@ export class SVGPathEditor extends InnerEditor {
 
     const newPointIdxMap = new Map(this.pointIdxMap);
 
-    const selectIdxObj = this.pointIdxMap.get(this.selectPoint?.innerId);
-    const selectIdx = selectIdxObj?.index;
+    const selectIdx = this.selectPointIdx;
 
     // 这里绘制顶点时, 同时记录了顶点与相邻点的关系, 用 leftIdx 跟 rightIdx 来记录
     const points = this.points
@@ -883,22 +1093,23 @@ export class SVGPathEditor extends InnerEditor {
 
         if (!firstIdx) firstIdx = index;
 
-        const pointStyles =
-          selectIdx === index
-            ? { ...this.pointStyle, ...this.selectPointStyle }
-            : { ...this.pointStyle, ...this.unSelectPointStyle };
-
         const point = new Ellipse({
           x,
           y,
           cursor: 'move',
           offsetX: -this.pointRadius,
           offsetY: -this.pointRadius,
-          ...pointStyles,
+          states: {
+            select: {
+              ...this.selectPointStyle,
+            },
+            unSelect: {
+              ...this.unSelectPointStyle,
+            },
+          },
+          state: selectIdx === index ? 'select' : 'unSelect',
+          ...this.pointStyle,
         });
-        if (selectIdx === index) {
-          this.selectPoint = point;
-        }
 
         const currentPoint = {
           index,
@@ -965,7 +1176,6 @@ export class SVGPathEditor extends InnerEditor {
         data: {
           isLeft: true,
         },
-        editable: true,
         offsetX: -this.pointRadius,
         offsetY: -this.pointRadius,
       });
@@ -982,7 +1192,6 @@ export class SVGPathEditor extends InnerEditor {
         data: {
           isRight: true,
         },
-        editable: true,
         offsetX: -this.pointRadius,
         offsetY: -this.pointRadius,
       });
@@ -1018,12 +1227,14 @@ export class SVGPathEditor extends InnerEditor {
    * @memberof SVGPathEditor
    */
   updateControl() {
-    const { innerId } = this.selectPoint || {};
-    if (!innerId) {
+    if (this.selectPointIdx === undefined) {
+      this.controlsBox.set({ children: [] });
       return;
     }
 
-    const pointObj = this.pointIdxMap.get(innerId);
+    const pointObj = this.points[this.selectPointIdx];
+    const prevPoint = this.points[this.selectPointIdx - 1];
+    const nextPoint = this.points[this.selectPointIdx + 1];
     if (pointObj === undefined) return;
 
     // 这里需要清除选中点外其他的 控制点 map
@@ -1035,11 +1246,9 @@ export class SVGPathEditor extends InnerEditor {
       this.controlMap.clear();
     }
 
-    const prevPointControl = this.createControl(this.points[pointObj.index]);
-    const currentPointControl = this.createControl(
-      this.points[pointObj.leftIdx]
-    );
-    const nextPointControl = this.createControl(this.points[pointObj.rightIdx]);
+    const prevPointControl = this.createControl(prevPoint);
+    const currentPointControl = this.createControl(pointObj);
+    const nextPointControl = this.createControl(nextPoint);
 
     this.controlsBox.set({
       children: [

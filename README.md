@@ -20,6 +20,15 @@ yarn add leafer-x-path-editor
 pnpm install leafer-x-path-editor
 ```
 
+宿主环境需要安装如下 依赖
+
+```
+@leafer-in/editor
+@leafer-in/state
+@leafer-ui/core
+@leafer-ui/interface
+```
+
 ### 示例
 
 ```ts
