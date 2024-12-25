@@ -12,6 +12,7 @@ const supportPlatforms = ['web', 'worker', 'node', 'miniapp'];
 const external = {
   '@leafer-ui/core': 'LeaferUI',
   '@leafer-in/editor': 'LeaferIN',
+  '@leafer-in/state': 'LeaferIN',
 }; // 声明外部依赖，不打进插件包，只引用
 
 const port = 12121; // visit http://localhost:12121
