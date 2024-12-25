@@ -1,5 +1,12 @@
 
 
+# [1.1.0](https://github.com/xjq7/leafer-x-path-editor/compare/1.0.11...1.1.0) (2024-12-25)
+
+
+### Features
+
+* 形状新增、删除能力 ([5ef8c9d](https://github.com/xjq7/leafer-x-path-editor/commit/5ef8c9d101697a774bca5d13e68074ae741f279b))
+
 ## [1.0.11](https://github.com/xjq7/leafer-x-path-editor/compare/1.0.10...1.0.11) (2024-12-13)
 
 
