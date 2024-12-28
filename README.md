@@ -24,7 +24,6 @@ pnpm install leafer-x-path-editor
 
 ```
 @leafer-in/editor
-@leafer-in/state
 @leafer-ui/core
 @leafer-ui/interface
 ```
