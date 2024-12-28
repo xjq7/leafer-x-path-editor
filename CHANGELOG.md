@@ -1,5 +1,7 @@
 
 
+## [1.1.1](https://github.com/xjq7/leafer-x-path-editor/compare/1.1.0...1.1.1) (2024-12-28)
+
 # [1.1.0](https://github.com/xjq7/leafer-x-path-editor/compare/1.0.11...1.1.0) (2024-12-25)
 
 
