@@ -1,5 +1,12 @@
 
 
+## [1.1.2](https://github.com/xjq7/leafer-x-path-editor/compare/1.1.1...1.1.2) (2024-12-28)
+
+
+### Bug Fixes
+
+* 锁定 @leafer-in/state 版本 ([56dd8ee](https://github.com/xjq7/leafer-x-path-editor/commit/56dd8eefb0302b84ad972721723f7f2630c92d4a))
+
 ## [1.1.1](https://github.com/xjq7/leafer-x-path-editor/compare/1.1.0...1.1.1) (2024-12-28)
 
 # [1.1.0](https://github.com/xjq7/leafer-x-path-editor/compare/1.0.11...1.1.0) (2024-12-25)
