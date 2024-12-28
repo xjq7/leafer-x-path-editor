@@ -70,6 +70,6 @@
     "registry": "https://registry.npmjs.org"
   },
   "dependencies": {
-    "@leafer-in/state": "^1.1.0"
+    "@leafer-in/state": "1.1.0"
   }
 }
