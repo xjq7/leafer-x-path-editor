@@ -1,5 +1,12 @@
 
 
+## [1.1.3](https://github.com/xjq7/leafer-x-path-editor/compare/1.1.2...1.1.3) (2025-02-06)
+
+
+### Bug Fixes
+
+* 修复自动闭合 Path 路径编辑 ([8009697](https://github.com/xjq7/leafer-x-path-editor/commit/800969738e7802eb310eedabbb362273f076686b))
+
 ## [1.1.2](https://github.com/xjq7/leafer-x-path-editor/compare/1.1.1...1.1.2) (2024-12-28)
 
 
