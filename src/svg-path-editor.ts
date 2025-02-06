@@ -368,6 +368,7 @@ export class SVGPathEditor extends InnerEditor {
             stroke: 'red',
           },
         },
+        editable: false,
       });
 
       if (path.indexOf('L') > -1) {
@@ -563,6 +564,11 @@ export class SVGPathEditor extends InnerEditor {
   private handleControlDrag(e: any) {
     const { isLeft, isRight } = e.target.data;
 
+    // 只处理控制点的拖动
+    if (e.target.tag !== 'Ellipse') {
+      return;
+    }
+
     const { moveX, moveY } = e;
 
     const { innerId, x: targetX, y: targetY } = e.target;
@@ -731,6 +737,7 @@ export class SVGPathEditor extends InnerEditor {
           path: `M ${x} ${y} L ${desX} ${desY}`,
           stroke: 'red',
           strokeWidth: 1,
+          editable: false,
         });
         absorbBox.push(absorbPath);
       }
@@ -1149,6 +1156,7 @@ export class SVGPathEditor extends InnerEditor {
       stroke: '#2193FF',
       strokeWidth: 1,
       path: point2PathData(this.points),
+      editable: false,
     });
 
     this.strokeBox.set({ children: [strokePath] });

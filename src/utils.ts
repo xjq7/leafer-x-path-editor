@@ -90,7 +90,8 @@ export function pathData2Point(path: IPathCommandData) {
       point.x = path[++i];
       point.y = path[++i];
     } else if (path[i] === Z) {
-      point.type = 'end';
+      point.x = pointData[0].x;
+      point.y = pointData[0].y;
     }
     pointData.push(point);
   }
@@ -165,10 +166,6 @@ export function point2PathData(points: IPoint[]) {
         pathData.push(Q, x1, y1, x, y);
       }
     }
-  }
-
-  if (points[points.length - 1].type === 'end') {
-    pathData.push(Z);
   }
 
   return pathData;
